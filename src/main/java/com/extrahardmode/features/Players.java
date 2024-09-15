@@ -256,7 +256,7 @@ public class Players extends ListenerModule
                         break;
                     case FALL:
                         applyEffectOnDmg(event, CFG.getPotionEffect(RootNode.ENHANCED_DMG_FALL, world.getName()), CFG.getDouble(RootNode.ENHANCED_DMG_FALL_MULT, world.getName()));
-//                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20 * event.getDamage()), 4));
+//                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, (int) (20 * event.getDamage()), 4));
 //                        event.setDamage(event.getDamage() * 2);
                         break;
                     case SUFFOCATION:

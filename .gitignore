@@ -178,3 +178,5 @@ artifacts
 .directory
 
 /spigot
+
+/.vscode

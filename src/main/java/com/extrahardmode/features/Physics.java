@@ -163,7 +163,7 @@ public class Physics extends ListenerModule
 //                    //Frighten the player
 //                    entityWithDamagedHead.damage(damageAmount, entity);
 //                    if (environmentalDmg)
-//                        entityWithDamagedHead.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 140, 10));
+//                        entityWithDamagedHead.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 140, 10));
 //                }
 //            }
 //        }

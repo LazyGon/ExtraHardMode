@@ -5,9 +5,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.service.config.ConfigNode;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
-
-import java.util.concurrent.Callable;
 
 /**
  * Output all the choosen modules to mcstats in nice plots
@@ -40,14 +39,8 @@ public class ConfigPlotter
         {
             metrics = new Metrics(plugin, 3342);
 
-            metrics.addCustomChart(new Metrics.SimplePie("bukkit_implementation", new Callable<String>()
-            {
-                @Override
-                public String call() throws Exception
-                {
-                    return plugin.getServer().getVersion().split("-")[1];
-                }
-            }));
+            metrics.addCustomChart(new SimplePie("bukkit_implementation",
+                    () -> plugin.getServer().getVersion().split("-")[1]));
 
 //            final int percent = CFG.getEnabledWorlds().length > 0 ? (plugin.getServer().getWorlds().size() * 100 / CFG.getEnabledWorlds().length) : 0;
 //            Metrics.Graph graph = metrics.createGraph("Enabled for % of worlds");
@@ -144,7 +137,7 @@ public class ConfigPlotter
                                 break;
                         }
 
-                        metrics.addCustomChart(new Metrics.SimplePie(node.toString(), () -> result));
+                        metrics.addCustomChart(new SimplePie(node.toString(), () -> result));
                         break;
                     }
                     //Please add future config nodes here, the bstats site defaults IDs to lowercase and does not allow editing of existing charts, nor easy bulk input of new ones...

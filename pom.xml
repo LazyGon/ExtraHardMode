@@ -39,66 +39,23 @@
         <outputdir>${project.build.outputDirectory}</outputdir>
         <mc-version>1.21.1</mc-version>
         <bukkit-ver>R0.1-SNAPSHOT</bukkit-ver>
-        <testDir>${basedir}/src/test/</testDir>
-        <srcDir>${basedir}/src/main/java/</srcDir>
     </properties>
 
     <!-- Build instructions -->
     <build>
         <finalName>${project.name}</finalName>
         <defaultGoal>package</defaultGoal>
-        <testSourceDirectory>${testDir}</testSourceDirectory>
-        <sourceDirectory>${srcDir}</sourceDirectory>
-
-        <resources>
-            <resource>
-                <includes>
-                    <include>plugin.yml</include>
-                </includes>
-                <directory>${basedir}/src/main/resources/</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
 
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
-
-            <!-- Shade Metrics -->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-shade-plugin</artifactId>-->
-                <!--<version>1.5</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>shade</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<artifactSet>-->
-                                <!--<includes>-->
-                                    <!--<include>org.mcstats.bukkit:metrics</include>-->
-                                <!--</includes>-->
-                            <!--</artifactSet>-->
-                            <!--<relocations>-->
-                                <!--<relocation>-->
-                                    <!--<pattern>org.mcstats</pattern>-->
-                                    <!--<shadedPattern>com.extrahardmode.metrics</shadedPattern>-->
-                                <!--</relocation>-->
-                            <!--</relocations>-->
-                            <!--&lt;!&ndash;<minimizeJar>true</minimizeJar>&ndash;&gt;-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
 
             <!-- Use a profile to override the outputdir, e.g. to a local testserver-->
             <!--<plugin>-->
@@ -110,16 +67,18 @@
                 <!--</configuration>-->
             <!--</plugin>-->
 
+            <!-- Shade Metrics -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <minimizeJar>true</minimizeJar>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <artifactSet>
                         <includes>
                             <include>org.bstats:bstats-bukkit</include>
+                            <include>org.bstats:bstats-base</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -237,59 +196,38 @@
 
     <!-- Dependencies -->
     <dependencies>
-        <!-- Spigot -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>${mc-version}-${bukkit-ver}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- CraftBukkit -> because we are too lazy to add the jar to our build path for runtime debugging :D -->
-        <!--<dependency>-->
-            <!--<groupId>org.bukkit</groupId>-->
-            <!--<artifactId>craftbukkit</artifactId>-->
-            <!--<version>${mc-version}-${bukkit-ver}</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!-- Metrics for stats -->
-        <!--<dependency>-->
-            <!--<groupId>org.mcstats.bukkit</groupId>-->
-            <!--<artifactId>metrics</artifactId>-->
-            <!--<version>R7</version>-->
-        <!--</dependency>-->
 
         <!-- Unit testing dependencies -->
         <!-- JUnit: Assertions and test framework -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <!-- Mock bukkit's interfaces -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Mock final methods and stuff -->
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>2.0.9</version>
+            <version>5.13.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
-            <version>2.0.9</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.13.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>2.0.9</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.13.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -299,6 +237,7 @@
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
             <version>6.1.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Block Loggers -->
@@ -321,12 +260,19 @@
             <groupId>de.diddiz</groupId>
             <artifactId>logblock</artifactId>
             <version>1.94</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bstats</groupId>
+            <artifactId>bstats-base</artifactId>
+            <version>3.0.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.8</version>
+            <version>3.0.3</version>
             <scope>compile</scope>
         </dependency>
 

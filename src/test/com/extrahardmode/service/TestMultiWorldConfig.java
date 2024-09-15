@@ -23,30 +23,27 @@ package com.extrahardmode.service;
 
 
 import com.extrahardmode.ExtraHardMode;
-import com.extrahardmode.mocks.MockExtraHardMode;
 import com.extrahardmode.service.config.Mode;
 import com.extrahardmode.service.config.MultiWorldConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.PluginLogger;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(PowerMockRunner.class)
+@ExtendWith(MockitoExtension.class)
 //@PrepareForTest({MultiWorldConfig.class, JavaPlugin.class, PluginLogger.class}) //Breaks in JDK 11 apparently
 public class TestMultiWorldConfig
 {
-    private final ExtraHardMode plugin = new MockExtraHardMode().get();
+    @Mock
+    private ExtraHardMode plugin;
 
 
     //Because MultiworldConfig has a constructor and is an interface
-    private class Mock extends MultiWorldConfig
+    private class Mocked extends MultiWorldConfig
     {
-        public Mock(ExtraHardMode plugin)
+        public Mocked(ExtraHardMode plugin)
         {
             super(plugin);
         }
@@ -86,8 +83,7 @@ public class TestMultiWorldConfig
     private final FileConfiguration config = new YamlConfiguration();
 
 
-    @Before
-    @Test
+    @BeforeEach
     public void prepare()
     {
         //normal values
@@ -106,7 +102,7 @@ public class TestMultiWorldConfig
     }
 
 
-    private final MultiWorldConfig module = new Mock(plugin);
+    private final MultiWorldConfig module = new Mocked(plugin);
 
 
 //    /**

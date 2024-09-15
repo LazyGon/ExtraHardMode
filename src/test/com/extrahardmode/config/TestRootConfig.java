@@ -23,11 +23,11 @@ package com.extrahardmode.config;
 
 
 import com.extrahardmode.ExtraHardMode;
-import com.extrahardmode.mocks.MockExtraHardMode;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,12 +40,12 @@ import static org.junit.Assert.assertTrue;
  * Test the MultiWorldConfig
  */
 
-@RunWith(PowerMockRunner.class)
+@ExtendWith(MockitoExtension.class)
 //@PrepareForTest({RootConfig.class, ExtraHardMode.class}) //Breaks in JDK 11 apparently
 public class TestRootConfig
 {
-    //Mock Plugin
-    private final ExtraHardMode plugin = new MockExtraHardMode().get();
+    @Mock
+    private ExtraHardMode plugin;
 
     private final RootConfig cfg = new RootConfig(plugin);
 

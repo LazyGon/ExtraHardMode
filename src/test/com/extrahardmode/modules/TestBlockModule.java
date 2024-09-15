@@ -24,11 +24,13 @@ package com.extrahardmode.modules;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.mocks.MockBlock;
-import com.extrahardmode.mocks.MockExtraHardMode;
 import com.extrahardmode.module.BlockModule;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -36,16 +38,17 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
+@ExtendWith(MockitoExtension.class)
 public class TestBlockModule
 {
-    private final ExtraHardMode plugin;
+    @Mock
+    private ExtraHardMode plugin;
 
-    private final BlockModule module;
+    private BlockModule module;
 
 
     public TestBlockModule()
     {
-        plugin = new MockExtraHardMode().get();
         module = new BlockModule(plugin);
     }
 

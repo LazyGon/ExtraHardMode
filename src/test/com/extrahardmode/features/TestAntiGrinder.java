@@ -26,7 +26,6 @@ import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.mocks.MockBlock;
-import com.extrahardmode.mocks.MockExtraHardMode;
 import com.extrahardmode.mocks.MockLocation;
 import com.extrahardmode.mocks.MockWorld;
 import com.extrahardmode.mocks.events.MockCreatureSpawnEvent;
@@ -36,22 +35,27 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@ExtendWith(MockitoExtension.class)
 public class TestAntiGrinder
 {
-    private final ExtraHardMode plugin = new MockExtraHardMode().get();
+    @Mock
+    private ExtraHardMode plugin;
 
     private final RootConfig CFG = new RootConfig(plugin);
 
     private final AntiGrinder module = new AntiGrinder(plugin, CFG, new BlockModule(plugin));
 
 
-    @Before
+    @BeforeEach
     public void prepare()
     {
         //Enable AntiGrinder in the Config

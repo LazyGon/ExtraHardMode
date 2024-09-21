@@ -100,12 +100,12 @@ public class TestMultiWorldConfig {
     // @Test
     // public void testLoadNodeValidInput()
     // {
-    // assertEquals(false, module.loadNode(config, MockConfigNode.BOOL_TRUE,
+    // assertFalse(module.loadNode(config, MockConfigNode.BOOL_TRUE,
     // false).getContent());
     // assertTrue(module.loadNode(config, MockConfigNode.BOOL_TRUE,
     // false).getStatusCode() == Status.OK);
     //
-    // assertEquals(false, module.loadNode(config, MockConfigNode.BOOL_FALSE,
+    // assertFalse(module.loadNode(config, MockConfigNode.BOOL_FALSE,
     // false).getContent());
     // assertTrue(module.loadNode(config, MockConfigNode.BOOL_FALSE,
     // false).getStatusCode() == Status.OK);
@@ -161,7 +161,7 @@ public class TestMultiWorldConfig {
     // false).getStatusCode() == Status.NOT_FOUND);
     //
     //
-    // assertEquals(true, module.loadNode(config, MockConfigNode.NOTFOUND_BOOL,
+    // assertTrue(module.loadNode(config, MockConfigNode.NOTFOUND_BOOL,
     // true).getContent());
     // assertTrue(module.loadNode(config, MockConfigNode.NOTFOUND_BOOL,
     // true).getStatusCode() == Status.ADJUSTED);

@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -77,10 +78,10 @@ class TestRootConfig {
      */
     @Test
     public void testGetBoolean() {
-        assertEquals(false, cfg.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, "pvp"));
-        assertEquals(false, cfg.getBoolean(RootNode.WEAK_FOOD_CROPS, "world_the_end"));
-        assertEquals(false, cfg.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, "world"));
-        assertEquals(true, cfg.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, "worlds"));
+        assertFalse(cfg.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, "pvp"));
+        assertFalse(cfg.getBoolean(RootNode.WEAK_FOOD_CROPS, "world_the_end"));
+        assertFalse(cfg.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, "world"));
+        assertTrue(cfg.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, "worlds"));
     }
 
     /*
@@ -103,7 +104,7 @@ class TestRootConfig {
         // Integer with disable value
         assertEquals(100, cfg.getInt(RootNode.GHASTS_DEFLECT_ARROWS, "test123"));
         // Boolean
-        assertEquals(false, cfg.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, "test123"));
+        assertFalse(cfg.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, "test123"));
         // String
         assertEquals("", cfg.getString(RootNode.MODE, "test123"));
         // Double

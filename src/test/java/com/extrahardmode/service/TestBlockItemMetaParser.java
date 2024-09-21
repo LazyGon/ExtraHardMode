@@ -165,10 +165,10 @@ public class TestBlockItemMetaParser {
     // Response<Map<Integer, List<Byte>>> retrievedData =
     // SpecialParsers.parseMaterials(fallingBlocks);
     //
-    // assertEquals(true, retrievedData.getContent().containsKey(34));
+    // assertTrue(retrievedData.getContent().containsKey(34));
     // assertEquals((byte) 124, (byte) retrievedData.getContent().get(34).get(0));
     //
-    // assertEquals(true, retrievedData.getContent().containsKey(25));
+    // assertTrue(retrievedData.getContent().containsKey(25));
     // assertEquals((byte) 12, (byte) retrievedData.getContent().get(25).get(0));
     //
     // assertSame("All the wrong characters should be stripped",

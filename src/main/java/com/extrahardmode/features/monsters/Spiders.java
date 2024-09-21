@@ -26,6 +26,7 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.WebCleanupTask;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class Spiders extends ListenerModule {
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) // Don't change type from respawned
         // zombies etc.
         {
-            if (plugin.random(spiderBonusSpawnPercent)) {
+            if (OurRandom.percentChance(spiderBonusSpawnPercent)) {
                 event.setCancelled(true);
                 entityType = EntityType.SPIDER;
                 EntityHelper.spawn(location, entityType);
@@ -109,7 +110,7 @@ public class Spiders extends ListenerModule {
         if (spidersDropWebOnDeath) {
             // Reduce amount of web dropped by spiders which die in caves from environmental
             // damage
-            if (entity instanceof Spider && (!EntityHelper.isLootLess(entity) || plugin.getRandom().nextInt(3) == 1)) {
+            if (entity instanceof Spider && (!EntityHelper.isLootLess(entity) || OurRandom.nextInt(3) == 1)) {
                 // random web placement
                 long serverTime = world.getFullTime();
                 int random1 = (int) (serverTime + entity.getLocation().getBlockZ()) % 9;

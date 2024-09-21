@@ -31,6 +31,7 @@ import com.extrahardmode.module.PlayerData;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
 import com.extrahardmode.task.ArmorWeightTask;
 import com.extrahardmode.task.SetPlayerHealthAndFoodTask;
@@ -188,7 +189,7 @@ public class Players extends ListenerModule {
             }
             loop:
             for (int i = 0; i < numberOfStacksToRemove && !drops.isEmpty(); i++) {
-                ItemStack toRemove = drops.get(plugin.getRandom().nextInt(drops.size()));
+                ItemStack toRemove = drops.get(OurRandom.nextInt(drops.size()));
                 for (Material material : blacklisted) {
                     if (material == toRemove.getType()) {
                         continue loop; // don't remove blacklisted items

@@ -75,7 +75,6 @@ import com.extrahardmode.task.WeightCheckTask;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -94,11 +93,6 @@ public class ExtraHardMode extends JavaPlugin {
      * Registered modules.
      */
     private final Map<Class<? extends IModule>, IModule> modules = new LinkedHashMap<>();
-
-    /**
-     * for computing random chance
-     */
-    private final Random randomNumberGenerator = new Random();
 
     /**
      * initializes well... everything
@@ -152,15 +146,9 @@ public class ExtraHardMode extends JavaPlugin {
         registerModule(Endermen.class, new Endermen(this));
         registerModule(Glydia.class, new Glydia(this));
         registerModule(Ghasts.class, new Ghasts(this));
-        try {
-            // Enabled from 1.6 onwards only
-            Class.forName("org.bukkit.entity.Horse", false, null);
-            registerModule(Horses.class, new Horses(this));
-        } catch (ClassNotFoundException ignored) {
-        }
+        registerModule(Horses.class, new Horses(this));
         registerModule(MonsterRules.class, new MonsterRules(this));
         registerModule(PigMen.class, new PigMen(this));
-        // registerModule(RealisticChopping.class, new RealisticChopping(this));
         registerModule(Silverfish.class, new Silverfish(this));
         registerModule(Skeletors.class, new Skeletors(this));
         registerModule(Spiders.class, new Spiders(this));
@@ -234,25 +222,6 @@ public class ExtraHardMode extends JavaPlugin {
         }
         this.getServer().getScheduler().cancelTasks(this);
         modules.clear();
-    }
-
-    /**
-     * Computes random chance
-     *
-     * @param percentChance - Percentage of success.
-     * @return True if it was successful, else false.
-     */
-    public boolean random(int percentChance) {
-        return randomNumberGenerator.nextInt(101) < percentChance;
-    }
-
-    /**
-     * Get random generator.
-     *
-     * @return a Random object
-     */
-    public Random getRandom() {
-        return randomNumberGenerator;
     }
 
     public String getTag() {

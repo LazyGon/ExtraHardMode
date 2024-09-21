@@ -63,7 +63,7 @@ public class IoHelper {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line + String.format("%n"));
+                sb.append(line).append(String.format("%n"));
             }
 
             memWriter.write(sb.toString());

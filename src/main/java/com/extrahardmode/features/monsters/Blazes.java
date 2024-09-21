@@ -27,10 +27,12 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.CreateExplosionTask;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Blaze;
@@ -89,12 +91,12 @@ public class Blazes extends ListenerModule {
 
         // FEATURE: more blazes in nether
         if (entityType == EntityType.ZOMBIFIED_PIGLIN && world.getEnvironment() == World.Environment.NETHER) {
-            if (plugin.random(bonusNetherBlazeSpawnPercent)) {
+            if (OurRandom.percentChance(bonusNetherBlazeSpawnPercent)) {
                 event.setCancelled(true);
                 entityType = EntityType.BLAZE;
 
                 // FEATURE: magma cubes spawn with blazes
-                if (plugin.random(bonusNetherBlazeSpawnPercent)) {
+                if (OurRandom.percentChance(bonusNetherBlazeSpawnPercent)) {
                     MagmaCube cube = (MagmaCube) (EntityHelper.spawn(location, EntityType.MAGMA_CUBE));
                     cube.setSize(1);
                 }
@@ -106,7 +108,7 @@ public class Blazes extends ListenerModule {
         // FEATURE: blazes near bedrock
         if (entityType == EntityType.SKELETON && world.getEnvironment() == World.Environment.NORMAL
                 && location.getBlockY() < 20 && !EntityHelper.isMarkedAsOurs(entity)) {
-            if (plugin.random(nearBedrockSpawnPercent)) {
+            if (OurRandom.percentChance(nearBedrockSpawnPercent)) {
                 event.setCancelled(true);
                 entityType = EntityType.BLAZE;
                 EntityHelper.spawn(location, entityType);
@@ -135,7 +137,7 @@ public class Blazes extends ListenerModule {
             if (world.getEnvironment() == World.Environment.NETHER) {
                 if (bonusLoot) {
                     // 50% chance of each
-                    if (plugin.getRandom().nextInt(2) == 0) {
+                    if (OurRandom.nextInt(2) == 0) {
                         event.getDrops().add(new ItemStack(Material.GUNPOWDER, 2));
                     } else {
                         event.getDrops().add(new ItemStack(Material.GLOWSTONE_DUST, 2));
@@ -170,11 +172,11 @@ public class Blazes extends ListenerModule {
         if (blazeSplitPercent > 0 && world.getEnvironment() == World.Environment.NETHER && entity instanceof Blaze) {
             // Blazes which have split already are less likely to split
             int respawnCount = !entity.getMetadata("extrahardmode.blaze.splitcount").isEmpty()
-                    ? entity.getMetadata("extrahardmode.blaze.splitcount").get(0).asInt()
+                    ? entity.getMetadata("extrahardmode.blaze.splitcount").getFirst().asInt()
                     : 0;
             respawnCount++;
             blazeSplitPercent = (int) (1.0D / respawnCount * blazeSplitPercent);
-            if (plugin.random(blazeSplitPercent)) {
+            if (OurRandom.percentChance(blazeSplitPercent)) {
                 // TODO EhmBlazeSplitEvent
                 LivingEntity firstNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
                 firstNewBlaze.setVelocity(new Vector(1, 0, 1));
@@ -233,7 +235,7 @@ public class Blazes extends ListenerModule {
             if (entityType == EntityType.BLAZE) {
                 Blaze blaze = (Blaze) entity;
 
-                if (blaze.getHealth() > blaze.getMaxHealth() / 2) {
+                if (blaze.getHealth() > blaze.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() / 2) {
 
                     Block block = entity.getLocation().getBlock();
 

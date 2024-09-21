@@ -26,6 +26,7 @@ import com.extrahardmode.compatibility.CompatHandler;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.service.EHMModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.BlockPhysicsCheckTask;
 import java.util.ArrayList;
 import java.util.List;
@@ -240,7 +241,7 @@ public class BlockModule extends EHMModule {
                     }
                 }
 
-                return plugin.random(deathProbability);
+                return OurRandom.percentChance(deathProbability);
             }
         }
 

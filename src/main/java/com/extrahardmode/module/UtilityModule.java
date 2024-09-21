@@ -64,9 +64,9 @@ public class UtilityModule extends EHMModule {
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
 
         // Generate the colors
-        int rdmInt1 = plugin.getRandom().nextInt(255);
-        int rdmInt2 = plugin.getRandom().nextInt(255);
-        int rdmInt3 = plugin.getRandom().nextInt(255);
+        int rdmInt1 = OurRandom.nextInt(255);
+        int rdmInt2 = OurRandom.nextInt(255);
+        int rdmInt3 = OurRandom.nextInt(255);
         Color mainColor = Color.fromRGB(rdmInt1, rdmInt2, rdmInt3);
 
         FireworkEffect fwEffect = FireworkEffect.builder().withColor(mainColor).with(type).build();

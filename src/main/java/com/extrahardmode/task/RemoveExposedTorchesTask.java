@@ -25,6 +25,8 @@ package com.extrahardmode.task;
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -106,7 +108,7 @@ public class RemoveExposedTorchesTask implements Runnable {
                                 // desert in which no rain falls
                                 {
                                     /* Reduce lag by torches lying on the ground */
-                                    if (plugin.getRandom().nextInt(5) == 1) {
+                                    if (OurRandom.nextInt(5) == 1) {
                                         block.breakNaturally();
                                     } else {
                                         block.setType(Material.AIR);
@@ -139,7 +141,7 @@ public class RemoveExposedTorchesTask implements Runnable {
                             case BEETROOTS: {
                                 if (snowBreaksCrops && temperature <= 0.15) // cold biomes in which snow falls
                                 {
-                                    if (plugin.getRandom().nextInt(5) == 1) {
+                                    if (OurRandom.nextInt(5) == 1) {
                                         block.breakNaturally();
                                     }
                                     // Snow can't be placed if its tilled soil
@@ -147,7 +149,7 @@ public class RemoveExposedTorchesTask implements Runnable {
                                         block.getRelative(BlockFace.DOWN).setType(Material.DIRT);
                                     }
                                     Snow snow = (Snow) Material.SNOW.createBlockData();
-                                    if (plugin.getRandom().nextBoolean()) {
+                                    if (OurRandom.nextBoolean()) {
                                         snow.setLayers(1);
                                     } else {
                                         snow.setLayers(2);

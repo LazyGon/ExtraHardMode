@@ -30,6 +30,7 @@ import com.extrahardmode.module.MsgModule;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.service.PermissionNode;
 import com.extrahardmode.task.RemoveExposedTorchesTask;
 import org.bukkit.Chunk;
@@ -170,7 +171,7 @@ public class Torches extends ListenerModule {
                 Chunk[] chunks = world.getLoadedChunks();
                 if (chunks.length > 0) {
                     int i;
-                    int startOffset = plugin.getRandom().nextInt(chunks.length);
+                    int startOffset = OurRandom.nextInt(chunks.length);
                     for (i = 0; i < chunks.length; i++) {
                         Chunk chunk = chunks[(startOffset + i) % chunks.length];
 

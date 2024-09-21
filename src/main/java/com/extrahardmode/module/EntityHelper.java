@@ -27,6 +27,7 @@ import java.util.Random;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Chicken;
@@ -77,7 +78,7 @@ public class EntityHelper {
      * @param entity - Entity to modify.
      */
     public static void markLootLess(Plugin plugin, LivingEntity entity) {
-        entity.setMetadata(ENVIRONMENTAL_DAMAGE, new FixedMetadataValue(plugin, entity.getMaxHealth()));
+        entity.setMetadata(ENVIRONMENTAL_DAMAGE, new FixedMetadataValue(plugin, entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
     }
 
     /**
@@ -90,7 +91,7 @@ public class EntityHelper {
         double currentTotalDamage = 0.0;
         List<MetadataValue> meta = entity.getMetadata(ENVIRONMENTAL_DAMAGE);
         if (!meta.isEmpty()) {
-            currentTotalDamage = meta.get(0).asDouble();
+            currentTotalDamage = meta.getFirst().asDouble();
         }
         entity.setMetadata(ENVIRONMENTAL_DAMAGE, new FixedMetadataValue(plugin, currentTotalDamage + damage));
     }
@@ -105,11 +106,11 @@ public class EntityHelper {
         double currentTotalDamage = 0.0;
         List<MetadataValue> meta = entity.getMetadata(ENVIRONMENTAL_DAMAGE);
         if (!meta.isEmpty()) {
-            currentTotalDamage = meta.get(0).asDouble();
+            currentTotalDamage = meta.getFirst().asDouble();
         }
         // wither is exempt. he can't be farmed because creating him requires combining
         // non-farmable components
-        return !(entity instanceof Wither) && (currentTotalDamage > entity.getMaxHealth() / 2.0);
+        return !(entity instanceof Wither) && (currentTotalDamage > entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() / 2.0);
     }
 
     /**
@@ -337,11 +338,10 @@ public class EntityHelper {
      */
     public static EntityType shooterType(Projectile projectile) {
         ProjectileSource source = projectile.getShooter();
-        if (!(source instanceof LivingEntity)) {
+        if (!(source instanceof LivingEntity entity)) {
             return EntityType.UNKNOWN;
         }
 
-        LivingEntity entity = (LivingEntity) source;
         return entity.getType();
     }
 

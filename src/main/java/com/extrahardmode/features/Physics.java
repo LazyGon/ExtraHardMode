@@ -30,6 +30,8 @@ import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -120,7 +122,7 @@ public class Physics extends ListenerModule {
         // FEATURE: breaking netherrack may start a fire
         if (netherRackFirePercent > 0 && block.getType() == Material.NETHERRACK && !playerBypasses) {
             Block underBlock = block.getRelative(BlockFace.DOWN);
-            if (underBlock.getType() == Material.NETHERRACK && plugin.random(netherRackFirePercent)) {
+            if (underBlock.getType() == Material.NETHERRACK && OurRandom.percentChance(netherRackFirePercent)) {
                 // TODO EhmNetherrackFireEvent
                 breakEvent.setCancelled(true);
                 block.setType(Material.FIRE);

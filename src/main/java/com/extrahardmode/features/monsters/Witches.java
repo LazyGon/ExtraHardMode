@@ -27,6 +27,7 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.CreateExplosionTask;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -85,7 +86,7 @@ public class Witches extends ListenerModule {
         if (entityType == EntityType.ZOMBIE && world.getEnvironment() == World.Environment.NORMAL
                 && entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS_BLOCK
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(witchSpawnPercent)) {
+            if (OurRandom.percentChance(witchSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.WITCH);
             }
@@ -111,19 +112,19 @@ public class Witches extends ListenerModule {
         if (additionalAttacks && EntityHelper.shooterType(potion) == EntityType.WITCH) {
             Witch witch = (Witch) potion.getShooter();
 
-            int random = plugin.getRandom().nextInt(100);
+            int rand = OurRandom.nextInt(100);
 
             boolean makeExplosion = false;
 
             // 30% summon zombie
-            if (random < 30) {
+            if (rand < 30) {
                 event.setCancelled(true);
 
                 boolean zombieNearby = false;
                 for (Entity entity : location.getChunk().getEntities()) {
                     if (entity.getType() == EntityType.ZOMBIE_VILLAGER) {
                         ZombieVillager zombie = (ZombieVillager) entity;
-                        if (zombie.isBaby()) {
+                        if (!zombie.isAdult()) {
                             zombieNearby = true;
                             break;
                         }
@@ -132,7 +133,7 @@ public class Witches extends ListenerModule {
 
                 if (!zombieNearby) {
                     ZombieVillager zombie = (ZombieVillager) EntityHelper.spawn(location, EntityType.ZOMBIE_VILLAGER);
-                    zombie.setBaby(true);
+                    zombie.setBaby();
                     if (zombie.getTarget() != null) {
                         zombie.setTarget(witch.getTarget());
                     }
@@ -141,11 +142,11 @@ public class Witches extends ListenerModule {
                 } else {
                     makeExplosion = true;
                 }
-            } else if (random < 60) {
+            } else if (rand < 60) {
                 // 30% teleport
                 event.setCancelled(true);
                 witch.teleport(location);
-            } else if (random < 90) {
+            } else if (rand < 90) {
                 // 30% explosion
                 event.setCancelled(true);
                 makeExplosion = true;

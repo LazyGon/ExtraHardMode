@@ -26,22 +26,18 @@ import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.Header;
 import com.extrahardmode.service.config.MultiWorldConfig;
 import com.extrahardmode.service.config.YamlCommentWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  *
  */
 public class RootConfig extends MultiWorldConfig {
-    /**
-     * Constructor
-     */
+
     public RootConfig(ExtraHardMode plugin) {
         super(plugin);
     }
@@ -65,8 +61,7 @@ public class RootConfig extends MultiWorldConfig {
                 Files.createDirectories(mainFile.getParent());
                 Files.createFile(mainFile);
             } catch (IOException e) {
-                plugin.getLogger().severe("Couldn't create config.yml");
-                e.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Couldn't create config.yml", e);
             }
         }
 
@@ -121,35 +116,4 @@ public class RootConfig extends MultiWorldConfig {
         return header;
     }
 
-    /**
-     * find all yml files
-     * loop over all files
-     * determine main file
-     * if doesn't exist -> create
-     * load main file
-     * loop remaining files <-
-     * merge configs
-     * determine disable/inherit values
-     * save files with correct inheritance
-     */
-
-    /**
-     * Search the base directory for yml-files
-     *
-     * @return File[] containing all the *.yml Files in a lexical order
-     */
-    protected File[] findAllYmlFiles(File baseDir) {
-        String[] filePaths = baseDir.list((dir, name) -> {
-            return name.endsWith(".yml"); // TODO - disables
-        });
-        if (filePaths == null) {
-            filePaths = new String[] {};
-        }
-        Arrays.sort(filePaths); // lexically
-        ArrayList<File> files = new ArrayList<>();
-        for (String fileName : filePaths) {
-            files.add(new File(plugin.getDataFolder() + File.separator + fileName));
-        }
-        return files.toArray(new File[0]);
-    }
 }

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -38,38 +39,15 @@ public class VersionCommand implements ICommand {
         sender.sendMessage(
                 ChatColor.GRAY + "========= " + ChatColor.GOLD + plugin.getName() + ChatColor.GRAY + " =========");
         sender.sendMessage(ChatColor.BLUE + "Version: " + ChatColor.WHITE + plugin.getDescription().getVersion());
-        // Read buildnumber from manifest if availible
-        {
-            JarFile pluginFile = null;
-            java.net.URL file = plugin.getClass().getProtectionDomain().getCodeSource().getLocation();
-            try {
-                pluginFile = new JarFile(file.getFile());
-            } catch (IOException ignored) {
-            }
 
-            if (pluginFile != null) {
-                try {
-                    Manifest manifest = pluginFile.getManifest();
-                    if (manifest != null) {
-                        String buildNumber = manifest.getMainAttributes().getValue("Build-Number");
-                        if (buildNumber != null && !buildNumber.isEmpty()) {
-                            sender.sendMessage(ChatColor.BLUE + "Build: " + ChatColor.WHITE + buildNumber);
-                        }
-                    }
-                } catch (IOException ignored) {
-                } finally {
-                    try {
-                        pluginFile.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+        String buildNumber = getBuildNumber(plugin);
+        if (buildNumber != null && !buildNumber.isEmpty()) {
+            sender.sendMessage(ChatColor.BLUE + "Build: " + ChatColor.WHITE + getBuildNumber(plugin));
         }
 
         sender.sendMessage(ChatColor.BLUE + "Author:");
         List<String> authors = plugin.getDescription().getAuthors();
-        sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.get(0)); // author defined by "author:
+        sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.getFirst()); // author defined by "author:
         // xyz" gets always loaded first
 
         sender.sendMessage(ChatColor.BLUE + "Contributors:");
@@ -77,5 +55,21 @@ public class VersionCommand implements ICommand {
             sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.get(i));
         }
         return true;
+    }
+
+    private String getBuildNumber(ExtraHardMode plugin) {
+        // Read buildnumber from manifest if availible
+        java.net.URL file = plugin.getClass().getProtectionDomain().getCodeSource().getLocation();
+        try (JarFile pluginFile = new JarFile(file.getFile())) {
+            Manifest manifest = pluginFile.getManifest();
+            if (manifest != null) {
+                return manifest.getMainAttributes().getValue("Build-Number");
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Cannot read build number from jar file.", e);
+            return null;
+        }
     }
 }

@@ -5,6 +5,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -49,7 +51,7 @@ public class Vex extends ListenerModule {
         // FEATURE: vex spawns naturally
         if (entityType == EntityType.BAT && world.getEnvironment() == World.Environment.NORMAL
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(vexSpawnPercent)) {
+            if (OurRandom.percentChance(vexSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.VEX);
             }

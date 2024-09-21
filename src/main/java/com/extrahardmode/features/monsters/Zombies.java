@@ -46,6 +46,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
+import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -81,7 +82,8 @@ public class Zombies extends ListenerModule {
         playerModule = plugin.getModuleForClass(PlayerModule.class);
         temporaryBlockHandler = plugin.getModuleForClass(TemporaryBlockHandler.class);
         try {
-            CreatureSpawnEvent.SpawnReason doesEnumExist = CreatureSpawnEvent.SpawnReason.REINFORCEMENTS;
+            // does enum exist
+            CreatureSpawnEvent.SpawnReason.REINFORCEMENTS.name();
             hasReinforcements = true;
         } catch (NoSuchFieldError e) {
             hasReinforcements = false;
@@ -113,12 +115,12 @@ public class Zombies extends ListenerModule {
 
                 // Zombies which have respawned already are less likely to respawn
                 int respawnCount = !entity.getMetadata("extrahardmode.zombie.respawncount").isEmpty()
-                        ? entity.getMetadata("extrahardmode.zombie.respawncount").get(0).asInt()
+                        ? entity.getMetadata("extrahardmode.zombie.respawncount").getFirst().asInt()
                         : 0;
                 respawnCount++;
                 zombiesReanimatePercent = (int) ((1.0D / respawnCount) * zombiesReanimatePercent);
 
-                if (!zombie.isVillager() && entity.getFireTicks() < 1
+                if (!(zombie instanceof ZombieVillager) && entity.getFireTicks() < 1
                         && OurRandom.percentChance(zombiesReanimatePercent)) {
                     // Save the incremented respawncount
                     entity.setMetadata("extrahardmode.zombie.respawncount",
@@ -147,7 +149,7 @@ public class Zombies extends ListenerModule {
                         tempBlock = temporaryBlockHandler.addTemporaryBlock(block.getLocation(), "respawn_skull");
                     }
                     RespawnZombieTask task = new RespawnZombieTask(plugin, entity.getLocation(), player, tempBlock);
-                    int respawnSeconds = plugin.getRandom().nextInt(6) + 3; // 3-8 seconds
+                    int respawnSeconds = OurRandom.nextInt(6) + 3; // 3-8 seconds
                     plugin.getServer().getScheduler()
                             .scheduleSyncDelayedTask(plugin, task, 20L * respawnSeconds); // /20L
                     // ~

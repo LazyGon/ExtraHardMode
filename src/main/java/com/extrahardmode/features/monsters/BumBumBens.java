@@ -31,6 +31,7 @@ import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.CoolCreeperExplosion;
 import com.extrahardmode.task.CreateExplosionTask;
 import org.bukkit.Effect;
@@ -89,7 +90,7 @@ public class BumBumBens extends ListenerModule {
 
         // FEATURE: charged creeper spawns
         if (entityType == EntityType.CREEPER) {
-            if (plugin.random(chargedSpawnPercent)) {
+            if (OurRandom.percentChance(chargedSpawnPercent)) {
                 ((Creeper) entity).setPowered(true);
             }
         }
@@ -111,7 +112,7 @@ public class BumBumBens extends ListenerModule {
 
         // FEATURE: creepers may drop activated TNT when they die
         if (creeperDropTNTPercent > 0) {
-            if (entity.getType() == EntityType.CREEPER && plugin.random(creeperDropTNTPercent)
+            if (entity.getType() == EntityType.CREEPER && OurRandom.percentChance(creeperDropTNTPercent)
                     && creeperDropTntMaxY > entity.getLocation().getBlockY()) {
                 final Player player = entity.getKiller();
                 EhmCreeperDropTntEvent dropTntEvent = new EhmCreeperDropTntEvent(player, (Creeper) entity,

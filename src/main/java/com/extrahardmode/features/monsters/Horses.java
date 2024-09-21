@@ -49,12 +49,12 @@ public class Horses extends ListenerModule {
     /**
      * Store the food value of each horse
      */
-    private Map<UUID/* HorseId */, Integer/* Food Value */> healthMap = new HashMap<>(8);
+    private final Map<UUID/* HorseId */, Integer/* Food Value */> healthMap = new HashMap<>(8);
 
     /**
      * Is the horse being ridden and should we drain its food
      */
-    private Set<UUID> horsesBeingRidden = new HashSet<>(8);
+    private final Set<UUID> horsesBeingRidden = new HashSet<>(8);
 
     private RootConfig CFG;
 
@@ -62,7 +62,7 @@ public class Horses extends ListenerModule {
      * This horse has been right clicked with food and player shouldn't mount the
      * horse
      */
-    private Set<UUID> enterMap = new HashSet<>(1);
+    private final Set<UUID> enterMap = new HashSet<>(1);
 
     private final String horseMessage = "extrahardmode.horse.health";
 

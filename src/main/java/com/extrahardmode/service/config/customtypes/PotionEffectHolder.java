@@ -79,7 +79,7 @@ public class PotionEffectHolder {
                 length = section.getString(key_duration, ""),
                 strength = section.getString(key_amplifier, "");
 
-        if (effect.equals("") || length.equals("") || strength.equals("")) {
+        if (effect.isEmpty() || length.isEmpty() || strength.isEmpty()) {
             return null;
         }
 

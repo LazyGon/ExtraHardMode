@@ -26,6 +26,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -85,7 +87,7 @@ public class PigMen extends ListenerModule {
             }
 
             // FEATURE: pig zombies sometimes drop nether wart when slain elsewhere
-            else if (pigWartDropEveryWherePercent > 0 && plugin.random(pigWartDropEveryWherePercent)) {
+            else if (pigWartDropEveryWherePercent > 0 && OurRandom.percentChance(pigWartDropEveryWherePercent)) {
                 event.getDrops().add(new ItemStack(Material.NETHER_WART));
             }
         }
@@ -159,7 +161,7 @@ public class PigMen extends ListenerModule {
         final boolean spawnPigsOnLightning = CFG.getBoolean(RootNode.LIGHTNING_SPAWNS_PIGMEN, world.getName());
 
         if (spawnPigsOnLightning && EntityHelper.simpleIsLocSafeSpawn(loc)) {
-            int rdm = plugin.getRandom().nextInt(10);
+            int rdm = OurRandom.nextInt(10);
             int amount = 1;
             switch (rdm) {
                 case 0:

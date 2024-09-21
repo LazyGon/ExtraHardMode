@@ -5,6 +5,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -55,7 +57,7 @@ public class CaveSpider extends ListenerModule {
                 && entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS_BLOCK
                 && entity.getLocation().getBlock().getBiome() == Biome.SWAMP
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(cavespiderSpawnPercent)) {
+            if (OurRandom.percentChance(cavespiderSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.CAVE_SPIDER);
             }

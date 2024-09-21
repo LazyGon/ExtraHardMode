@@ -22,8 +22,11 @@
 package com.extrahardmode.task;
 
 import com.extrahardmode.ExtraHardMode;
+import com.extrahardmode.service.OurRandom;
+
 import java.util.List;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -72,9 +75,10 @@ public class DragonAttackPatternTask implements Runnable {
         // if the player has been defeated
         if (!this.player.isOnline() || world != this.player.getWorld() || this.player.isDead()) {
             // restore some of the dragon's health
-            int newHealth = (int) (this.dragon.getHealth() + this.dragon.getMaxHealth() * 0.25);
-            if (newHealth > this.dragon.getMaxHealth()) {
-                this.dragon.setHealth(this.dragon.getMaxHealth());
+            double maxHealth = this.dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+            int newHealth = (int) (this.dragon.getHealth() + maxHealth * 0.25);
+            if (newHealth > maxHealth) {
+                this.dragon.setHealth(maxHealth);
             } else {
                 this.dragon.setHealth(newHealth);
             }
@@ -83,9 +87,9 @@ public class DragonAttackPatternTask implements Runnable {
         }
 
         for (int i = 0; i < 3; i++) {
-            DragonAttackTask task = new DragonAttackTask(plugin, this.dragon, this.player);
+            DragonAttackTask task = new DragonAttackTask(this.dragon, this.player);
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task,
-                    20L * (long) i + (long) (plugin.getRandom().nextInt(20)));
+                    20L * (long) i + (long) (OurRandom.nextInt(20)));
         }
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this, 20L * 30L);

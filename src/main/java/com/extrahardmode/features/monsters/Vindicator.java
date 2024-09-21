@@ -5,6 +5,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -53,7 +55,7 @@ public class Vindicator extends ListenerModule {
                 // roofed forest. Need confirmation from
                 // @erik1988 if this is sufficient
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(vindicatorSpawnPercent)) {
+            if (OurRandom.percentChance(vindicatorSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.VINDICATOR);
             }

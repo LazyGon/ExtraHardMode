@@ -139,7 +139,7 @@ public class Skeletors extends ListenerModule {
 
                 Player player = arrow.getShooter() instanceof Player ? (Player) arrow.getShooter() : null;
                 EhmSkeletonDeflectEvent skeliEvent = new EhmSkeletonDeflectEvent(player, (Skeleton) entity,
-                        deflectPercent, !plugin.random(deflectPercent));
+                        deflectPercent, !OurRandom.percentChance(deflectPercent));
                 plugin.getServer().getPluginManager().callEvent(skeliEvent);
 
                 // percent chance
@@ -324,7 +324,7 @@ public class Skeletors extends ListenerModule {
     public static void removeMinionFromSkeli(UUID minionId, LivingEntity summoner) {
         List<MetadataValue> meta = summoner.getMetadata(key_spawnedMinions);
         if (!meta.isEmpty()) {
-            MetadataValue value = meta.get(0);
+            MetadataValue value = meta.getFirst();
             if (value.value() instanceof List<?> v) {
                 v.removeIf(minionId::equals);
             }
@@ -364,7 +364,7 @@ public class Skeletors extends ListenerModule {
         List<MetadataValue> meta = entity.getMetadata(key_totalSpawnedMinions);
         int totalCount = 0;
         if (!meta.isEmpty()) {
-            MetadataValue value = meta.get(0);
+            MetadataValue value = meta.getFirst();
             if (value.value() instanceof Integer) {
                 totalCount = (Integer) value.value();
             }
@@ -401,7 +401,7 @@ public class Skeletors extends ListenerModule {
     public static UUID getParentOfMinion(LivingEntity minion, Plugin plugin) {
         List<MetadataValue> meta = minion.getMetadata(key_parent);
         if (!meta.isEmpty()) {
-            MetadataValue metaVal = meta.get(0);
+            MetadataValue metaVal = meta.getFirst();
             if (metaVal.value() instanceof UUID) {
                 return (UUID) metaVal.value();
             }
@@ -430,7 +430,7 @@ public class Skeletors extends ListenerModule {
         // FEATURE: Skeletons spawns naturally in The End.
         if (entityType == EntityType.ENDERMAN && world.getEnvironment() == World.Environment.THE_END
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(cavespiderSpawnPercent)) {
+            if (OurRandom.percentChance(cavespiderSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.SKELETON);
             }

@@ -9,11 +9,11 @@ import java.util.regex.Pattern;
  * @author Diemex
  */
 public class RegexHelper {
-    private static Pattern onlyNums = Pattern.compile("[^0-9]");
-    private static Pattern onlyEnum = Pattern.compile("[^A-Z_]");
-    private static Pattern containsNums = Pattern.compile(".*\\d.*");
-    private static Pattern containsLetters = Pattern.compile(".*[a-zA-Z_].*");
-    private static Pattern whitespace = Pattern.compile("\\s"); // Includes tabs/newline characters
+    private static final Pattern onlyNums = Pattern.compile("[^0-9]");
+    private static final Pattern onlyEnum = Pattern.compile("[^A-Z_]");
+    private static final Pattern containsNums = Pattern.compile(".*\\d.*");
+    private static final Pattern containsLetters = Pattern.compile(".*[a-zA-Z_].*");
+    private static final Pattern whitespace = Pattern.compile("\\s"); // Includes tabs/newline characters
 
     /**
      * Returns a default value instead of a NumberFormatException when input is

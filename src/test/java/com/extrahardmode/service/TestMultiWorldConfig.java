@@ -39,7 +39,7 @@ public class TestMultiWorldConfig {
     private ExtraHardMode plugin;
 
     // Because MultiworldConfig has a constructor and is an interface
-    private class Mocked extends MultiWorldConfig {
+    private static class Mocked extends MultiWorldConfig {
         public Mocked(ExtraHardMode plugin) {
             super(plugin);
         }

@@ -63,12 +63,12 @@ public class EHMConfig {
     /**
      * Nodes to load from the config
      */
-    private Set<ConfigNode> mConfigNodes = new LinkedHashSet<>();
+    private final Set<ConfigNode> mConfigNodes = new LinkedHashSet<>();
 
     /**
      * Loaded config values
      */
-    private Map<ConfigNode, Object> mLoadedNodes = new HashMap<>();
+    private final Map<ConfigNode, Object> mLoadedNodes = new HashMap<>();
 
     /**
      * Location we loaded the File from
@@ -93,7 +93,7 @@ public class EHMConfig {
     /**
      * Worlds in which this config is active in
      */
-    private Set<String> mWorlds = new LinkedHashSet<>(); // Linked: keeps inserted order
+    private final Set<String> mWorlds = new LinkedHashSet<>(); // Linked: keeps inserted order
 
     /**
      * If this config is enabled for all worlds
@@ -382,6 +382,7 @@ public class EHMConfig {
         for (String world : mWorlds) {
             if (world.equals(MultiWorldConfig.ALL_WORLDS)) {
                 mEnabledForAll = true;
+                break;
             }
         }
     }

@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  * @author Diemex
  */
 public class RegexHelper {
-    private static Pattern onlyNums = Pattern.compile("[^0-9]");
-    private static Pattern onlyEnum = Pattern.compile("[^A-Z_]");
+    private static final Pattern onlyNums = Pattern.compile("[^0-9]");
+    private static final Pattern onlyEnum = Pattern.compile("[^A-Z_]");
 
     public static int parseNumber(String input) throws NumberFormatException {
         int num;

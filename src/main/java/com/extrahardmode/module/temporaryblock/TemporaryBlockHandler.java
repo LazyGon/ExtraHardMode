@@ -16,7 +16,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class TemporaryBlockHandler extends ListenerModule {
-    private Map<LiteLocation, TemporaryBlock> temporaryBlockList = new HashMap<>();
+    private final Map<LiteLocation, TemporaryBlock> temporaryBlockList = new HashMap<>();
 
     public TemporaryBlockHandler(ExtraHardMode plugin) {
         super(plugin);

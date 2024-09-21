@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
  * Represents one line in a scoreboard
  */
 public class MsgLineHolder {
-    private StringBuilder sb = new StringBuilder();
+    private final StringBuilder sb = new StringBuilder();
     private ChatColor lineColor = null;
     private String prefix = "";
     private String suffix = "";

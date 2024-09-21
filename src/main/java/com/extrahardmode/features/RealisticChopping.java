@@ -27,6 +27,7 @@ import com.extrahardmode.module.BlockModule;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.FallingLogsTask;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -120,7 +121,7 @@ public class RealisticChopping extends ListenerModule {
                             // check 2 blocks down for logs to see if it it's a stem
                             if (!Tag.LOGS.isTagged(log.getRelative(BlockFace.DOWN).getType())) {
                                 plugin.getServer().getScheduler().runTaskLater(plugin, new FallingLogsTask(plugin, log),
-                                        plugin.getRandom().nextInt(50/* so they don't fall at once */));
+                                        OurRandom.nextInt(50/* so they don't fall at once */));
                             }
                         }
                     } else if (Tag.LOGS.isTagged(aboveLogType)) {

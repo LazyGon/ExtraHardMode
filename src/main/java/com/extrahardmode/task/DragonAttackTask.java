@@ -21,7 +21,7 @@
 
 package com.extrahardmode.task;
 
-import com.extrahardmode.ExtraHardMode;
+import com.extrahardmode.service.OurRandom;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
@@ -37,11 +37,6 @@ import org.bukkit.util.Vector;
 public class DragonAttackTask implements Runnable {
 
     /**
-     * Plugin instance.
-     */
-    private final ExtraHardMode plugin;
-
-    /**
      * Target player.
      */
     private final Player player;
@@ -54,12 +49,10 @@ public class DragonAttackTask implements Runnable {
     /**
      * Constructor.
      *
-     * @param plugin - Plugin instance.
      * @param dragon - Dragon.
      * @param player - Target player.
      */
-    public DragonAttackTask(ExtraHardMode plugin, Entity dragon, Player player) {
-        this.plugin = plugin;
+    public DragonAttackTask(Entity dragon, Player player) {
         this.dragon = dragon;
         this.player = player;
     }
@@ -81,15 +74,15 @@ public class DragonAttackTask implements Runnable {
         Location dragonLocation = this.dragon.getLocation();
 
         Location targetLocation;
-        if (plugin.random(20)) {
+        if (OurRandom.percentChance(20)) {
             targetLocation = world.getHighestBlockAt(dragonLocation).getLocation();
         } else {
             targetLocation = player.getLocation();
         }
 
-        Location offsetLocation = targetLocation.add(plugin.getRandom().nextInt(10) - 5,
-                plugin.getRandom().nextInt(3) - 1,
-                plugin.getRandom().nextInt(10) - 5);
+        Location offsetLocation = targetLocation.add(OurRandom.nextInt(10) - 5,
+                OurRandom.nextInt(3) - 1,
+                OurRandom.nextInt(10) - 5);
 
         Vector vector = new Vector(offsetLocation.getX() - dragonLocation.getX(),
                 offsetLocation.getY() - dragonLocation.getY(), offsetLocation.getZ()

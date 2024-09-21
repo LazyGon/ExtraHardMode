@@ -6,6 +6,7 @@ import java.util.Random;
  * @author Diemex
  */
 public class OurRandom {
+
     private static Random rdm = new Random();
 
     public static double nextDouble() {
@@ -14,6 +15,14 @@ public class OurRandom {
 
     public static int nextInt(int range) {
         return rdm.nextInt(range);
+    }
+
+    public static float nextFloat() {
+        return rdm.nextFloat();
+    }
+
+    public static boolean nextBoolean() {
+        return rdm.nextBoolean();
     }
 
     public static boolean percentChance(int percentage) {

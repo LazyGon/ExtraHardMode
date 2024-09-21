@@ -31,6 +31,8 @@ import com.extrahardmode.module.PlayerData;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -166,7 +168,7 @@ public class Water extends ListenerModule {
     void drown(Player player, int drowningRate, int overEncumbranceExtra, float cachedWeightStatus, float maxWeight,
                float normalDrownVel, float overwaterDrownVel) {
         if (cachedWeightStatus > maxWeight) {
-            float rdm = plugin.getRandom().nextFloat(); // how expensive is this
+            float rdm = OurRandom.nextFloat(); // how expensive is this
             // drownrate + extra when overencumbered
             float drownPercent = ((float) drowningRate / 500.0F)
                     + ((cachedWeightStatus - maxWeight) * overEncumbranceExtra) / 500.0F;

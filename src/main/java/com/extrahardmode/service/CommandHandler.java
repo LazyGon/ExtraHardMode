@@ -182,7 +182,7 @@ public abstract class CommandHandler implements CommandExecutor {
             return args;
         }
         final List<String> argList = new LinkedList<>(Arrays.asList(args));
-        argList.remove(0);
+        argList.removeFirst();
         return argList.toArray(new String[0]);
     }
 

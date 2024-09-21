@@ -5,6 +5,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -50,7 +52,7 @@ public class KillerBunny extends ListenerModule {
         // FEATURE: killer bunnies spawns naturally
         if (entityType == EntityType.RABBIT && world.getEnvironment() == World.Environment.NORMAL
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(killerBunnySpawnPercent)) {
+            if (OurRandom.percentChance(killerBunnySpawnPercent)) {
                 event.setCancelled(true);
                 Rabbit rabbit = (Rabbit) EntityHelper.spawn(location, EntityType.RABBIT);
                 rabbit.setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);

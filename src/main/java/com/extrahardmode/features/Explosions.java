@@ -29,6 +29,7 @@ import com.extrahardmode.events.fakeevents.FakeEntityExplodeEvent;
 import com.extrahardmode.module.BlockModule;
 import com.extrahardmode.module.UtilityModule;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.CreateExplosionTask;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -290,7 +291,7 @@ public class Explosions extends ListenerModule {
         if (event.getEntity() instanceof FallingBlock fallBaby) {
             Block block = event.getBlock();
             if (fallBaby.hasMetadata(tag)) {
-                Object obj = !fallBaby.getMetadata(tag).isEmpty() ? fallBaby.getMetadata(tag).get(0).value() : null;
+                Object obj = !fallBaby.getMetadata(tag).isEmpty() ? fallBaby.getMetadata(tag).getFirst().value() : null;
                 if (obj instanceof Location loc) {
                     // Compare the distance to the original explosion, dont place block if the block
                     // landed far away (dont make landscape ugly)
@@ -433,7 +434,7 @@ public class Explosions extends ListenerModule {
         for (Block block : blocks) {
             if (block.getType().isSolid()) {
                 // Only a few of the blocks fly as an effect
-                if (plugin.random(flyPercentage)) {
+                if (OurRandom.percentChance(flyPercentage)) {
                     FallingBlock fall = block.getLocation().getWorld().spawnFallingBlock(block.getLocation(),
                             block.getBlockData());
                     fall.setMetadata(tag, new FixedMetadataValue(plugin, block.getLocation())); // decide on the

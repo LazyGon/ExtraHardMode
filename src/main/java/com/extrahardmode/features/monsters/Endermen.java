@@ -26,6 +26,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.events.EhmEndermanTeleportEvent;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -91,7 +93,7 @@ public class Endermen extends ListenerModule {
             }
 
             // half the time, teleport the player instead
-            if (plugin.random(50)) {
+            if (OurRandom.percentChance(50)) {
                 int distanceSquared = (int) player.getLocation().distanceSquared(enderman.getLocation());
 
                 // play sound at old location

@@ -28,6 +28,7 @@ import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.potion.PotionEffectType;
 
 /**
@@ -1492,9 +1493,11 @@ public enum RootNode implements ConfigNode {
             this.add(Material.DIRT.name());
             this.add(Material.GRASS_BLOCK.name());
             this.add(Material.COBBLESTONE.name());
+            this.add(Material.COBBLED_DEEPSLATE.name());
             this.add(Material.MOSSY_COBBLESTONE.name());
             this.add(Material.STONE_SLAB.name());
             this.add(Material.COBBLESTONE_SLAB.name());
+            this.add(Material.COBBLED_DEEPSLATE_SLAB.name());
             this.add(Material.MYCELIUM.name());
         }
     }
@@ -1515,6 +1518,15 @@ public enum RootNode implements ConfigNode {
             this.add(Material.REDSTONE_ORE.name());
             this.add(Material.EMERALD_ORE.name());
             this.add(Material.DIAMOND_ORE.name());
+            this.add(Material.COPPER_ORE.name());
+            this.add(Material.DEEPSLATE_COAL_ORE.name());
+            this.add(Material.DEEPSLATE_IRON_ORE.name());
+            this.add(Material.DEEPSLATE_GOLD_ORE.name());
+            this.add(Material.DEEPSLATE_LAPIS_ORE.name());
+            this.add(Material.DEEPSLATE_REDSTONE_ORE.name());
+            this.add(Material.DEEPSLATE_EMERALD_ORE.name());
+            this.add(Material.DEEPSLATE_DIAMOND_ORE.name());
+            this.add(Material.DEEPSLATE_COPPER_ORE.name());
         }
     }
 
@@ -1544,7 +1556,13 @@ public enum RootNode implements ConfigNode {
          */
         public DefaultStoneBlocks() {
             super();
-            this.add(Material.STONE, Material.COBBLESTONE);
+            for (Material stone : Tag.BASE_STONE_OVERWORLD.getValues()) {
+                if (Tag.DEEPSLATE_ORE_REPLACEABLES.isTagged(stone)) {
+                    this.add(stone, Material.COBBLED_DEEPSLATE);
+                } else {
+                    this.add(stone, Material.COBBLESTONE);
+                }
+            }
         }
     }
 
@@ -1562,8 +1580,9 @@ public enum RootNode implements ConfigNode {
     private static class DefaultHardBlocks extends ArrayList<String> {
         public DefaultHardBlocks() {
             super();
-            this.add(Material.STONE.name());
-
+            for (Material baseStone : Tag.BASE_STONE_OVERWORLD.getValues()) {
+                this.add(baseStone.name());
+            }
         }
     }
 

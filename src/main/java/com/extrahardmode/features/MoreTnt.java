@@ -50,7 +50,7 @@ public class MoreTnt extends ListenerModule {
     public void beforeCraft(PrepareItemCraftEvent event) {
         Inventory inv = event.getInventory();
 
-        if (inv != null && inv.getHolder() != null) {
+        if (inv.getHolder() != null) {
             InventoryHolder human = inv.getHolder();
             if (human instanceof Player player) {
                 World world = player.getWorld();

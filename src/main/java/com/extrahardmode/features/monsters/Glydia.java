@@ -33,6 +33,7 @@ import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.FindAndReplace;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.DragonAttackPatternTask;
 import com.extrahardmode.task.DragonAttackTask;
 import java.util.List;
@@ -40,6 +41,8 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EnderDragon;
@@ -284,9 +287,9 @@ public class Glydia extends ListenerModule {
                 }
 
                 for (int i = 0; i < 5; i++) {
-                    DragonAttackTask task = new DragonAttackTask(plugin, entity, damager);
+                    DragonAttackTask task = new DragonAttackTask(entity, damager);
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task,
-                            20L * (plugin.getRandom().nextInt(15)));
+                            20L * (OurRandom.nextInt(15)));
                 }
 
                 Chunk chunk = damager.getLocation().getChunk();
@@ -340,8 +343,9 @@ public class Glydia extends ListenerModule {
             // if he's there, full health
             if (enderDragon != null) {
                 final int enderDragonHealth = CFG.getInt(RootNode.ENDER_DRAGON_HEALTH, world.getName());
-                enderDragon.setMaxHealth(enderDragonHealth);
-                enderDragon.setHealth(enderDragon.getMaxHealth());
+                AttributeInstance maxHealth = enderDragon.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                maxHealth.setBaseValue(enderDragonHealth);
+                enderDragon.setHealth(maxHealth.getValue());
             }
 
             // otherwise, spawn one
@@ -364,8 +368,9 @@ public class Glydia extends ListenerModule {
             if (enderDragonHealth <= 0) {
                 return;
             }
-            event.getEntity().setMaxHealth(enderDragonHealth);
-            event.getEntity().setHealth(event.getEntity().getMaxHealth());
+            AttributeInstance maxHealth = event.getEntity().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            maxHealth.setBaseValue(enderDragonHealth);
+            event.getEntity().setHealth(maxHealth.getValue());
         }
     }
 
@@ -416,7 +421,7 @@ public class Glydia extends ListenerModule {
                 world.getName());
 
         // FEATURE: ender dragon fireballs may summon minions and/or set fires
-        if (dragonAdditionalAttacks && entity != null && entity.getType() == EntityType.FIREBALL) {
+        if (dragonAdditionalAttacks && entity.getType() == EntityType.FIREBALL) {
             Fireball fireball = (Fireball) entity;
             Entity spawnedMonster = null;
             if (fireball.getShooter() != null && EntityHelper.shooterType(fireball) == EntityType.ENDER_DRAGON) {
@@ -425,9 +430,9 @@ public class Glydia extends ListenerModule {
                 // Start of "ALTERNATIVE_FIREBALL" spawning method
                 if (alternativeFireball) {
 
-                    int random = plugin.getRandom().nextInt(150);
-                    if (random < 100) {
-                        if (random < 10) {
+                    int rand = OurRandom.nextInt(150);
+                    if (rand < 100) {
+                        if (rand < 10) {
                             spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.BLAZE);
                             for (int x1 = -2; x1 <= 2; x1++) {
                                 for (int z1 = -2; z1 <= 2; z1++) {
@@ -450,25 +455,25 @@ public class Glydia extends ListenerModule {
                                     velocity.setY(velocity.getY() * -1);
                                 }
 
-                                if (plugin.getRandom().nextBoolean()) {
+                                if (OurRandom.nextBoolean()) {
                                     velocity.setZ(velocity.getZ() * -1);
                                 }
 
-                                if (plugin.getRandom().nextBoolean()) {
+                                if (OurRandom.nextBoolean()) {
                                     velocity.setX(velocity.getX() * -1);
                                 }
 
                                 fire.setVelocity(velocity);
                             }
 
-                        } else if (random < 50) {
+                        } else if (rand < 50) {
 
                             for (int i = 0; i < 2; i++) {
                                 spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(),
                                         EntityType.ZOMBIE_VILLAGER);
                                 EntityHelper.markLootLess(plugin, (LivingEntity) spawnedMonster);
                             }
-                        } else if (random < 80) {
+                        } else if (rand < 80) {
                             for (int i = 0; i < 2; i++) {
                                 spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(),
                                         EntityType.SKELETON);
@@ -481,8 +486,8 @@ public class Glydia extends ListenerModule {
                 // End of "ALTERNATIVE_FIREBALL" spawning method.
                 // Begin of the normal spawning method.
                 else {
-                    int random = plugin.getRandom().nextInt(100);
-                    if (random < 40) {
+                    int rand = OurRandom.nextInt(100);
+                    if (rand < 40) {
                         spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.BLAZE);
 
                         for (int x1 = -2; x1 <= 2; x1++) {
@@ -505,15 +510,15 @@ public class Glydia extends ListenerModule {
                             if (velocity.getY() < 0) {
                                 velocity.setY(velocity.getY() * -1);
                             }
-                            if (plugin.getRandom().nextBoolean()) {
+                            if (OurRandom.nextBoolean()) {
                                 velocity.setZ(velocity.getZ() * -1);
                             }
-                            if (plugin.getRandom().nextBoolean()) {
+                            if (OurRandom.nextBoolean()) {
                                 velocity.setX(velocity.getX() * -1);
                             }
                             fire.setVelocity(velocity);
                         }
-                    } else if (random < 70) {
+                    } else if (rand < 70) {
                         for (int i = 0; i < 2; i++) {
                             spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(),
                                     EntityType.ZOMBIE_VILLAGER);

@@ -182,7 +182,7 @@ public class AntiFarming extends ListenerModule {
                 "BlockGrowEvent block material: " + block.getType().name() + ", location: " + block.getLocation());
         MaterialData newStateData = event.getNewState().getData();
         plugin.debug(block.getWorld(), "Successfully retrieved getNewState#getData");
-        if (weakCropsEnabled && plugin.getModuleForClass(BlockModule.class).plantDies(block, newStateData)) {
+        if (plugin.getModuleForClass(BlockModule.class).plantDies(block, newStateData)) {
             event.setCancelled(true);
             // shrub gets removed on farmland
             event.getBlock().getRelative(BlockFace.DOWN).setType(Material.DIRT);
@@ -390,9 +390,7 @@ public class AntiFarming extends ListenerModule {
             final Player player = event.getPlayer();
             // Bucket displays as full, derpy inventories, run next tick
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                if (player != null) {
-                    player.updateInventory();
-                }
+                player.updateInventory();
             });
         }
     }

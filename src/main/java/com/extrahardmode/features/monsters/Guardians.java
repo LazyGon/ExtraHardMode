@@ -5,6 +5,8 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
+import com.extrahardmode.service.OurRandom;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -56,7 +58,7 @@ public class Guardians extends ListenerModule {
                 && entity.getLocation().getBlock().getBiome() == Biome.DEEP_OCEAN
                 || entity.getLocation().getBlock().getBiome() == Biome.OCEAN
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-            if (plugin.random(guardiansSpawnPercent)) {
+            if (OurRandom.percentChance(guardiansSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.GUARDIAN);
             }

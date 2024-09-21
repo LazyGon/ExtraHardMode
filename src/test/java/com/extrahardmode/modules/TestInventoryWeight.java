@@ -28,11 +28,11 @@ import com.extrahardmode.module.PlayerModule;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Max
@@ -64,7 +64,7 @@ public class TestInventoryWeight {
 
     private final ItemStack[] emptyInv = new ItemStack[4 * 9];
 
-    @Before
+    @BeforeEach
     public void prepare() {
         module = new PlayerModule(plugin);
     }
@@ -75,16 +75,16 @@ public class TestInventoryWeight {
     @Test
     public void armorTest() {
         new MockPlayerInventory(myPlayer, emptyArmor, emptyInv);
-        assertEquals("Empty inventory = no weight ", 0, module.inventoryWeight(myPlayer, 15, 5, 5), 0);
+        assertEquals(0, module.inventoryWeight(myPlayer, 15, 5, 5), 0, "Empty inventory = no weight ");
 
         new MockPlayerInventory(myPlayer, oneArmor, emptyInv);
-        assertEquals("One piece ", 15, module.inventoryWeight(myPlayer, 15, 5, 5), 0);
+        assertEquals(15, module.inventoryWeight(myPlayer, 15, 5, 5), 0, "One piece ");
 
         new MockPlayerInventory(myPlayer, twoArmor, emptyInv);
-        assertEquals("Two pieces ", 12, module.inventoryWeight(myPlayer, 6, 5, 5), 0);
+        assertEquals(12, module.inventoryWeight(myPlayer, 6, 5, 5), 0, "Two pieces ");
 
         new MockPlayerInventory(myPlayer, fullArmor, emptyInv);
-        assertEquals("Full armor ", 8, module.inventoryWeight(myPlayer, 2, 5, 5), 0);
+        assertEquals(8, module.inventoryWeight(myPlayer, 2, 5, 5), 0, "Full armor ");
     }
 
     /**
@@ -115,6 +115,6 @@ public class TestInventoryWeight {
 
         new MockPlayerInventory(myPlayer, fullArmor, inv);
 
-        assertEquals("See comment for calculation", 143, module.inventoryWeight(myPlayer, 5, 64, 1), 0);
+        assertEquals(143, module.inventoryWeight(myPlayer, 5, 64, 1), 0, "See comment for calculation");
     }
 }

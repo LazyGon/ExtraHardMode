@@ -24,9 +24,9 @@ package com.extrahardmode.modules;
 import com.extrahardmode.module.UtilityModule;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Diemex

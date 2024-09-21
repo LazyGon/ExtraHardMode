@@ -22,8 +22,7 @@
 package com.extrahardmode.config;
 
 import com.extrahardmode.ExtraHardMode;
-import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,8 +30,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test the MultiWorldConfig
@@ -116,41 +116,46 @@ class TestRootConfig {
     /**
      * Getting a boolean with an illegal argument
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void illegalArgumentBoolean() {
-        cfg.getBoolean(RootNode.WORLDS, "");
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> cfg.getBoolean(RootNode.WORLDS, ""));
     }
 
     /**
      * Getting an int with an illegal argument
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void illegalArgumentInt() {
-        cfg.getInt(RootNode.MORE_FALLING_BLOCKS, "");
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> cfg.getInt(RootNode.MORE_FALLING_BLOCKS, ""));
     }
 
     /**
      * Getting a double with an illegal argument
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void illegalArgumentDouble() {
-        cfg.getDouble(RootNode.ARID_DESSERTS, "");
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> cfg.getDouble(RootNode.ARID_DESSERTS, ""));
     }
 
     /**
      * Getting a string with an illegal argument
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void illegalArgumentString() {
-        cfg.getString(RootNode.BONUS_NETHER_BLAZE_SPAWN_PERCENT, "");
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> cfg.getString(RootNode.BONUS_NETHER_BLAZE_SPAWN_PERCENT, ""));
     }
 
     /**
      * Getting a list with an illegal argument
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void illegalArgumentStringList() {
-        cfg.getStringList(RootNode.ANIMAL_EXP_NERF, "");
+        assertThrowsExactly(IllegalArgumentException.class,
+                () -> cfg.getStringList(RootNode.ANIMAL_EXP_NERF, ""));
     }
 
     @Test

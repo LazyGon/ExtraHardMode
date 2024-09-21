@@ -34,14 +34,14 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class TestAntiGrinder {
@@ -62,10 +62,10 @@ public class TestAntiGrinder {
     public void spawnerSpawns() {
         CreatureSpawnEvent event = new MockCreatureSpawnEvent(EntityType.BLAZE, "world",
                 CreatureSpawnEvent.SpawnReason.SPAWNER).get();
-        assertFalse("Spawners should drop no exp", module.handleEntitySpawn(event));
+        assertFalse(module.handleEntitySpawn(event), "Spawners should drop no exp");
 
         event = new MockCreatureSpawnEvent(EntityType.ENDERMAN, "world", CreatureSpawnEvent.SpawnReason.SPAWNER).get();
-        assertFalse("Spawners should drop no exp", module.handleEntitySpawn(event));
+        assertFalse(module.handleEntitySpawn(event), "Spawners should drop no exp");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TestAntiGrinder {
         MockWorld world = event.getWorld();
         world.setEnvironment(World.Environment.NORMAL);
 
-        assertTrue("Zombie spawn succeeds", module.handleEntitySpawn(event.get()));
+        assertTrue(module.handleEntitySpawn(event.get()), "Zombie spawn succeeds");
     }
 
     @Test
@@ -115,7 +115,7 @@ public class TestAntiGrinder {
         MockWorld world = event.getWorld();
         world.setEnvironment(World.Environment.NETHER);
 
-        assertTrue("Natural spawn in the Nether failed", module.handleEntitySpawn(event.get()));
+        assertTrue(module.handleEntitySpawn(event.get()), "Natural spawn in the Nether failed");
 
         world.setEnvironment(World.Environment.NETHER);
 
@@ -123,7 +123,7 @@ public class TestAntiGrinder {
         relative.setMaterial(Material.COBBLESTONE);
         block.setRelative(BlockFace.DOWN, relative.get());
 
-        assertFalse("Natural spawn in a not natural Location succeeded", module.handleEntitySpawn(event.get()));
+        assertFalse(module.handleEntitySpawn(event.get()), "Natural spawn in a not natural Location succeeded");
 
         // NetherRack doesn't spawn in the OverWorld
         relative.setMaterial(Material.NETHERRACK);
@@ -131,6 +131,6 @@ public class TestAntiGrinder {
 
         world.setEnvironment(World.Environment.NORMAL);
 
-        assertFalse("Spawn on NetherRack in the OverWorld should have failed", module.handleEntitySpawn(event.get()));
+        assertFalse(module.handleEntitySpawn(event.get()), "Spawn on NetherRack in the OverWorld should have failed");
     }
 }

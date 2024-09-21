@@ -26,13 +26,13 @@ import com.extrahardmode.mocks.MockBlock;
 import com.extrahardmode.module.BlockModule;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

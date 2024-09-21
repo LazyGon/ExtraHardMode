@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
 @ExtendWith(MockitoExtension.class)
 // @PrepareForTest({RootConfig.class, ExtraHardMode.class}) //Breaks in JDK 11
 // apparently
-public class TestRootConfig {
+class TestRootConfig {
     @Mock
     private ExtraHardMode plugin;
 

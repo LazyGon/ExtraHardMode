@@ -28,7 +28,7 @@ import com.extrahardmode.config.messages.MsgCategory;
 import com.extrahardmode.service.EHMModule;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import java.sql.*;
 import java.util.HashMap;

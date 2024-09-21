@@ -3,7 +3,7 @@ package de.diemex.scoreboardnotifier;
 import de.diemex.scoreboardnotifier.message.MsgLineHolder;
 import de.diemex.scoreboardnotifier.message.MsgSettings;
 import de.diemex.scoreboardnotifier.message.StringUtil;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import java.util.List;
 

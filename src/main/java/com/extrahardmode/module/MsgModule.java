@@ -31,7 +31,7 @@ import com.extrahardmode.service.PermissionNode;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import de.diemex.scoreboardnotifier.NotificationManager;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

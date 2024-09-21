@@ -25,7 +25,7 @@ import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.IoHelper;
 import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.ModularConfig;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;

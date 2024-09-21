@@ -80,12 +80,14 @@ public class PigMen extends ListenerModule {
         // FEATURE: pig zombies drop nether wart when slain in nether fortresses
         if (world.getEnvironment().equals(World.Environment.NETHER) && entity instanceof PigZombie) {
             Block underBlock = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
-            if (pigWartFortress && underBlock.getType() == Material.NETHER_BRICK)
+            if (pigWartFortress && underBlock.getType() == Material.NETHER_BRICK) {
                 event.getDrops().add(new ItemStack(Material.NETHER_WART));
+            }
 
             // FEATURE: pig zombies sometimes drop nether wart when slain elsewhere
-            else if (pigWartDropEveryWherePercent > 0 && plugin.random(pigWartDropEveryWherePercent))
+            else if (pigWartDropEveryWherePercent > 0 && plugin.random(pigWartDropEveryWherePercent)) {
                 event.getDrops().add(new ItemStack(Material.NETHER_WART));
+            }
         }
     }
 
@@ -137,8 +139,9 @@ public class PigMen extends ListenerModule {
         double damagePercentage = CFG.getInt(RootNode.PIG_ZOMBIE_DMG_PERCENT, event.getEntity().getWorld().getName())
                 / 100.0;
 
-        if (damagePercentage > 0.0 && event.getEntity() instanceof Player && event.getDamager() instanceof PigZombie)
+        if (damagePercentage > 0.0 && event.getEntity() instanceof Player && event.getDamager() instanceof PigZombie) {
             event.setDamage(event.getDamage() * damagePercentage);
+        }
     }
 
     /**

@@ -139,18 +139,20 @@ public class Water extends ListenerModule {
                                 BlockFace.EAST,
                                 BlockFace.SOUTH_EAST,
                                 BlockFace.SOUTH,
-                                BlockFace.SOUTH_WEST };
+                                BlockFace.SOUTH_WEST};
                         Location loc = player.getLocation();
                         boolean isWaterNear = false;
                         for (BlockFace face : faces) {
                             Material nearType = loc.getBlock().getRelative(face).getType();
-                            if (nearType.equals(Material.WATER))
+                            if (nearType.equals(Material.WATER)) {
                                 isWaterNear = true;
+                            }
                         }
-                        if (isWaterNear)
+                        if (isWaterNear) {
                             drown(player, drowningRate, overEncumbranceExtra, playerData.cachedWeightStatus, maxWeight,
                                     normalDrownVel + 0.3F, normalDrownVel + 0.3F); // the water flowing down pulls you
-                                                                                   // down
+                        }
+                        // down
                     }
                 }
             }
@@ -162,7 +164,7 @@ public class Water extends ListenerModule {
      */
 
     void drown(Player player, int drowningRate, int overEncumbranceExtra, float cachedWeightStatus, float maxWeight,
-            float normalDrownVel, float overwaterDrownVel) {
+               float normalDrownVel, float overwaterDrownVel) {
         if (cachedWeightStatus > maxWeight) {
             float rdm = plugin.getRandom().nextFloat(); // how expensive is this
             // drownrate + extra when overencumbered
@@ -172,10 +174,12 @@ public class Water extends ListenerModule {
                 Vector vec = player.getVelocity();
                 // when floating on top of water pull down more
                 Material material = player.getLocation().getBlock().getRelative((BlockFace.UP)).getType();
-                if (material.equals(Material.AIR))
+                if (material.equals(Material.AIR)) {
                     vec.setY(overwaterDrownVel);
-                else // when under water
+                } else // when under water
+                {
                     vec.setY(normalDrownVel);
+                }
                 player.setVelocity(vec);
                 messenger.send(player, MessageNode.NO_SWIMMING_IN_ARMOR);
             }
@@ -202,8 +206,9 @@ public class Water extends ListenerModule {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onPlayerPickupItem(EntityPickupItemEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER)
+        if (event.getEntityType() != EntityType.PLAYER) {
             return;
+        }
 
         // FEATURE: players can't swim when they're carrying a lot of weight
         Player player = (Player) event.getEntity();

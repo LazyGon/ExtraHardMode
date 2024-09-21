@@ -1,8 +1,6 @@
-
 package com.extrahardmode.features.monsters;
 
 import com.extrahardmode.ExtraHardMode;
-
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
@@ -10,7 +8,8 @@ import com.extrahardmode.service.ListenerModule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -39,8 +38,9 @@ public class Vindicator extends ListenerModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (EntityHelper.isMarkedAsOurs(entity))
+        if (EntityHelper.isMarkedAsOurs(entity)) {
             return;
+        }
         Location location = event.getLocation();
         World world = location.getWorld();
         EntityType entityType = entity.getType();
@@ -50,8 +50,8 @@ public class Vindicator extends ListenerModule {
         // FEATURE: Vindicator spawns naturally
         if (entityType == EntityType.SKELETON && world.getEnvironment() == World.Environment.NORMAL
                 && entity.getLocation().getBlock().getBiome() == Biome.FOREST // TODO: formerly roofed and mutated
-                                                                              // roofed forest. Need confirmation from
-                                                                              // @erik1988 if this is sufficient
+                // roofed forest. Need confirmation from
+                // @erik1988 if this is sufficient
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
             if (plugin.random(vindicatorSpawnPercent)) {
                 event.setCancelled(true);

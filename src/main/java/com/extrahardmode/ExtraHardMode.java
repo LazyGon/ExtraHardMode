@@ -72,14 +72,13 @@ import com.extrahardmode.service.IModule;
 import com.extrahardmode.service.OurRandom;
 import com.extrahardmode.task.MoreMonstersTask;
 import com.extrahardmode.task.WeightCheckTask;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Main plugin class.
@@ -111,8 +110,9 @@ public class ExtraHardMode extends JavaPlugin {
         MessageConfig config = new MessageConfig(this);
         registerModule(MessageConfig.class, config);
         String prefix = config.getString(MessageNode.EHM_CHAT_PREFIX);
-        if (prefix != null)
+        if (prefix != null) {
             TAG = prefix;
+        }
 
         File rootFolder = new File(getDataFolder().getPath() + File.separator + "persistence" + File.separator);
         rootFolder.mkdirs();
@@ -171,7 +171,7 @@ public class ExtraHardMode extends JavaPlugin {
         registerModule(CaveSpider.class, new CaveSpider(this));
         registerModule(Guardians.class, new Guardians(this));
         registerModule(Vex.class, new Vex(this));
-        
+
         // Compatibility
         registerModule(CompatHandler.class, new CompatHandler(this));
         registerModule(ExplosionCompatStorage.class, new ExplosionCompatStorage(this));
@@ -188,12 +188,15 @@ public class ExtraHardMode extends JavaPlugin {
         // Feature: check weight task if no swimming in armor active and feature active
         // in at least one world
         boolean active = false;
-        for (World world : getServer().getWorlds())
-            if (getModuleForClass(RootConfig.class).getBoolean(RootNode.NO_SWIMMING_IN_ARMOR, world.getName()))
+        for (World world : getServer().getWorlds()) {
+            if (getModuleForClass(RootConfig.class).getBoolean(RootNode.NO_SWIMMING_IN_ARMOR, world.getName())) {
                 active = true;
-        if (active)
+            }
+        }
+        if (active) {
             this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new WeightCheckTask(this), 20L * 5,
                     20L * 5);
+        }
 
         // Armor task
         /*
@@ -214,18 +217,21 @@ public class ExtraHardMode extends JavaPlugin {
     }
 
     public void debug(World world, String message) {
-        if ((getModuleForClass(RootConfig.class)).getBoolean(RootNode.DEBUG, world.getName()))
+        if ((getModuleForClass(RootConfig.class)).getBoolean(RootNode.DEBUG, world.getName())) {
             this.getLogger().info(message);
+        }
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
         // Gracefully stop all modules
-        for (IModule module : modules.values())
+        for (IModule module : modules.values()) {
             module.closing();
-        for (Player player : getServer().getOnlinePlayers())
+        }
+        for (Player player : getServer().getOnlinePlayers()) {
             player.setWalkSpeed(0.2F);
+        }
         this.getServer().getScheduler().cancelTasks(this);
         modules.clear();
     }
@@ -234,7 +240,6 @@ public class ExtraHardMode extends JavaPlugin {
      * Computes random chance
      *
      * @param percentChance - Percentage of success.
-     *
      * @return True if it was successful, else false.
      */
     public boolean random(int percentChance) {
@@ -259,7 +264,6 @@ public class ExtraHardMode extends JavaPlugin {
      *
      * @param clazz  - Class of the instance.
      * @param module - Module instance.
-     *
      * @throws IllegalArgumentException - Thrown if an argument is null.
      */
     <T extends IModule> void registerModule(Class<T> clazz, T module) {
@@ -279,9 +283,8 @@ public class ExtraHardMode extends JavaPlugin {
      * Deregister a module.
      *
      * @param clazz - Class of the instance.
-     *
      * @return Module that was removed. Returns null if no instance of the module is
-     *         registered.
+     * registered.
      */
     public <T extends IModule> T deregisterModuleForClass(Class<T> clazz) {
         // Check arguments.
@@ -300,9 +303,8 @@ public class ExtraHardMode extends JavaPlugin {
      * Retrieve a registered module.
      *
      * @param clazz - Class identifier.
-     *
      * @return Module instance. Returns null is an instance of the given class has
-     *         not been registered with the API.
+     * not been registered with the API.
      */
     public <T extends IModule> T getModuleForClass(Class<T> clazz) {
         return clazz.cast(modules.get(clazz));
@@ -319,14 +321,16 @@ public class ExtraHardMode extends JavaPlugin {
 
     /**
      * Determines if a config node is enabled in any world
-     * 
+     *
      * @param node
      * @return True if enabled in a world, false if disabled everywhere
      */
     public boolean isNodeEnabled(RootNode node) {
-        for (World world : getServer().getWorlds())
-            if (getModuleForClass(RootConfig.class).getBoolean(node, world.getName()))
+        for (World world : getServer().getWorlds()) {
+            if (getModuleForClass(RootConfig.class).getBoolean(node, world.getName())) {
                 return true;
+            }
+        }
         return false;
     }
 }

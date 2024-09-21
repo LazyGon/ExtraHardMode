@@ -1,20 +1,19 @@
 package com.extrahardmode.service.config.customtypes;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * Holds a relationship. BlockTypes can be retrieved by their key BlockType. F.e
  * stone -> cobblestone
  *
  * @deprecated Was originally used to hold the now-deprecated BlockTypes. Maybe
- *             now just overkill? idk.
- *
- *             Only used for the "soften surrounding stone" feature, turning one
- *             block (e.g. stone) into another (e.g. cobblestone)
+ * now just overkill? idk.
+ * <p>
+ * Only used for the "soften surrounding stone" feature, turning one
+ * block (e.g. stone) into another (e.g. cobblestone)
  */
 @Deprecated
 public class BlockRelationsList {
@@ -31,17 +30,20 @@ public class BlockRelationsList {
      *                     match it won't be added
      */
     public void addFromConfig(String configString) {
-        if (configString == null)
+        if (configString == null) {
             return;
+        }
 
         String[] splitted = configString.split("-");
-        if (splitted.length < 2)
+        if (splitted.length < 2) {
             return;
+        }
 
         Material block1 = Material.matchMaterial(splitted[0]);
         Material block2 = Material.matchMaterial(splitted[1]);
-        if (block1 != null && block2 != null)
+        if (block1 != null && block2 != null) {
             add(block1, block2);
+        }
     }
 
     /**
@@ -50,8 +52,9 @@ public class BlockRelationsList {
      * @return list of block relations
      */
     public String[] toConfigStrings() {
-        if (mBlockRelations.isEmpty())
-            return new String[] { "" };
+        if (mBlockRelations.isEmpty()) {
+            return new String[] {""};
+        }
         String[] configStrings = new String[mBlockRelations.size()];
         int i = 0;
         for (Map.Entry<Material, Material> relation : mBlockRelations.entrySet()) {
@@ -67,9 +70,11 @@ public class BlockRelationsList {
 
     public Material get(Block block) {
         Material material = block.getType();
-        for (Map.Entry<Material, Material> entry : mBlockRelations.entrySet())
-            if (entry.getKey() == material)
+        for (Map.Entry<Material, Material> entry : mBlockRelations.entrySet()) {
+            if (entry.getKey() == material) {
                 return entry.getValue();
+            }
+        }
         return null;
     }
 

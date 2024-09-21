@@ -49,9 +49,11 @@ public class Response<T> {
     @Override
     public boolean equals(Object other) {
         if (other instanceof Response<?> otherR) {
-            return otherR.getStatusCode() == this.getStatusCode() && Objects.equals(this.getContent(), otherR.getContent());
-        } else
+            return otherR.getStatusCode() == this.getStatusCode() &&
+                    Objects.equals(this.getContent(), otherR.getContent());
+        } else {
             return false;
+        }
     }
 
     /**

@@ -22,12 +22,10 @@
 package com.extrahardmode.task;
 
 import com.extrahardmode.ExtraHardMode;
-import com.extrahardmode.config.RootConfig;
+import java.util.List;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 /**
  * Task to handle the dragon's attack pattern.
@@ -57,7 +55,7 @@ public class DragonAttackPatternTask implements Runnable {
      * @param playersFightingDragon - All fighting players.
      */
     public DragonAttackPatternTask(ExtraHardMode plugin, LivingEntity dragon, Player player,
-            List<String> playersFightingDragon) {
+                                   List<String> playersFightingDragon) {
         this.plugin = plugin;
         this.dragon = dragon;
         this.player = player;
@@ -65,8 +63,9 @@ public class DragonAttackPatternTask implements Runnable {
 
     @Override
     public void run() {
-        if (this.dragon.isDead())
+        if (this.dragon.isDead()) {
             return;
+        }
 
         World world = this.dragon.getWorld();
 

@@ -22,21 +22,31 @@
 package com.extrahardmode.config;
 
 import com.extrahardmode.service.IoHelper;
-import com.extrahardmode.service.config.*;
+import com.extrahardmode.service.config.ConfigNode;
+import com.extrahardmode.service.config.Header;
+import com.extrahardmode.service.config.Mode;
+import com.extrahardmode.service.config.MultiWorldConfig;
+import com.extrahardmode.service.config.Status;
+import com.extrahardmode.service.config.Validation;
 import com.extrahardmode.service.config.customtypes.BlockRelationsList;
 import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.*;
 
 /**
  * A Wrapper that contains
@@ -169,7 +179,7 @@ public class EHMConfig {
 
     /**
      * Initializes and fully loads this configuration
-     * 
+     *
      * <pre>
      * - load mode
      * - load worlds
@@ -178,8 +188,9 @@ public class EHMConfig {
      * </pre>
      */
     public void load() {
-        if (mConfigNodes.isEmpty())
+        if (mConfigNodes.isEmpty()) {
             throw new IllegalStateException("You forgot to add nodes to " + mConfigFile.getName());
+        }
         loadMode();
         loadCommentOptions();
         loadNodes();
@@ -191,11 +202,13 @@ public class EHMConfig {
      * Saves the config to file
      */
     public void save() {
-        if (mLoadedNodes.isEmpty())
+        if (mLoadedNodes.isEmpty()) {
             throw new IllegalStateException("No nodes are loaded, nothing to save to " + mConfigFile.getName());
+        }
         saveNodes();
-        if (mPrintHeader)
+        if (mPrintHeader) {
             writeHeader();
+        }
     }
 
     public Map<ConfigNode, Object> getLoadedNodes() {
@@ -344,15 +357,17 @@ public class EHMConfig {
         // DETERMINE MODE FIRST
         String modeString = mConfig.getString(mModeNode.getPath());
         try {
-            if (modeString != null)
+            if (modeString != null) {
                 setMode(Mode.valueOf(modeString.toUpperCase()));
+            }
         } catch (IllegalArgumentException ignored) {
         } finally {
             if (getMode() == null || getMode() == Mode.NOT_SET) {
-                if (isMainConfig())
+                if (isMainConfig()) {
                     setMode(Mode.MAIN);
-                else
+                } else {
                     setMode(Mode.INHERIT);
+                }
             }
         }
     }
@@ -364,9 +379,11 @@ public class EHMConfig {
         mWorlds.addAll((List<String>) mLoadedNodes.get(RootNode.WORLDS));
 
         // Check for all worlds placeholder = Enables plugin for all worlds
-        for (String world : mWorlds)
-            if (world.equals(MultiWorldConfig.ALL_WORLDS))
+        for (String world : mWorlds) {
+            if (world.equals(MultiWorldConfig.ALL_WORLDS)) {
                 mEnabledForAll = true;
+            }
+        }
     }
 
     public void loadCommentOptions() {
@@ -465,13 +482,15 @@ public class EHMConfig {
                 // TODO ADD BLOCKTYPE_LIST
                 default: {
                     Object validateMe = mLoadedNodes.get(node);
-                    if (validateMe == null)
+                    if (validateMe == null) {
                         mLoadedNodes.put(node, node.getDefaultValue());
+                    }
                 }
             }
             // Make sure the string of the node matches
-            if (node == mModeNode)
+            if (node == mModeNode) {
                 mLoadedNodes.put(node, mMode.name());
+            }
         }
     }
 
@@ -519,29 +538,19 @@ public class EHMConfig {
     }
 
     private void writeHeader() {
-        if (mHeader == null)
+        if (mHeader == null) {
             return;
-        ByteArrayOutputStream memHeaderStream = null;
-        OutputStreamWriter memWriter = null;
-        try {
+        }
+
+        try (ByteArrayOutputStream memHeaderStream = new ByteArrayOutputStream();
+             OutputStreamWriter memWriter = new OutputStreamWriter(memHeaderStream,
+                     StandardCharsets.UTF_8.newEncoder())) {
             // Write Header to a temporary file
-            memHeaderStream = new ByteArrayOutputStream();
-            memWriter = new OutputStreamWriter(memHeaderStream, StandardCharsets.UTF_8.newEncoder());
-            memWriter.write(String.format(mHeader.toString()));
-            memWriter.close();
+            memWriter.write(mHeader.toString());
             // Copy Header to the beginning of the config file
             IoHelper.writeHeader(mConfigFile, memHeaderStream);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (memHeaderStream != null)
-                    memHeaderStream.close();
-                if (memWriter != null)
-                    memWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -559,8 +568,9 @@ public class EHMConfig {
      * @return if the config can be loaded
      */
     public boolean isValid() {
-        if (mConfig == null)
+        if (mConfig == null) {
             throw new IllegalStateException("FileConfiguration hasn't been loaded yet");
+        }
         return (mConfig.getValues(true).containsKey(RootNode.baseNode())
                 && mConfig.getStringList(RootNode.WORLDS.getPath()) != null) || isMainConfig();
     }

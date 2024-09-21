@@ -33,7 +33,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Blaze;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -146,12 +152,13 @@ public class Blazes extends ListenerModule {
             // Label explosion as creeper
             Creeper creeper = world.spawn(entity.getLocation(), Creeper.class);
             creeper.remove();
-            new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.OVERWORLD_BLAZE, creeper).run(); // equal
-                                                                                                                 // to a
-                                                                                                                 // TNT
-                                                                                                                 // blast,
-                                                                                                                 // sets
-                                                                                                                 // fires
+            new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.OVERWORLD_BLAZE,
+                    creeper).run(); // equal
+            // to a
+            // TNT
+            // blast,
+            // sets
+            // fires
             // fire a fireball straight up in normal worlds
             Fireball fireball = (Fireball) world.spawnEntity(entity.getLocation(), EntityType.FIREBALL);
             fireball.setDirection(new Vector(0, 10, 0));
@@ -215,9 +222,9 @@ public class Blazes extends ListenerModule {
             Fireball ball = world.spawn(entity.getLocation(), Fireball.class);
             ball.remove();
             new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.MAGMACUBE_FIRE, ball).run(); // fiery
-                                                                                                             // explosion
-                                                                                                             // for
-                                                                                                             // effect
+            // explosion
+            // for
+            // effect
             // TODO EhmMagmaCubeExplodeEvent
         }
 
@@ -234,8 +241,9 @@ public class Blazes extends ListenerModule {
                     for (int i = 0; i < 50; i++) {
                         if (underBlock.getType() == Material.AIR) {
                             underBlock = underBlock.getRelative(BlockFace.DOWN);
-                        } else
+                        } else {
                             break;
+                        }
                     }
                     block = underBlock.getRelative(BlockFace.UP);
                     if (block.getType() == Material.AIR && underBlock.getType() != Material.AIR

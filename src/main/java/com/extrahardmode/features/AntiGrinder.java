@@ -32,7 +32,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -65,7 +70,9 @@ public class AntiGrinder extends ListenerModule {
         this.blockModule = blockModule;
     }
 
-    /** Your basic constructor of choice */
+    /**
+     * Your basic constructor of choice
+     */
     public AntiGrinder(ExtraHardMode plugin) {
         super(plugin);
     }
@@ -224,7 +231,7 @@ public class AntiGrinder extends ListenerModule {
                                     new Location(monsterEyeLocation.getWorld(),
                                             0.8 * monsterEyeLocation.getX() + 0.2 * playerEyeLocation.getX(),
                                             monsterEyeLocation.getY(),
-                                            0.8 * monsterEyeLocation.getZ() + 0.2 * playerEyeLocation.getZ()), };
+                                            0.8 * monsterEyeLocation.getZ() + 0.2 * playerEyeLocation.getZ()),};
 
                             for (Location middleLocation : locations) {
                                 // monster is blocked at eye level, unable to advance toward killer

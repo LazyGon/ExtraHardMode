@@ -23,14 +23,13 @@ package com.extrahardmode.command;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.ICommand;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 
 public class VersionCommand implements ICommand {
 
@@ -53,8 +52,9 @@ public class VersionCommand implements ICommand {
                     Manifest manifest = pluginFile.getManifest();
                     if (manifest != null) {
                         String buildNumber = manifest.getMainAttributes().getValue("Build-Number");
-                        if (buildNumber != null && !buildNumber.isEmpty())
+                        if (buildNumber != null && !buildNumber.isEmpty()) {
                             sender.sendMessage(ChatColor.BLUE + "Build: " + ChatColor.WHITE + buildNumber);
+                        }
                     }
                 } catch (IOException ignored) {
                 } finally {
@@ -70,7 +70,7 @@ public class VersionCommand implements ICommand {
         sender.sendMessage(ChatColor.BLUE + "Author:");
         List<String> authors = plugin.getDescription().getAuthors();
         sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.get(0)); // author defined by "author:
-                                                                                       // xyz" gets always loaded first
+        // xyz" gets always loaded first
 
         sender.sendMessage(ChatColor.BLUE + "Contributors:");
         for (int i = 1; i < authors.size(); i++) {

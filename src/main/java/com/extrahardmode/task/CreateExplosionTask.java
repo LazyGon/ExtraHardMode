@@ -195,7 +195,7 @@ public class CreateExplosionTask implements Runnable {
      * boolean validateLocationSafe(Location loc, ExplosionType type)
      * {
      * boolean isSafe = true;
-     * 
+     *
      * return isSafe;
      * }
      */
@@ -214,7 +214,7 @@ public class CreateExplosionTask implements Runnable {
      * protected land
      * ArrayList<Block> boundaries = new ArrayList<Block>();
      * Location cubeLoc = loc.clone();
-     * 
+     *
      * for (int i = 0; i < 8; i++) //4 outer walls
      * {
      * //10(5*2) blocks per cornerPillar, no matter the size of the explosion.

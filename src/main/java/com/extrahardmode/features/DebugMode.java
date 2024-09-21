@@ -4,14 +4,13 @@ import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.module.DataStoreModule;
 import com.extrahardmode.module.MsgModule;
 import com.extrahardmode.service.ListenerModule;
+import java.text.DecimalFormat;
+import java.util.HashSet;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.text.DecimalFormat;
-import java.util.HashSet;
 
 /**
  * Debugging mode with some extra data to help the developers
@@ -34,8 +33,9 @@ public class DebugMode extends ListenerModule {
 
     public void disableDebugMode(String playerName) {
         dataStoreModule.getPlayerData(playerName).inDebug = false;
-        for (int line = 0; line < 6; line++)
+        for (int line = 0; line < 6; line++) {
             msgModule.getManager().removePopup(playerName, key_blockdata_msg + line);
+        }
     }
 
     public boolean isInDebugMode(String playerName) {
@@ -50,8 +50,9 @@ public class DebugMode extends ListenerModule {
         Player player = event.getPlayer();
         if (isInDebugMode(player.getName())) {
             Block target = player.getTargetBlock(new HashSet<>(), 50);
-            for (int line = 0; line < 6; line++)
+            for (int line = 0; line < 6; line++) {
                 msgModule.getManager().removePopup(player.getName(), key_blockdata_msg + line);
+            }
             DecimalFormat twoDecimalPlaces = new DecimalFormat("#.##");
             msgModule.getManager().showPopup(player.getName(), key_blockdata_msg + 5, 0, ChatColor.RED, null,
                     "EHM DEBUGMODE", "Humidity: " + twoDecimalPlaces.format(target.getHumidity()));

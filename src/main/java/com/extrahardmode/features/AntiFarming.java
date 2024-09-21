@@ -37,10 +37,20 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.*;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.SheepRegrowWoolEvent;
@@ -163,8 +173,9 @@ public class AntiFarming extends ListenerModule {
         final boolean weakCropsEnabled = CFG.getBoolean(RootNode.WEAK_FOOD_CROPS, world.getName());
 
         // FEATURE:
-        if (!weakCropsEnabled)
+        if (!weakCropsEnabled) {
             return;
+        }
 
         Block block = event.getBlock();
         plugin.debug(block.getWorld(),
@@ -243,8 +254,9 @@ public class AntiFarming extends ListenerModule {
         // FEATURE: sheep are all white, and may be dyed only temporarily
         if (sheepRegrowWhiteEnabled) {
             Sheep sheep = event.getEntity();
-            if (sheep.isSheared())
+            if (sheep.isSheared()) {
                 sheep.setColor(DyeColor.WHITE);
+            }
         }
     }
 
@@ -378,15 +390,16 @@ public class AntiFarming extends ListenerModule {
             final Player player = event.getPlayer();
             // Bucket displays as full, derpy inventories, run next tick
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                if (player != null)
+                if (player != null) {
                     player.updateInventory();
+                }
             });
         }
     }
 
     /**
      * When a player place kelp or seagrass in marked water.
-     * 
+     *
      * @param event Event that occurred.
      */
     @EventHandler(ignoreCancelled = true)

@@ -21,6 +21,9 @@
 
 package com.extrahardmode.modules;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.mocks.MockBlock;
 import com.extrahardmode.module.BlockModule;
@@ -30,9 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

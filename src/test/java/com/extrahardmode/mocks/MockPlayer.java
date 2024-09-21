@@ -21,10 +21,10 @@
 
 package com.extrahardmode.mocks;
 
-import org.bukkit.entity.Player;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.bukkit.entity.Player;
 
 /**
  * Mocks a Player and his name

@@ -1,13 +1,12 @@
 package com.extrahardmode.events;
 
+import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 /**

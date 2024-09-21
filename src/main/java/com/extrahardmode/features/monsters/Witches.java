@@ -32,7 +32,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.ThrownPotion;
+import org.bukkit.entity.Witch;
+import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -67,8 +72,9 @@ public class Witches extends ListenerModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (EntityHelper.isMarkedAsOurs(entity))
+        if (EntityHelper.isMarkedAsOurs(entity)) {
             return;
+        }
         Location location = event.getLocation();
         World world = location.getWorld();
         EntityType entityType = entity.getType();

@@ -1,6 +1,8 @@
 package com.extrahardmode.task;
 
-/** @author Diemex */
+/**
+ * @author Diemex
+ */
 
 import com.extrahardmode.module.EntityHelper;
 import org.bukkit.entity.LivingEntity;
@@ -27,7 +29,8 @@ public class SlowKillTask extends BukkitRunnable {
         if (!entity.isDead()) {
             entity.damage(1);
             EntityHelper.addEnvironmentalDamage(plugin, entity, 1.0);
-        } else
+        } else {
             cancel();
+        }
     }
 }

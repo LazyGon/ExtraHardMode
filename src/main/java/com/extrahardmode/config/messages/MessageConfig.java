@@ -25,8 +25,14 @@ import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.IoHelper;
 import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.ModularConfig;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.logging.Level;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -34,15 +40,18 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
-import java.util.logging.Level;
-
-/** Configuration handler for the messages.yml file. */
+/**
+ * Configuration handler for the messages.yml file.
+ */
 public class MessageConfig extends ModularConfig {
-    /** File reference. */
+    /**
+     * File reference.
+     */
     private final File file;
 
-    /** Configuration object reference. */
+    /**
+     * Configuration object reference.
+     */
     private final YamlConfiguration config;
 
     /**
@@ -52,7 +61,7 @@ public class MessageConfig extends ModularConfig {
      */
     public MessageConfig(ExtraHardMode plugin) {
         super(plugin);
-        file = new File(plugin.getDataFolder().getPath() + File.separator + "messages.yml");
+        file = plugin.getDataFolder().toPath().resolve("messages.yml").toFile();
         config = YamlConfiguration.loadConfiguration(file);
     }
 
@@ -76,13 +85,15 @@ public class MessageConfig extends ModularConfig {
         try {
             FileConfiguration reorderedConfig = new YamlConfiguration();
             for (MessageNode node : MessageNode.values()) {
-                if (node.isCategoryNode()) // convert the parsed enum value to a string representation
+                // convert the parsed enum value to a string representation
+                if (node.isCategoryNode()) {
                     reorderedConfig.set(node.getPath(), getCat(node).name().toLowerCase());
-                else if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.COLOR) {
-                    if (getColor(node) == null)
+                } else if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.COLOR) {
+                    if (getColor(node) == null) {
                         reorderedConfig.set(node.getPath(), "NONE");
-                    else
+                    } else {
                         reorderedConfig.set(node.getPath(), getColor(node).name());
+                    }
                 } else {
                     reorderedConfig.set(node.getPath(), OPTIONS.get(node));
                 }
@@ -119,7 +130,7 @@ public class MessageConfig extends ModularConfig {
                     "$PLAYER: Affected player",
                     "$PLAYERS: If multiple players are affected",
                     "$DEATH_MSG: Death message if someone dies",
-                    "$ITEMS: a player lost" };
+                    "$ITEMS: a player lost"};
             StringBuilder sb = new StringBuilder();
             sb.append(StringUtils.repeat("#", 100));
             sb.append("%n");
@@ -152,8 +163,9 @@ public class MessageConfig extends ModularConfig {
     public void reload() {
         // Reload config from file.
         try {
-            if (!file.exists())
+            if (!file.exists()) {
                 file.createNewFile();
+            }
             config.load(file);
             loadSettings(config);
             boundsCheck();
@@ -169,10 +181,11 @@ public class MessageConfig extends ModularConfig {
     @Override
     public void loadSettings(ConfigurationSection config) {
         for (MessageNode node : MessageNode.values()) {
-            if (node.isCategoryNode())
+            if (node.isCategoryNode()) {
                 updateCat(node, config);
-            else
+            } else {
                 updateOption(node, config);
+            }
         }
     }
 
@@ -197,8 +210,9 @@ public class MessageConfig extends ModularConfig {
             cat = MsgCategory.valueOf(val != null ? val.toUpperCase() : "");
         } catch (IllegalArgumentException ignored) {
         } finally {
-            if (cat == null)
+            if (cat == null) {
                 cat = node.getDefaultCategory();
+            }
             OPTIONS.put(node, cat);
         }
     }
@@ -208,10 +222,9 @@ public class MessageConfig extends ModularConfig {
      * message if found
      *
      * @param node node to check
-     *
      * @return the {@link com.extrahardmode.config.messages.MsgCategory} enum value
-     *         of the node or null if the enum name of the node doesn't end with
-     *         _MODE or value of the node is not found.
+     * of the node or null if the enum name of the node doesn't end with
+     * _MODE or value of the node is not found.
      */
     public MsgCategory getCat(MessageNode node) {
         MessageNode modeNode = null;
@@ -222,8 +235,9 @@ public class MessageConfig extends ModularConfig {
         } finally {
             // if (!node.name().endsWith("_MODE"))
             // Validate.notNull(modeNode, "There is no MODE node set for " + node.name());
-            if (modeNode != null)
+            if (modeNode != null) {
                 obj = OPTIONS.get(modeNode);
+            }
         }
         return obj instanceof MsgCategory ? (MsgCategory) obj : null;
     }
@@ -247,10 +261,11 @@ public class MessageConfig extends ModularConfig {
         for (ConfigNode node : MessageNode.values()) {
             if (node.getSubType() == ConfigNode.SubType.PLAYER_NAME) {
                 String nodeValue = config.getString(node.getPath());
-                if (nodeValue != null)
+                if (nodeValue != null) {
                     set(node, nodeValue.length() > 16 ? nodeValue.substring(0, 16) : nodeValue);
+                }
                 updateOption(node, config); // Kinda a quick workaround for the set() method in the super class not
-                                            // being implemented
+                // being implemented
             }
         }
     }

@@ -28,6 +28,9 @@ import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.task.FallingLogsTask;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
@@ -37,10 +40,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * When chopping down trees the logs fall down and loose logs fall down on the
@@ -89,7 +88,7 @@ public class RealisticChopping extends ListenerModule {
         Player player = breakEvent.getPlayer();
 
         final boolean betterTreeChoppingEnabled = false; // CFG.getBoolean(RootNode.BETTER_TREE_CHOPPING,
-                                                         // world.getName());
+        // world.getName());
         final boolean playerHasBypass = playerModule.playerBypasses(player, Feature.REALISTIC_CHOPPING);
 
         // FEATURE: trees chop more naturally
@@ -119,9 +118,10 @@ public class RealisticChopping extends ListenerModule {
                         for (Block log : logs) {
                             // TODO EhmRealisticChoppingLooseLogEvent
                             // check 2 blocks down for logs to see if it it's a stem
-                            if (!Tag.LOGS.isTagged(log.getRelative(BlockFace.DOWN).getType()))
+                            if (!Tag.LOGS.isTagged(log.getRelative(BlockFace.DOWN).getType())) {
                                 plugin.getServer().getScheduler().runTaskLater(plugin, new FallingLogsTask(plugin, log),
                                         plugin.getRandom().nextInt(50/* so they don't fall at once */));
+                            }
                         }
                     } else if (Tag.LOGS.isTagged(aboveLogType)) {
                         blockModule.applyPhysics(aboveLog, false);

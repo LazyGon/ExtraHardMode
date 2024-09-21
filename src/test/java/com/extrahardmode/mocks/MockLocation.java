@@ -21,15 +21,15 @@
 
 package com.extrahardmode.mocks;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.bukkit.Location;
+import org.bukkit.World;
+
 /**
  * Basic Location
- * 
+ *
  * <pre>
  *     mock getBlock(X/Y/Z)
  *     mock get(X/Y/Z)

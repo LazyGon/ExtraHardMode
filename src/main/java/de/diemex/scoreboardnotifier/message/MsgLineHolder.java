@@ -1,9 +1,8 @@
 package de.diemex.scoreboardnotifier.message;
 
-import org.bukkit.ChatColor;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.ChatColor;
 
 /**
  * Represents one line in a scoreboard
@@ -50,15 +49,17 @@ public class MsgLineHolder {
 
     public static List<String> toString(List<MsgLineHolder> msg) {
         List<String> output = new ArrayList<>(msg.size());
-        for (MsgLineHolder line : msg)
+        for (MsgLineHolder line : msg) {
             output.add(line.getLineText());
+        }
         return output;
     }
 
     public static List<MsgLineHolder> fromString(List<String> msg, ChatColor lineColor) {
         List<MsgLineHolder> output = new ArrayList<>();
-        for (String line : msg)
+        for (String line : msg) {
             output.add(new MsgLineHolder().append(line).setLineColor(lineColor));
+        }
         return output;
     }
 

@@ -91,7 +91,8 @@ public class RemoveExposedTorchesTask implements Runnable {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     /* Biome is saved on a per column basis */
-                    loopDown: for (int y = chunk.getWorld().getMaxHeight() - 1; y > 0; y--) {
+                    loopDown:
+                    for (int y = chunk.getWorld().getMaxHeight() - 1; y > 0; y--) {
                         Block block = chunk.getBlock(x, y, z);
                         double temperature = block.getTemperature();
                         Material blockType = block.getType();
@@ -102,7 +103,7 @@ public class RemoveExposedTorchesTask implements Runnable {
                             case TORCH:
                             case WALL_TORCH: {
                                 if (rainBreaksTorches && temperature < 1.0) // excludes warmer biomes like mesa and
-                                                                            // desert in which no rain falls
+                                // desert in which no rain falls
                                 {
                                     /* Reduce lag by torches lying on the ground */
                                     if (plugin.getRandom().nextInt(5) == 1) {
@@ -133,16 +134,18 @@ public class RemoveExposedTorchesTask implements Runnable {
                             case ROSE_BUSH: // RED_ROSE //ROSE_RED
                             case DANDELION: // YELLOW FLOWER
                             case SHORT_GRASS: // I still can't recall if the replacement for LONG_GRASS is GRASS or
-                                              // TALL_GRASS...
+                                // TALL_GRASS...
                             case TALL_GRASS:
                             case BEETROOTS: {
                                 if (snowBreaksCrops && temperature <= 0.15) // cold biomes in which snow falls
                                 {
-                                    if (plugin.getRandom().nextInt(5) == 1)
+                                    if (plugin.getRandom().nextInt(5) == 1) {
                                         block.breakNaturally();
+                                    }
                                     // Snow can't be placed if its tilled soil
-                                    if (block.getRelative(BlockFace.DOWN).getType() == Material.FARMLAND)
+                                    if (block.getRelative(BlockFace.DOWN).getType() == Material.FARMLAND) {
                                         block.getRelative(BlockFace.DOWN).setType(Material.DIRT);
+                                    }
                                     Snow snow = (Snow) Material.SNOW.createBlockData();
                                     if (plugin.getRandom().nextBoolean()) {
                                         snow.setLayers(1);
@@ -153,8 +156,7 @@ public class RemoveExposedTorchesTask implements Runnable {
                                 }
                                 break loopDown;
                             }
-                            default: /* Anything which isn't AIR will protect torches and Crops */
-                            {
+                            default: /* Anything which isn't AIR will protect torches and Crops */ {
                                 break loopDown;
                             }
                         }

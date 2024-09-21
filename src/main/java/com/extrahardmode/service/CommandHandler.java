@@ -22,12 +22,15 @@
 package com.extrahardmode.service;
 
 import com.extrahardmode.ExtraHardMode;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import java.util.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -116,7 +119,8 @@ public abstract class CommandHandler implements CommandExecutor {
      * handler to do the logic for.
      */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+                             String[] args) {
         if (args.length == 0) {
             return noArgs(sender, command, label);
         } else {
@@ -150,7 +154,6 @@ public abstract class CommandHandler implements CommandExecutor {
      * @param sender  - Sender of the command.
      * @param command - Command used.
      * @param label   - Command label.
-     *
      * @return True if handled. Should not need to return false...
      */
     protected abstract boolean noArgs(CommandSender sender, Command command, String label);
@@ -164,7 +167,6 @@ public abstract class CommandHandler implements CommandExecutor {
      * @param command - Command used.
      * @param label   - Command label.
      * @param args    - Arguments.
-     *
      * @return True if handled. Should not need to return false...
      */
     protected abstract boolean unknownCommand(CommandSender sender, Command command, String label, String[] args);
@@ -173,12 +175,12 @@ public abstract class CommandHandler implements CommandExecutor {
      * Shortens the given string array by removing the first entry.
      *
      * @param args - Array to shorten.
-     *
      * @return Shortened array.
      */
     String[] shortenArgs(String[] args) {
-        if (args.length == 0)
+        if (args.length == 0) {
             return args;
+        }
         final List<String> argList = new LinkedList<>(Arrays.asList(args));
         argList.remove(0);
         return argList.toArray(new String[0]);

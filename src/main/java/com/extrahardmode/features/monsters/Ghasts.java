@@ -27,15 +27,18 @@ import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
+import java.util.List;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 /**
  * All changes to Ghasts including:
@@ -108,8 +111,9 @@ public class Ghasts extends ListenerModule {
                     // who shot it?
                     if (arrow.getShooter() != null && arrow.getShooter() instanceof Player player) {
                         // check permissions when it's shot by a player
-                        if (!playerModule.playerBypasses(player, Feature.MONSTER_GHASTS))
+                        if (!playerModule.playerBypasses(player, Feature.MONSTER_GHASTS)) {
                             event.setDamage(event.getDamage() * arrowDamagePercent / 100);
+                        }
                     }
                 }
             }

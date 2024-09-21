@@ -12,7 +12,6 @@ public class Validation {
      * @param node  the ConfigNode to validate, validates according to the SubType
      *              of the ConfigNode
      * @param value the current value to validate
-     *
      * @return validated value, if value null then defaultValue is returned
      */
     public static Integer validateInt(final ConfigNode node, Object value) {
@@ -59,20 +58,22 @@ public class Validation {
      *
      * @param node  - Root node to validate.
      * @param value - Integer to validate
-     *
      * @return validated value
      */
     public static Integer validateYCoordinate(ConfigNode node, Integer value) {
         if (node.getVarType() == ConfigNode.VarType.INTEGER) {
-            if (value == null)
+            if (value == null) {
                 value = (Integer) node.getDefaultValue();
+            }
             int maxHeight = 255;
-            if (value < 0)
+            if (value < 0) {
                 value = 0;
-            else if (value > maxHeight)
+            } else if (value > maxHeight) {
                 value = maxHeight;
-        } else
+            }
+        } else {
             throwWrongTypeError(node, ConfigNode.VarType.INTEGER);
+        }
         return value;
     }
 
@@ -81,17 +82,18 @@ public class Validation {
      *
      * @param node  - Root node to validate.
      * @param value - Integer to validate
-     *
      * @return validated value
      */
     public static Integer validatePercentage(ConfigNode node, Integer value) {
         if (node.getVarType() == ConfigNode.VarType.INTEGER) {
-            if (value < 0)
+            if (value < 0) {
                 value = 0;
-            else if (value > 100)
+            } else if (value > 100) {
                 value = 100;
-        } else
+            }
+        } else {
             throwWrongTypeError(node, ConfigNode.VarType.INTEGER);
+        }
         return value;
     }
 
@@ -103,7 +105,6 @@ public class Validation {
      * @param maxVal the maximum value for the config, if == minVal then it doesn't
      *               get checked
      * @param value  - Integer to validate
-     *
      * @return validated value
      */
     public static Integer validateCustomBounds(ConfigNode node, int minVal, int maxVal, Integer value) {
@@ -113,8 +114,9 @@ public class Validation {
             } else if (minVal < maxVal && value > maxVal) {
                 value = maxVal;
             }
-        } else
+        } else {
             throwWrongTypeError(node, ConfigNode.VarType.INTEGER);
+        }
         return value;
     }
 

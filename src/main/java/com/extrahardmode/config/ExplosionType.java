@@ -73,7 +73,7 @@ public enum ExplosionType {
     private final boolean allowBlockDamageA;
 
     ExplosionType(int powerA, boolean fireA, boolean allowBlockDamageA, int powerB, boolean fireB,
-            boolean allowBlockDamageB) {
+                  boolean allowBlockDamageB) {
         this.powerA = powerA;
         this.fireA = fireA;
         this.allowBlockDamageA = allowBlockDamageA;

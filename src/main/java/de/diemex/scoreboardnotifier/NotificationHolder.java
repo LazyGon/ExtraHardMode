@@ -3,9 +3,8 @@ package de.diemex.scoreboardnotifier;
 import de.diemex.scoreboardnotifier.message.MsgLineHolder;
 import de.diemex.scoreboardnotifier.message.MsgSettings;
 import de.diemex.scoreboardnotifier.message.StringUtil;
-import org.apache.commons.lang3.Validate;
-
 import java.util.List;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Holds information about a message to be displayed
@@ -65,8 +64,9 @@ public class NotificationHolder {
     public NotificationHolder(MsgSettings type, String title, List<MsgLineHolder> msg) {
         StringBuilder sb = new StringBuilder();
         for (MsgLineHolder line : msg) {
-            if (!sb.isEmpty())
+            if (!sb.isEmpty()) {
                 sb.append(" ");
+            }
             Validate.isTrue(line.length() <= 40, "Scoreboards have a max of 40 characters per line. Given line was "
                     + line.length() + " long. Content: \"" + line + "\"");
             sb.append(line);
@@ -121,7 +121,6 @@ public class NotificationHolder {
      * Change the count
      *
      * @param by change count by, can also be negative to decrement
-     *
      * @return this NotificationHolder for methoud chaining
      */
     public NotificationHolder modifyCount(int by) {
@@ -143,7 +142,6 @@ public class NotificationHolder {
      * similar/same and we need to make them slightly different
      *
      * @param linePrefix character to add.
-     *
      * @return this NotificationHolder for methoud chaining
      */
     public NotificationHolder addLinePrefix(char linePrefix) {
@@ -156,7 +154,6 @@ public class NotificationHolder {
      * be unique)
      *
      * @param other Popup to compare
-     *
      * @return true if one line is the same
      */
     public boolean hasOneEqualLine(NotificationHolder other) {
@@ -177,16 +174,17 @@ public class NotificationHolder {
      * Compares if the message text is the same
      *
      * @param obj to compare
-     *
      * @return true if equal, otherwise false
      */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof NotificationHolder) {
-            label: if (getMsgLines().size() == ((NotificationHolder) obj).getMsgLines().size()) {
+            label:
+            if (getMsgLines().size() == ((NotificationHolder) obj).getMsgLines().size()) {
                 for (int i = 0; i < getMsgLines().size(); i++) {
-                    if (!getMsgLines().get(i).equals(((NotificationHolder) obj).getMsgLines().get(i)))
+                    if (!getMsgLines().get(i).equals(((NotificationHolder) obj).getMsgLines().get(i))) {
                         break label;
+                    }
                 }
                 return true;
             }

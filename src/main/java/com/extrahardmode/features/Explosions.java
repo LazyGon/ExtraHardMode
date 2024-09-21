@@ -30,6 +30,10 @@ import com.extrahardmode.module.BlockModule;
 import com.extrahardmode.module.UtilityModule;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.task.CreateExplosionTask;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,12 +51,9 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-/** Various changes to Explosions including: */
+/**
+ * Various changes to Explosions including:
+ */
 public class Explosions extends ListenerModule {
     private RootConfig CFG;
 
@@ -91,11 +92,12 @@ public class Explosions extends ListenerModule {
     // |_|_\___\___|\___/|____/_/ \_\_|_\ |____|___|___/ |_| |___|_|\_|___|_|_\
     //
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH) // RoboMWM - High priority to allow plugins to
-                                                                         // clear the blocklist if they so choose
+    // clear the blocklist if they so choose
     public void regularExplosions(EntityExplodeEvent event) {
         if (event instanceof FakeEntityExplodeEvent
-                || !(event.getEntity() instanceof Ghast || event.getEntity() instanceof TNTPrimed))
+                || !(event.getEntity() instanceof Ghast || event.getEntity() instanceof TNTPrimed)) {
             return;
+        }
 
         final Entity sourceEntity = event.getEntity();
         final World world = event.getLocation().getWorld();
@@ -108,23 +110,24 @@ public class Explosions extends ListenerModule {
         // cancel explosion if no worldDamage should be done
         final boolean tntWorldDamage = event.getLocation().getBlockY() > CFG.getInt(RootNode.EXPLOSIONS_Y,
                 world.getName())
-                        ? CFG.getBoolean(RootNode.EXPLOSIONS_TNT_ABOVE_WORLD_GRIEF, world.getName())
-                        : CFG.getBoolean(RootNode.EXPLOSIONS_TNT_BELOW_WORLD_GRIEF, world.getName());
+                ? CFG.getBoolean(RootNode.EXPLOSIONS_TNT_ABOVE_WORLD_GRIEF, world.getName())
+                : CFG.getBoolean(RootNode.EXPLOSIONS_TNT_BELOW_WORLD_GRIEF, world.getName());
 
         // TNT
         if (sourceEntity instanceof TNTPrimed) {
-            if (customTntExplosion && !event.blockList().isEmpty() && (flyOtherPlugins || event.getYield() == 0.25F)) // getYield
-                                                                                                                     // value
-                                                                                                                     // of
-                                                                                                                     // 0.25
-                                                                                                                     // somewhat
-                                                                                                                     // ensures
-                                                                                                                     // this
-                                                                                                                     // is
-                                                                                                                     // a
-                                                                                                                     // vanilla
-                                                                                                                     // TNT
-                                                                                                                     // explosion.
+            if (customTntExplosion && !event.blockList().isEmpty() &&
+                    (flyOtherPlugins || event.getYield() == 0.25F)) // getYield
+            // value
+            // of
+            // 0.25
+            // somewhat
+            // ensures
+            // this
+            // is
+            // a
+            // vanilla
+            // TNT
+            // explosion.
             {
                 if (!multipleExplosions) {
                     CreateExplosionTask explosionTask = new CreateExplosionTask(plugin, location, ExplosionType.TNT,
@@ -135,8 +138,9 @@ public class Explosions extends ListenerModule {
                     multipleExplosions(location, sourceEntity, ExplosionType.TNT);
                 }
 
-                if (!tntWorldDamage && CFG.isEnabledIn(world.getName()))
+                if (!tntWorldDamage && CFG.isEnabledIn(world.getName())) {
                     event.setCancelled(true);
+                }
             }
         }
 
@@ -161,8 +165,9 @@ public class Explosions extends ListenerModule {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST) // so it probably got cancelled already
     public void onLateExplosion(EntityExplodeEvent event) {
-        if (event instanceof FakeEntityExplodeEvent)
+        if (event instanceof FakeEntityExplodeEvent) {
             return;
+        }
 
         final Entity sourceEntity = event.getEntity();
         final World world = event.getLocation().getWorld();
@@ -212,7 +217,7 @@ public class Explosions extends ListenerModule {
      * // | (_| (_) | |\/| | _/ _ \| | | || _ \| || |__ | | | | \ V /
      * // \___\___/|_| |_|_|/_/ \_\_| |___|___/___|____|___| |_| |_|
      * //
-     * 
+     *
      * @EventHandler(priority = EventPriority.LOWEST)
      * public void provideCompatibility(EntityExplodeEvent event)
      * {
@@ -237,14 +242,14 @@ public class Explosions extends ListenerModule {
      * FakeEntityExplodeEvent(explosionStorage.getExplosionCause(),
      * explosionStorage.getCenterLocation(), event.blockList(), event.getYield());
      * plugin.getServer().getPluginManager().callEvent(compatEvent);
-     * 
+     *
      * if (compatEvent.isCancelled())
      * //We cancel the event because we only want the event with the correct Entity
      * to be logged
      * event.setCancelled(true);
      * else //do our additional processing
      * explosionLogic(compatEvent);
-     * 
+     *
      * //Some plugins might decide to clear the blocklist instead of cancelling the
      * event, in that case the modified blocklist is the same
      * //Handle blockbreaking and setting fire ourselves
@@ -263,7 +268,7 @@ public class Explosions extends ListenerModule {
      * event.blockList().clear(); //we don't want this event to be recorded, but we
      * still want the explosion particles
      * compatEvent.blockList().addAll(copy);
-     * 
+     *
      * explosionStorage.clearQueue();
      * }
      * }
@@ -277,7 +282,7 @@ public class Explosions extends ListenerModule {
     // |____/_/ \_\_|\_|___/___|_|\_|\___| |___/____\___/ \___|_|\_\___/
     //
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) // so we are last and if a block protection
-                                                                            // plugin cancelled the event we know it
+    // plugin cancelled the event we know it
     public void handleLandedBlocksFromPhysics(EntityChangeBlockEvent event) {
         final int distance = (int) Math.pow(
                 CFG.getInt(RootNode.EXPLOSIONS_FLYING_BLOCKS_AUTOREMOVE_RADIUS, event.getBlock().getWorld().getName()),
@@ -298,16 +303,19 @@ public class Explosions extends ListenerModule {
                     else {
                         Material type = BlockModule.getDroppedMaterial(fallBaby.getBlockData().getMaterial());
                         if (type.isBlock() && type == fallBaby.getBlockData().getMaterial()) // preserve blockdata. See
-                                                                                             // issue #69
-                                                                                             // //Alternatively could
-                                                                                             // block#setType in second
-                                                                                             // condition
+                        // issue #69
+                        // //Alternatively could
+                        // block#setType in second
+                        // condition
+                        {
                             return;
-                        else if (type.isBlock())
+                        } else if (type.isBlock()) {
                             block.setType(type);
-                        else // if block doesnt drop something that can be placed again... thin glass,
-                             // redstone ore
+                        } else // if block doesnt drop something that can be placed again... thin glass,
+                        // redstone ore
+                        {
                             block.setType(Material.AIR);
+                        }
                         event.setCancelled(true);
                     }
                 }
@@ -347,7 +355,7 @@ public class Explosions extends ListenerModule {
 
         if (sourceEntity instanceof Creeper || sourceEntity instanceof TNTPrimed) {
             event.setYield(1); // so people have enough blocks to fill creeper holes and because TNT explodes
-                               // multiple times
+            // multiple times
         }
 
         // FEATURE: in hardened stone mode, TNT only softens stone to cobble
@@ -420,7 +428,7 @@ public class Explosions extends ListenerModule {
      * @param spreadVel     how fast to propel on horizontal axis
      */
     public void applyExplosionPhysics(Collection<Block> blocks, final Location center, final int flyPercentage,
-            final double upVel, final double spreadVel) {
+                                      final double upVel, final double spreadVel) {
         final List<FallingBlock> fallingBlockList = new ArrayList<>();
         for (Block block : blocks) {
             if (block.getType().isSolid()) {
@@ -429,8 +437,8 @@ public class Explosions extends ListenerModule {
                     FallingBlock fall = block.getLocation().getWorld().spawnFallingBlock(block.getLocation(),
                             block.getBlockData());
                     fall.setMetadata(tag, new FixedMetadataValue(plugin, block.getLocation())); // decide on the
-                                                                                                // distance if block
-                                                                                                // should be placed
+                    // distance if block
+                    // should be placed
                     // fall.setMetadata("drops", new FixedMetadataValue(plugin, block.getDrops()));
                     fall.setDropItem(
                             CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_DROP_ITEM, block.getWorld().getName()));

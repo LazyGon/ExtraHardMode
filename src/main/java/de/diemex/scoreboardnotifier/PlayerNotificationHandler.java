@@ -1,5 +1,9 @@
 package de.diemex.scoreboardnotifier;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,11 +12,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Every player gets a handler that handles new messages, removal of messages
@@ -62,8 +61,9 @@ public class PlayerNotificationHandler {
         this.playerName = playerName;
         msgBoard = Bukkit.getScoreboardManager().getNewScoreboard();
         Player player = Bukkit.getPlayer(playerName);
-        if (player != null)
+        if (player != null) {
             previousBoard = player.getScoreboard();
+        }
     }
 
     /**
@@ -99,8 +99,9 @@ public class PlayerNotificationHandler {
         // Remove messages with the same identifier
         if (popup.getType().hasUniqueIdentifier()) {
             String id = popup.getType().getUniqueIdentifier();
-            if (idMap.containsKey(id))
+            if (idMap.containsKey(id)) {
                 notifications.remove(idMap.get(id));
+            }
             idMap.put(id, index);
         }
 
@@ -131,8 +132,9 @@ public class PlayerNotificationHandler {
             idMap.remove(id);
             removeMessage(index);
             updateIndexes();
-            if (!messagesScheduled())
+            if (!messagesScheduled()) {
                 restoreScoreboard();
+            }
         }
     }
 
@@ -145,13 +147,15 @@ public class PlayerNotificationHandler {
         // is this notification still valid?
         if (notifications.containsKey(id)) {
             msgCount--;
-            for (String line : notifications.get(id).getMsg())
+            for (String line : notifications.get(id).getMsg()) {
                 msgBoard.resetScores(line);
+            }
             notifications.remove(id);
             // Update all the line numbers
             updateIndexes();
-            if (!messagesScheduled())
+            if (!messagesScheduled()) {
                 restoreScoreboard();
+            }
         }
     }
 
@@ -160,8 +164,9 @@ public class PlayerNotificationHandler {
         int separator = 0; // pos of =
 
         // Clear scoreboard
-        for (String player : msgBoard.getEntries())
+        for (String player : msgBoard.getEntries()) {
             msgBoard.resetScores(player);
+        }
 
         // Update the scores and put separators in between the lines
         boolean updateTitle = true;
@@ -184,7 +189,9 @@ public class PlayerNotificationHandler {
                 StringBuilder sb = new StringBuilder(StringUtils.repeat("-", 16));
                 sb.setCharAt(separator < 16 ? separator++ : 0, '='); // Maximum of 16 messages at a time...
                 if (i != 1) // not last line
+                {
                     objective.getScore(sb.toString()).setScore(lastLine--);
+                }
             }
         }
     }
@@ -205,9 +212,11 @@ public class PlayerNotificationHandler {
      */
     private int getHighestIndex() {
         int highestId = 0;
-        for (Integer id : notifications.keySet())
-            if (id > highestId)
+        for (Integer id : notifications.keySet()) {
+            if (id > highestId) {
                 highestId = id;
+            }
+        }
         return highestId;
     }
 
@@ -216,9 +225,11 @@ public class PlayerNotificationHandler {
      */
     private int lineCount() {
         int lineCount = 0;
-        for (NotificationHolder popup : notifications.values())
-            if (popup != null)
+        for (NotificationHolder popup : notifications.values()) {
+            if (popup != null) {
                 lineCount += popup.getMsg().size();
+            }
+        }
         return lineCount;
     }
 
@@ -233,7 +244,8 @@ public class PlayerNotificationHandler {
 
     private void restoreScoreboard() {
         Player player = Bukkit.getPlayer(playerName);
-        if (player != null && previousBoard != null)
+        if (player != null && previousBoard != null) {
             player.setScoreboard(previousBoard);
+        }
     }
 }

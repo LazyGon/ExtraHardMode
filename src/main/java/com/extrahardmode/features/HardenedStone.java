@@ -34,6 +34,10 @@ import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.service.PermissionNode;
 import com.extrahardmode.service.config.customtypes.BlockRelationsList;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -47,11 +51,6 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Hardened Stone is there to make branchmining harder/impossible
@@ -137,11 +136,13 @@ public class HardenedStone extends ListenerModule {
                 int blocks = 0;
                 Integer toolSettings = toolDurabilityMap.get(tool);
 
-                if (toolUnbreakingMap.containsKey(tool) && inHandStack.containsEnchantment(Enchantment.UNBREAKING))
+                if (toolUnbreakingMap.containsKey(tool) && inHandStack.containsEnchantment(Enchantment.UNBREAKING)) {
                     toolSettings *= toolUnbreakingMap.get(tool);
+                }
 
-                if (toolSettings != null)
+                if (toolSettings != null) {
                     blocks = toolSettings;
+                }
 
                 EhmHardenedStoneEvent hardEvent = new EhmHardenedStoneEvent(player, inHandStack, blocks);
 
@@ -172,8 +173,9 @@ public class HardenedStone extends ListenerModule {
                 Block adjacentBlock = block.getRelative(face);
                 if (stoneBlocks.contains(adjacentBlock)) {
                     adjacentBlock.setType(stoneBlocks.get(adjacentBlock));
-                    if (applyPhysics)
+                    if (applyPhysics) {
                         blockModule.applyPhysics(adjacentBlock, true);
+                    }
                 }
             }
         }
@@ -200,8 +202,9 @@ public class HardenedStone extends ListenerModule {
 
         if (hardstoneEnabled && blockOrePlacement && !playerBypasses && oreBlocks.contains(block.getType())) {
             ArrayList<Block> adjacentBlocks = new ArrayList<>();
-            for (BlockFace face : blockModule.getTouchingFaces())
+            for (BlockFace face : blockModule.getTouchingFaces()) {
                 adjacentBlocks.add(block.getRelative(face));
+            }
 
             for (Block adjacentBlock : adjacentBlocks) {
                 if (stoneBlocks.contains(adjacentBlock)) {

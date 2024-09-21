@@ -100,7 +100,7 @@ public class LimitedBuilding extends ListenerModule {
             // if standing directly over lava, prevent placement
             else if ((underBlock.getType() == Material.AIR || underBlock.getType() == Material.LAVA)
                     && !(playerBlock.getType().name().contains("STEP")
-                            && playerBlock.getType().name().contains("STAIRS"))
+                    && playerBlock.getType().name().contains("STAIRS"))
                     && block.getRelative(BlockFace.DOWN).getType() == Material.AIR) {
                 // TODO EhmLimitedBuildingEvent Case.PLAYER_ABOVE_UNSAFE_LOC
                 messenger.send(player, MessageNode.REALISTIC_BUILDING, PermissionNode.SILENT_REALISTIC_BUILDING);

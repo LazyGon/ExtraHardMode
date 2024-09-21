@@ -29,13 +29,12 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Table;
-import java.util.Objects;
-import org.apache.commons.lang3.Validate;
-import org.bukkit.Material;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.Material;
 
 /**
  * Modular configuration class that utilizes a ConfigNode enumeration as easy
@@ -108,8 +107,9 @@ public abstract class MultiWorldConfig extends EHMModule {
             case INTEGER: {
                 if (value instanceof Integer || value instanceof Double) {
                     // fix error when double is provided which can be casted
-                    if (value instanceof Double)
+                    if (value instanceof Double) {
                         value = ((Double) value).intValue();
+                    }
                     OPTIONS.put(world, node, value);
                     break;
                 }
@@ -165,8 +165,9 @@ public abstract class MultiWorldConfig extends EHMModule {
      */
     public String[] getEnabledWorlds() {
         ArrayList<String> worlds = new ArrayList<>();
-        for (Map.Entry<String, Map<ConfigNode, Object>> entry : OPTIONS.rowMap().entrySet())
+        for (Map.Entry<String, Map<ConfigNode, Object>> entry : OPTIONS.rowMap().entrySet()) {
             worlds.add(entry.getKey());
+        }
         return worlds.toArray(new String[0]);
     }
 
@@ -214,40 +215,42 @@ public abstract class MultiWorldConfig extends EHMModule {
      * @param world world name
      * @param clazz type of node
      * @param <T>
-     *
      * @return node value for the given world
      */
     public <T> T get(final ConfigNode node, final String world, Class<T> clazz) {
-        if (!varTypeClassMap.containsKey(node.getVarType()))
+        if (!varTypeClassMap.containsKey(node.getVarType())) {
             throw new IllegalArgumentException("Node " + node + " doesn't have a class set");
+        }
         Object val = OPTIONS.get(world, node);
         // VarType of node has to match VarType of the expected class
         if (varTypeClassMap.inverse().get(clazz) == node.getVarType()) {
             // Check cast
-            if (varTypeClassMap.get(node.getVarType()).isInstance(val))
+            if (varTypeClassMap.get(node.getVarType()).isInstance(val)) {
                 return (T) OPTIONS.get(world, node);
-            else
+            } else {
                 return (T) node.getValueToDisable();
-        } else
+            }
+        } else {
             throw new IllegalArgumentException("Attempted to get " + node + " of type " + node.getVarType()
                     + " as " + varTypeClassMap.get(node.getVarType()));
+        }
     }
 
     /**
      * Get the integer value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns -1 if unknown.
      */
     public int getInt(final ConfigNode node, final String world) {
         int i = -1;
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.INTEGER) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             i = obj instanceof Integer ? (Integer) obj : (Integer) node.getValueToDisable();
         } else {
             throw new IllegalArgumentException(
@@ -260,17 +263,17 @@ public abstract class MultiWorldConfig extends EHMModule {
      * Get the double value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns 0 if unknown.
      */
     public double getDouble(final ConfigNode node, final String world) {
         double d;
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.DOUBLE) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             d = obj instanceof Number ? ((Number) obj).doubleValue() : (Double) node.getValueToDisable();
         } else {
             throw new IllegalArgumentException(
@@ -283,17 +286,17 @@ public abstract class MultiWorldConfig extends EHMModule {
      * Get the boolean value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns false if unknown.
      */
     public boolean getBoolean(final ConfigNode node, final String world) {
         boolean bool = false;
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.BOOLEAN) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             bool = obj instanceof Boolean ? (Boolean) obj : (Boolean) node.getValueToDisable();
         } else {
             throw new IllegalArgumentException(
@@ -306,17 +309,17 @@ public abstract class MultiWorldConfig extends EHMModule {
      * Get the string value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns and empty string if unknown.
      */
     public String getString(final ConfigNode node, final String world) {
         String out = "";
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.STRING) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             out = obj instanceof String ? (String) obj : (String) node.getValueToDisable();
         } else {
             throw new IllegalArgumentException(
@@ -329,17 +332,17 @@ public abstract class MultiWorldConfig extends EHMModule {
      * Get the list value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns an empty list if unknown.
      */
     public List<String> getStringList(final ConfigNode node, final String world) {
         List<String> list;
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.LIST) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             list = obj instanceof List ? (List<String>) obj : (List) node.getValueToDisable();
         } else {
             throw new IllegalArgumentException(
@@ -353,10 +356,11 @@ public abstract class MultiWorldConfig extends EHMModule {
 
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.POTION_EFFECT) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             effect = obj instanceof PotionEffectHolder ? (PotionEffectHolder) obj
                     : (PotionEffectHolder) node.getValueToDisable();
         } else {
@@ -367,18 +371,20 @@ public abstract class MultiWorldConfig extends EHMModule {
     }
 
     @Deprecated // Should encourage use of getStringList, since this is performing an unchecked
-                // cast?
+    // cast?
     public List<Material> getStringListAsMaterialList(final ConfigNode node, final String world) {
         List<Material> blockList = new ArrayList<>();
 
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.LIST) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
-            if (!(obj instanceof List))
+            }
+            if (!(obj instanceof List)) {
                 return blockList;
+            }
             for (String materialName : (List<String>) obj) {
                 Material material = Material.matchMaterial(materialName);
                 if (material == null) {
@@ -401,10 +407,11 @@ public abstract class MultiWorldConfig extends EHMModule {
 
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.BLOCK_RELATION_LIST) {
             Object obj = null;
-            if (OPTIONS.contains(world, node))
+            if (OPTIONS.contains(world, node)) {
                 obj = OPTIONS.get(world, node);
-            else if (enabledForAll)
+            } else if (enabledForAll) {
                 obj = OPTIONS.get(ALL_WORLDS, node);
+            }
             blockList = obj instanceof BlockRelationsList ? (BlockRelationsList) obj
                     : (BlockRelationsList) node.getValueToDisable();
         } else {

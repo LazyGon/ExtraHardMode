@@ -48,7 +48,7 @@ public class EhmSkeletonKnockbackEvent extends Event implements Cancellable {
      * @param cancelled         if the Event should be cancelled by default
      */
     public EhmSkeletonKnockbackEvent(Entity entity, Skeleton skeleton, Vector velocity, int deflectPercentage,
-            boolean cancelled) {
+                                     boolean cancelled) {
         this(entity, skeleton, velocity, deflectPercentage);
         this.cancelled = cancelled;
     }

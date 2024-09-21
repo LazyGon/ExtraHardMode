@@ -1,10 +1,9 @@
 package de.diemex.scoreboardnotifier.message;
 
-import org.apache.commons.lang3.Validate;
-import org.bukkit.ChatColor;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.ChatColor;
 
 /**
  * Methods for splitting strings into smaller chunks in an intelligent way
@@ -14,7 +13,6 @@ public class StringUtil {
      * Wrap words in an intelligent way to display in a scoreboard
      *
      * @param message to wrap
-     *
      * @return the wrapped lines
      */
     public static List<MsgLineHolder> getLines(String message) {
@@ -25,7 +23,6 @@ public class StringUtil {
      * Wrap words in an intelligent way to display in a scoreboard
      *
      * @param message to wrap
-     *
      * @return the wrapped lines
      */
     public static List<MsgLineHolder> getLines(String message, ChatColor color) {
@@ -37,24 +34,26 @@ public class StringUtil {
      *
      * @param message   to wrap
      * @param lineColor colors of the lines, reduces the line size by 2
-     *
      * @return the wrapped lines
      */
     public static List<MsgLineHolder> getLines(String message, ChatColor lineColor, String linePrefix, String suffix) {
         Validate.notNull(message, "Null string");
 
-        if (linePrefix == null)
+        if (linePrefix == null) {
             linePrefix = "";
-        if (suffix == null)
+        }
+        if (suffix == null) {
             suffix = "";
+        }
 
         List<MsgLineHolder> lines = new ArrayList<>();
 
         String[] words;
-        if (message.contains(" "))
+        if (message.contains(" ")) {
             words = message.split(" ");
-        else
-            words = new String[] { message };
+        } else {
+            words = new String[] {message};
+        }
 
         MsgLineHolder line = new MsgLineHolder();
         int offset = 0;
@@ -65,7 +64,9 @@ public class StringUtil {
             if (line.length() == 0) {
                 // Set properties
                 if (lineColor != null) // need color code for every line
+                {
                     line.setLineColor(lineColor);
+                }
                 line.setPrefix(linePrefix);
                 // If word exceeds the maximum line length cut it
                 if (words[i].length() - offset > maxLineLength) {
@@ -111,9 +112,9 @@ public class StringUtil {
         }
         // Append suffix to last MsgLineHolder
         if (!suffix.isEmpty()) {
-            if (line.length() + suffix.length() < maxLineLength)
+            if (line.length() + suffix.length() < maxLineLength) {
                 line.setSuffix(suffix);
-            else {
+            } else {
                 lines.add(line);
                 line = new MsgLineHolder().setSuffix(suffix);
             }
@@ -127,14 +128,14 @@ public class StringUtil {
      *
      * @param first  first list
      * @param second second list to compare
-     *
      * @return true if one or more elements are the same, false if lists are
-     *         completely different
+     * completely different
      */
     public static <T> boolean containsOneEqualElem(List<T> first, List<T> second) {
         for (T str : first) {
-            if (second.contains(str))
+            if (second.contains(str)) {
                 return true;
+            }
         }
         return false;
     }

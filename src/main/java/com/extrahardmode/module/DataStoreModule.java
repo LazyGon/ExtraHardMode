@@ -24,29 +24,38 @@ package com.extrahardmode.module;
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.service.EHMModule;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-/** Manages miscellaneous data. */
+/**
+ * Manages miscellaneous data.
+ */
 public class DataStoreModule extends EHMModule {
 
-    /** In-memory cache for player data */
+    /**
+     * In-memory cache for player data
+     */
     private final Map<String, PlayerData> playerNameToPlayerDataMap = new ConcurrentHashMap<>();
 
-    /** List of previous locations. */
+    /**
+     * List of previous locations.
+     */
     private final List<SimpleEntry<Player, Location>> previousLocations = new CopyOnWriteArrayList<>();
 
-    /** List of Players fighting the dragon */
+    /**
+     * List of Players fighting the dragon
+     */
     private final List<String> playersFightingDragon = new ArrayList<>();
 
-    /** Config */
+    /**
+     * Config
+     */
     private RootConfig CFG;
 
     /**
@@ -85,7 +94,6 @@ public class DataStoreModule extends EHMModule {
      * Retrieves player data from memory
      *
      * @param playerName - Name of player.
-     *
      * @return PlayerData associated with it.
      */
     public PlayerData getPlayerData(String playerName) {

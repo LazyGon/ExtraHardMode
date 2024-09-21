@@ -21,11 +21,10 @@
 
 package com.extrahardmode.task;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * Called to cleanup webs near an entity.

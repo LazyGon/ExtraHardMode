@@ -3,16 +3,15 @@ package de.diemex.scoreboardnotifier;
 import de.diemex.scoreboardnotifier.message.MsgLineHolder;
 import de.diemex.scoreboardnotifier.message.MsgSettings;
 import de.diemex.scoreboardnotifier.message.StringUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Class to show announcements via the Scoreboard
@@ -39,15 +38,16 @@ public class NotificationManager implements Listener {
     }
 
     private boolean show_Popup(final String player, final String scoreboardTitle, final MsgSettings type,
-            final List<MsgLineHolder> msg) {
+                               final List<MsgLineHolder> msg) {
         NotificationHolder popup = new NotificationHolder(type, scoreboardTitle, msg);
 
         final PlayerNotificationHandler store = getPlayerHandler(player, scoreboardTitle);
 
         final int id = store.displayMessage(popup);
 
-        if (type.getLength() > 0)
+        if (type.getLength() > 0) {
             removeNotificationLater(id, store, type.getLength());
+        }
 
         return true;
     }
@@ -60,11 +60,10 @@ public class NotificationManager implements Listener {
      * @param type            type defines color and length
      * @param scoreboardTitle scoreboard title is used
      * @param msg             message text already cut into lines with length <= 16
-     *
      * @return a boolean for whatever reason I cant remember
      */
     private boolean showTimedPopup(final String player, final MsgSettings type, final String scoreboardTitle,
-            final List<String> msg) {
+                                   final List<String> msg) {
         return show_Popup(player, scoreboardTitle, type, MsgLineHolder.fromString(msg, type.getTextColor()));
     }
 
@@ -77,11 +76,10 @@ public class NotificationManager implements Listener {
      * @param scoreboardTitle scoreboard title is used
      * @param msg             message text will be wrapped to fit the scoreboard
      *                        limitations
-     *
      * @return a boolean for whatever reason I cant remember
      */
     private boolean showTimedPopup(final String player, final MsgSettings type, final String scoreboardTitle,
-            final String msg) {
+                                   final String msg) {
         return show_Popup(player, scoreboardTitle, type, StringUtil.getLines(msg, type.getTextColor()));
     }
 
@@ -94,7 +92,6 @@ public class NotificationManager implements Listener {
      * @param scoreboardTitle scoreboard title is used
      * @param msg             message text will be wrapped to fit the scoreboard
      *                        limitations
-     *
      * @return a boolean for whatever reason I cant remember
      */
     public boolean showTimedPopup(final String player, int length, final String scoreboardTitle, final String msg) {
@@ -117,11 +114,10 @@ public class NotificationManager implements Listener {
      * @param scoreboardTitle scoreboard title is used
      * @param msg             message text will be wrapped to fit the scoreboard
      *                        limitations
-     *
      * @return a boolean for whatever reason I cant remember
      */
     public boolean showPopup(final String player, final String identifier, int length, ChatColor titleColor,
-            ChatColor textColor, final String scoreboardTitle, final String msg) {
+                             ChatColor textColor, final String scoreboardTitle, final String msg) {
         return show_Popup(player, scoreboardTitle, new MsgSettings(identifier, length, titleColor, textColor),
                 StringUtil.getLines(msg, textColor));
     }
@@ -141,11 +137,10 @@ public class NotificationManager implements Listener {
      * @param textColor       general textcolor of the message
      * @param scoreboardTitle scoreboard title is used
      * @param msg             message text already cut into lines with length <= 16
-     *
      * @return a boolean for whatever reason I cant remember
      */
     public boolean showPopup(final String player, final String identifier, int length, ChatColor titleColor,
-            ChatColor textColor, final String scoreboardTitle, final List<String> msg) {
+                             ChatColor textColor, final String scoreboardTitle, final List<String> msg) {
         return showTimedPopup(player, new MsgSettings(identifier, length, titleColor, textColor), scoreboardTitle, msg);
     }
 
@@ -157,8 +152,9 @@ public class NotificationManager implements Listener {
 
             final int id = store.displayMessage(popup);
 
-            if (!type.hasUniqueIdentifier())
+            if (!type.hasUniqueIdentifier()) {
                 removeNotificationLater(id, store, type.getLength());
+            }
         }
         return true;
     }
@@ -170,7 +166,6 @@ public class NotificationManager implements Listener {
      * @param type            type of the message
      * @param scoreboardTitle title of the scoreboard
      * @param msg             text of the message
-     *
      * @return if successful
      */
     public boolean broadcastPopup(MsgSettings type, final String scoreboardTitle, final List<String> msg) {
@@ -184,7 +179,6 @@ public class NotificationManager implements Listener {
      * @param type            type of the message
      * @param scoreboardTitle title of the scoreboard
      * @param msg             text of the message
-     *
      * @return if successful
      */
     public boolean broadcastPopup(MsgSettings type, final String scoreboardTitle, final String msg) {
@@ -208,15 +202,14 @@ public class NotificationManager implements Listener {
      *
      * @param player          player
      * @param scoreboardTitle title of the scoreboard
-     *
      * @return storage object
      */
     private PlayerNotificationHandler getPlayerHandler(String player, String scoreboardTitle) {
         final PlayerNotificationHandler notificationHandler;
 
-        if (managerScoreboards.containsKey(player))
+        if (managerScoreboards.containsKey(player)) {
             notificationHandler = managerScoreboards.get(player);
-        else {
+        } else {
             notificationHandler = new PlayerNotificationHandler(scoreboardTitle, plugin, player);
             managerScoreboards.put(player, notificationHandler);
         }

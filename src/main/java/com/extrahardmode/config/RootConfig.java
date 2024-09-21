@@ -26,9 +26,10 @@ import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.Header;
 import com.extrahardmode.service.config.MultiWorldConfig;
 import com.extrahardmode.service.config.YamlCommentWriter;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -57,42 +58,26 @@ public class RootConfig extends MultiWorldConfig {
     @Override
     public void load() {
         init();
-        // find all ymls
-        File[] configFiles = findAllYmlFiles(plugin.getDataFolder());
-        // load the ymls
-        EHMConfig[] ehmConfigs = new EHMConfig[configFiles.length];
-        for (int i = 0; i < configFiles.length; i++) {
-            ehmConfigs[i] = new EHMConfig(configFiles[i]);
-            ehmConfigs[i].registerNodes(RootNode.values());
-            ehmConfigs[i].load();
-        }
-        // what is the main config.yml file?
-        EHMConfig mainEhmConfig = null;
-        for (EHMConfig ehmConfig : ehmConfigs) {
-            if (ehmConfig.isMainConfig()) {
-                mainEhmConfig = ehmConfig;
-                break;
+
+        Path mainFile = plugin.getDataFolder().toPath().resolve("config.yml");
+        if (Files.notExists(mainFile)) {
+            try {
+                Files.createDirectories(mainFile.getParent());
+                Files.createFile(mainFile);
+            } catch (IOException e) {
+                plugin.getLogger().severe("Couldn't create config.yml");
+                e.printStackTrace();
             }
         }
-        // has config.yml been found? not -> create it
-        if (mainEhmConfig == null) {
-            File mainFile = new File(plugin.getDataFolder().getPath() + File.separator + "config.yml");
-            if (!mainFile.exists()) {
-                try {
-                    mainFile.getParentFile().mkdirs();
-                    mainFile.createNewFile();
-                } catch (IOException e) {
-                    plugin.getLogger().severe("Couldn't create config.yml");
-                    e.printStackTrace();
-                }
-            }
-            mainEhmConfig = new EHMConfig(mainFile);
-            mainEhmConfig.registerNodes(RootNode.values());
-            mainEhmConfig.load();
-        }
+
+        EHMConfig mainEhmConfig = new EHMConfig(mainFile.toFile());
+        mainEhmConfig.registerNodes(RootNode.values());
+        mainEhmConfig.load();
+
         // Load config.yml
-        if (mainEhmConfig.isEnabledForAll())
+        if (mainEhmConfig.isEnabledForAll()) {
             enabledForAll = true;
+        }
         for (Map.Entry<ConfigNode, Object> node : mainEhmConfig.getLoadedNodes().entrySet()) {
             for (String world : mainEhmConfig.getWorlds()) {
                 set(world, node.getKey(), node.getValue());
@@ -104,12 +89,15 @@ public class RootConfig extends MultiWorldConfig {
 
         // Prepare comments
         Map<String, String[]> comments = new HashMap<>();
-        for (RootNode node : RootNode.values())
-            if (node.getComments() != null)
+        for (RootNode node : RootNode.values()) {
+            if (node.getComments() != null) {
                 comments.put(node.getPath(), node.getComments());
+            }
+        }
 
-        if (mainEhmConfig.printComments())
+        if (mainEhmConfig.printComments()) {
             YamlCommentWriter.write(mainEhmConfig.getConfigFile(), comments);
+        }
     }
 
     private Header createHeader() {
@@ -128,7 +116,7 @@ public class RootConfig extends MultiWorldConfig {
                 "5. Lots of the configuration is user requested so if you need something just ask",
                 "6. Remember to use /ehm reload after you changed the config instead of /reload",
                 "",
-                "Happy Configuring!" };
+                "Happy Configuring!"};
         header.addLines(lines);
         return header;
     }
@@ -154,12 +142,14 @@ public class RootConfig extends MultiWorldConfig {
         String[] filePaths = baseDir.list((dir, name) -> {
             return name.endsWith(".yml"); // TODO - disables
         });
-        if (filePaths == null)
+        if (filePaths == null) {
             filePaths = new String[] {};
+        }
         Arrays.sort(filePaths); // lexically
         ArrayList<File> files = new ArrayList<>();
-        for (String fileName : filePaths)
+        for (String fileName : filePaths) {
             files.add(new File(plugin.getDataFolder() + File.separator + fileName));
+        }
         return files.toArray(new File[0]);
     }
 }

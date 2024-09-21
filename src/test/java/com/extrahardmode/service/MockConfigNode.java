@@ -22,7 +22,6 @@
 package com.extrahardmode.service;
 
 import com.extrahardmode.service.config.ConfigNode;
-
 import java.util.Collections;
 
 public enum MockConfigNode implements ConfigNode {
@@ -53,7 +52,8 @@ public enum MockConfigNode implements ConfigNode {
 
     INT_Y_1("y01", VarType.INTEGER, SubType.Y_VALUE, 1),
 
-    INT_HP_1("hp01", VarType.INTEGER, SubType.HEALTH, 5),;
+    INT_HP_1("hp01", VarType.INTEGER, SubType.HEALTH, 5),
+    ;
 
     private final String path;
 
@@ -115,8 +115,9 @@ public enum MockConfigNode implements ConfigNode {
                     switch (subType) {
                         case NATURAL_NUMBER:
                         case Y_VALUE: {
-                            if (disableValue != null)
+                            if (disableValue != null) {
                                 obj = disableValue.get();
+                            }
                             break;
                         }
                         case HEALTH: {

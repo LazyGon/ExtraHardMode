@@ -34,6 +34,10 @@ import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
 import com.extrahardmode.task.ArmorWeightTask;
 import com.extrahardmode.task.SetPlayerHealthAndFoodTask;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -46,13 +50,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Playerchanges include
@@ -82,16 +85,18 @@ public class Players extends ListenerModule {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         playerModule = plugin.getModuleForClass(PlayerModule.class);
-        for (World world : plugin.getServer().getWorlds())
+        for (World world : plugin.getServer().getWorlds()) {
             if (CFG.getBoolean(RootNode.ARMOR_SLOWDOWN_ENABLE, world.getName())) {
                 isArmorWeightEnabled = true;
                 break;
             }
+        }
         // In case the plugin is reloaded...
         if (isArmorWeightEnabled && !plugin.getServer().getOnlinePlayers().isEmpty()) {
-            for (Player player : plugin.getServer().getOnlinePlayers())
+            for (Player player : plugin.getServer().getOnlinePlayers()) {
                 armorCheckingPlayers.put(player, plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,
                         new ArmorWeightTask(plugin, player), 20L * 5, 20L * 3));
+            }
         }
     }
 
@@ -105,9 +110,10 @@ public class Players extends ListenerModule {
      */
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
-        if (isArmorWeightEnabled)
+        if (isArmorWeightEnabled) {
             armorCheckingPlayers.put(event.getPlayer(), plugin.getServer().getScheduler().scheduleSyncRepeatingTask(
                     plugin, new ArmorWeightTask(plugin, event.getPlayer()), 20L * 5, 20L * 3));
+        }
     }
 
     /**
@@ -116,9 +122,11 @@ public class Players extends ListenerModule {
     @EventHandler(priority = EventPriority.LOW)
     void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        if (CFG.getBoolean(RootNode.ARMOR_SLOWDOWN_ENABLE, event.getFrom().getName()))
-            if (!CFG.getBoolean(RootNode.ARMOR_SLOWDOWN_ENABLE, player.getWorld().getName()))
+        if (CFG.getBoolean(RootNode.ARMOR_SLOWDOWN_ENABLE, event.getFrom().getName())) {
+            if (!CFG.getBoolean(RootNode.ARMOR_SLOWDOWN_ENABLE, player.getWorld().getName())) {
                 player.setWalkSpeed(0.2f);
+            }
+        }
     }
 
     /**
@@ -175,13 +183,17 @@ public class Players extends ListenerModule {
             List<ItemStack> removedDrops = new ArrayList<>();
 
             int numberOfStacksToRemove = (int) (drops.size() * (deathLossPercent / 100.0f));
-            if (numberOfStacksToRemove == 0 && deathLossPercent > 0)
+            if (numberOfStacksToRemove == 0 && deathLossPercent > 0) {
                 numberOfStacksToRemove = 1;
-            loop: for (int i = 0; i < numberOfStacksToRemove && !drops.isEmpty(); i++) {
+            }
+            loop:
+            for (int i = 0; i < numberOfStacksToRemove && !drops.isEmpty(); i++) {
                 ItemStack toRemove = drops.get(plugin.getRandom().nextInt(drops.size()));
-                for (Material material : blacklisted)
-                    if (material == toRemove.getType())
+                for (Material material : blacklisted) {
+                    if (material == toRemove.getType()) {
                         continue loop; // don't remove blacklisted items
+                    }
+                }
                 removedDrops.add(toRemove);
             }
             EhmPlayerInventoryLossEvent inventoryLossEvent = new EhmPlayerInventoryLossEvent(event, drops,
@@ -191,7 +203,8 @@ public class Players extends ListenerModule {
             if (!inventoryLossEvent.isCancelled()) {
                 List<ItemStack> evntDrops = inventoryLossEvent.getDrops();
                 List<ItemStack> evntDropsRemove = inventoryLossEvent.getStacksToRemove();
-                outer: for (ItemStack item : evntDropsRemove) {
+                outer:
+                for (ItemStack item : evntDropsRemove) {
                     for (Material tool : toolIds) {
                         // Damage valuable tools instead of completely destroying them
                         if (tool == item.getType()) {
@@ -199,8 +212,9 @@ public class Players extends ListenerModule {
                             short maxDurability = item.getType().getMaxDurability();
                             dur += (short) (maxDurability / 100 * toolDmgPercent);
                             // Prevent complete destroyal of heavily damaged items
-                            if (dur >= maxDurability && !destroyTools)
+                            if (dur >= maxDurability && !destroyTools) {
                                 dur = --maxDurability;
+                            }
                             item.setDurability(dur);
                             continue outer;
                         }
@@ -232,10 +246,11 @@ public class Players extends ListenerModule {
                     case BLOCK_EXPLOSION:
                     case ENTITY_EXPLOSION:
                         // TODO EhmPlayerEnvironmentalDamageEvent for each type
-                        if (event.getDamage() > 2)
+                        if (event.getDamage() > 2) {
                             applyEffectOnDmg(event,
                                     CFG.getPotionEffect(RootNode.ENHANCED_DMG_EXPLOSION, world.getName()),
                                     CFG.getDouble(RootNode.ENHANCED_DMG_EXPLOSION_MULT, world.getName()));
+                        }
                         break;
                     case FALL:
                         applyEffectOnDmg(event, CFG.getPotionEffect(RootNode.ENHANCED_DMG_FALL, world.getName()),
@@ -246,13 +261,15 @@ public class Players extends ListenerModule {
                         break;
                     case SUFFOCATION:
                         if (player.getVehicle() instanceof Horse) // Reduced because you can easily glitch into blocks
+                        {
                             applyEffectOnDmg(event,
                                     CFG.getPotionEffect(RootNode.ENHANCED_DMG_SUFFOCATION, world.getName()),
                                     CFG.getDouble(RootNode.ENHANCED_DMG_SUFFOCATION_MULT, world.getName()) / 2);
-                        else
+                        } else {
                             applyEffectOnDmg(event,
                                     CFG.getPotionEffect(RootNode.ENHANCED_DMG_SUFFOCATION, world.getName()),
                                     CFG.getDouble(RootNode.ENHANCED_DMG_SUFFOCATION_MULT, world.getName()));
+                        }
                         // event.setDamage(event.getDamage() * 5);
                         break;
                     case LAVA:
@@ -325,11 +342,12 @@ public class Players extends ListenerModule {
                 (action.equals(Action.LEFT_CLICK_BLOCK) || action.equals(Action.LEFT_CLICK_AIR))) {
             if (block.getRelative(event.getBlockFace()).getType() == Material.FIRE) {
                 EhmPlayerExtinguishFireEvent fireEvent = new EhmPlayerExtinguishFireEvent(player, 100); // 20L ~ 1
-                                                                                                        // seconds; 100L
-                                                                                                        // ~ 5 seconds
+                // seconds; 100L
+                // ~ 5 seconds
                 plugin.getServer().getPluginManager().callEvent(fireEvent);
-                if (!fireEvent.isCancelled())
+                if (!fireEvent.isCancelled()) {
                     player.setFireTicks(fireEvent.getBurnTicks());
+                }
             }
         }
     }

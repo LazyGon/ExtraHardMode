@@ -59,7 +59,7 @@ public class TestMultiWorldConfig {
 
     /**
      * Our Config
-     * 
+     *
      * <pre>
      * BOOL_TRUE = false
      * BOOL_FALSE = false
@@ -86,7 +86,7 @@ public class TestMultiWorldConfig {
         config.set(MockConfigNode.INHERITS_BOOL.getPath(), Mode.INHERIT.name());
         config.set(MockConfigNode.INHERITS_INT.getPath(), Mode.INHERIT.name());
         config.set(MockConfigNode.INHERITS_DOUBLE.getPath(), Mode.INHERIT.name().toLowerCase());// just to test if that
-                                                                                                // also works
+        // also works
         config.set(MockConfigNode.INHERITS_STR.getPath(), Mode.INHERIT.name());
         config.set(MockConfigNode.INHERITS_LIST.getPath(), Mode.INHERIT.name().toLowerCase());
     }

@@ -283,7 +283,7 @@ public enum MessageNode implements ConfigNode {
     MessageNode(String path, MsgCategory msgCategory, String column, String value) {
         this.path = path;
         this.msgCategory = null; // This is important: Shows that this node actually holds a value and not the
-                                 // mode of a node
+        // mode of a node
         this.column = column;
         this.varType = VarType.STRING;
         this.subType = null;
@@ -349,22 +349,24 @@ public enum MessageNode implements ConfigNode {
      */
     public static Collection<MessageNode> getMessageNodes() {
         List<MessageNode> categories = new ArrayList<>();
-        for (MessageNode node : MessageNode.values())
+        for (MessageNode node : MessageNode.values()) {
             if (node.name().toUpperCase().endsWith("_MODE")) {
                 MessageNode msg = null;
                 try {
                     msg = MessageNode.valueOf(node.name().replace("_MODE", "")); // Every message
-                                                                                 // has a node with
-                                                                                 // the message and
-                                                                                 // an accompanying
-                                                                                 // node holding the
-                                                                                 // type of message
+                    // has a node with
+                    // the message and
+                    // an accompanying
+                    // node holding the
+                    // type of message
                 } catch (IllegalArgumentException ignored) {
                 } finally {
-                    if (msg != null)
+                    if (msg != null) {
                         categories.add(msg);
+                    }
                 }
             }
+        }
         return categories;
     }
 
@@ -373,9 +375,11 @@ public enum MessageNode implements ConfigNode {
      */
     public static Collection<MessageNode> getCategoryNodes() {
         List<MessageNode> categories = new ArrayList<>();
-        for (MessageNode node : MessageNode.values())
-            if (node.name().toUpperCase().endsWith("_MODE"))
+        for (MessageNode node : MessageNode.values()) {
+            if (node.name().toUpperCase().endsWith("_MODE")) {
                 categories.add(node);
+            }
+        }
         return categories;
     }
 
@@ -383,7 +387,6 @@ public enum MessageNode implements ConfigNode {
      * Get the default category of this message.
      *
      * @return type
-     *
      * @see MessageConfig#getCat(MessageNode)
      */
     public MsgCategory getDefaultCategory() {

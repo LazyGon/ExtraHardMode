@@ -35,8 +35,9 @@ public class RegexHelper {
         if (containsNumbers(input)) {
             input = stripNumber(input);
             num = Integer.parseInt(input);
-        } else
+        } else {
             throw new NumberFormatException("Not a readable number \"" + input + "\"");
+        }
         return num;
     }
 
@@ -45,8 +46,9 @@ public class RegexHelper {
     }
 
     public static Short parseShort(String input) {
-        if (!containsNumbers(input))
+        if (!containsNumbers(input)) {
             return null;
+        }
         input = stripNumber(input);
 
         int metaInt = Integer.parseInt(input);
@@ -56,8 +58,9 @@ public class RegexHelper {
     }
 
     public static Byte parseByte(String input) {
-        if (!containsNumbers(input))
+        if (!containsNumbers(input)) {
             return null;
+        }
         input = stripNumber(input);
 
         int metaInt = Integer.parseInt(input);

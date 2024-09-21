@@ -21,6 +21,8 @@
 
 package com.extrahardmode.modules;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.mocks.MockPlayer;
 import com.extrahardmode.mocks.MockPlayerInventory;
@@ -31,8 +33,6 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Max
@@ -54,11 +54,11 @@ public class TestInventoryWeight {
 
     private final ItemStack ironHelmet = new ItemStack(Material.IRON_HELMET);
 
-    private final ItemStack[] oneArmor = { ironboots, null, null, null };
+    private final ItemStack[] oneArmor = {ironboots, null, null, null};
 
-    private final ItemStack[] twoArmor = { null, ironLeggings, null, ironHelmet };
+    private final ItemStack[] twoArmor = {null, ironLeggings, null, ironHelmet};
 
-    private final ItemStack[] fullArmor = { ironboots, ironLeggings, ironChest, ironHelmet };
+    private final ItemStack[] fullArmor = {ironboots, ironLeggings, ironChest, ironHelmet};
 
     private final ItemStack[] emptyArmor = new ItemStack[4];
 

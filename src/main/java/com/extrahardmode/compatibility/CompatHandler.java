@@ -2,12 +2,11 @@ package com.extrahardmode.compatibility;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.EHMModule;
+import java.util.HashSet;
+import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Handles compatibility for all supported plugins in one class
@@ -26,18 +25,24 @@ public class CompatHandler extends EHMModule {
     }
 
     public static boolean isExplosionProtected(Location loc) {
-        if (loc != null)
-            for (IBlockProtection prot : blockProtectionPls)
-                if (prot.isExplosionProtected(loc))
+        if (loc != null) {
+            for (IBlockProtection prot : blockProtectionPls) {
+                if (prot.isExplosionProtected(loc)) {
                     return true;
+                }
+            }
+        }
         return false;
     }
 
     public static boolean canMonsterSpawn(Location loc) {
-        if (loc != null)
-            for (IMonsterProtection prot : monsterProtectionPls)
-                if (prot.denySpawn(loc))
+        if (loc != null) {
+            for (IMonsterProtection prot : monsterProtectionPls) {
+                if (prot.denySpawn(loc)) {
                     return true;
+                }
+            }
+        }
         return false;
     }
 

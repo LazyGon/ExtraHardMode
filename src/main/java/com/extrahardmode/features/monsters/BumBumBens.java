@@ -35,10 +35,19 @@ import com.extrahardmode.task.CoolCreeperExplosion;
 import com.extrahardmode.task.CreateExplosionTask;
 import org.bukkit.Effect;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.potion.PotionEffectType;
 
 /**
@@ -70,8 +79,9 @@ public class BumBumBens extends ListenerModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (EntityHelper.isMarkedAsOurs(entity))
+        if (EntityHelper.isMarkedAsOurs(entity)) {
             return;
+        }
         EntityType entityType = entity.getType();
         World world = entity.getWorld();
 
@@ -109,8 +119,9 @@ public class BumBumBens extends ListenerModule {
                 plugin.getServer().getPluginManager().callEvent(dropTntEvent);
                 if (!dropTntEvent.isCancelled()) {
                     world.spawnEntity(entity.getLocation(), EntityType.TNT);
-                    if (creeperSound)
+                    if (creeperSound) {
                         world.playEffect(entity.getLocation(), Effect.GHAST_SHRIEK, 1, 35);
+                    }
                 }
             }
         }
@@ -147,26 +158,31 @@ public class BumBumBens extends ListenerModule {
                     if (damageByEntityEvent != null) {
                         if (damageByEntityEvent.getDamager() instanceof Player) { // Normal Damage from a player
                             damager = (Player) damageByEntityEvent.getDamager();
-                            if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS))
+                            if (playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS)) {
                                 return;
+                            }
                         } else if (damageByEntityEvent.getDamager() instanceof Projectile bullet) { // Damaged by an arrow shot
-                                                                                             // by a player
+                            // by a player
                             if (bullet.getShooter() instanceof Player)// otherwise skeli/dispenser etc.
+                            {
                                 damager = (Player) bullet.getShooter();
-                            if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS))
+                            }
+                            if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS)) {
                                 return;
+                            }
                         }
                     }
                     if (creeper.getTarget() == null && damager == null) { // If not targetting a player this is an
-                                                                          // explosion we don't need. Trying to prevent
-                                                                          // unecessary world damage
+                        // explosion we don't need. Trying to prevent
+                        // unecessary world damage
                         return;
                     }
                     EntityHelper.markLootLess(plugin, (LivingEntity) entity);
                     entity.remove();
-                    if (customCharged)
+                    if (customCharged) {
                         new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER_CHARGED, entity)
                                 .run(); // equal to a TNT blast
+                    }
                     return;
                 }
             }
@@ -202,8 +218,9 @@ public class BumBumBens extends ListenerModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     // give some time for other plugins to block the event
     public void onExplosion(EntityExplodeEvent event) {
-        if (event instanceof FakeEntityExplodeEvent)
+        if (event instanceof FakeEntityExplodeEvent) {
             return;
+        }
         Entity entity = event.getEntity();
         World world = event.getLocation().getWorld();
 
@@ -214,10 +231,12 @@ public class BumBumBens extends ListenerModule {
         if (customCreeper && entity instanceof Creeper) {
             event.setCancelled(true);
             EntityHelper.flagIgnore(plugin, entity);// Ignore this creeper in further calls to this method
-            if (((Creeper) entity).isPowered())
+            if (((Creeper) entity).isPowered()) {
                 new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER_CHARGED, entity).run();
-            else // normal creeper
+            } else // normal creeper
+            {
                 new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER, entity).run();
+            }
         }
     }
 }

@@ -25,11 +25,10 @@ import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.MultiWorldConfig;
 import com.extrahardmode.service.config.customtypes.BlockRelationsList;
 import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
-import org.bukkit.Material;
-import org.bukkit.potion.PotionEffectType;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import org.bukkit.Material;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * Configuration options of the root config.yml file.
@@ -1199,7 +1198,8 @@ public enum RootNode implements ConfigNode {
     /**
      * Damage the world below border
      */
-    EXPLOSIONS_GHAST_ABOVE_WORLD_GRIEF("Explosions.Ghasts.Above Border.World Damage", VarType.BOOLEAN, true),;
+    EXPLOSIONS_GHAST_ABOVE_WORLD_GRIEF("Explosions.Ghasts.Above Border.World Damage", VarType.BOOLEAN, true),
+    ;
 
     /**
      * Path.
@@ -1341,7 +1341,7 @@ public enum RootNode implements ConfigNode {
 
     /**
      * Get the Object that will disable this option
-     * 
+     *
      * <pre>
      * Defaults:
      * boolean: false
@@ -1371,9 +1371,9 @@ public enum RootNode implements ConfigNode {
             case INTEGER: {
                 obj = 0;
                 if (subType != null) {
-                    if (disableValue != null && disableValue.get() != null)
+                    if (disableValue != null && disableValue.get() != null) {
                         obj = disableValue.get();
-                    else {
+                    } else {
                         switch (subType) {
                             case NATURAL_NUMBER:
                             case Y_VALUE, PERCENTAGE: {
@@ -1397,15 +1397,16 @@ public enum RootNode implements ConfigNode {
             }
             case DOUBLE: {
                 obj = 0.0;
-                if (subType != null)
-                    if (disableValue != null && disableValue.get() != null)
+                if (subType != null) {
+                    if (disableValue != null && disableValue.get() != null) {
                         obj = disableValue.get();
-                    else {
+                    } else {
                         switch (subType) {
                             case NATURAL_NUMBER:
                             case Y_VALUE: {
-                                if (disableValue != null)
+                                if (disableValue != null) {
                                     obj = disableValue.get();
+                                }
                                 break;
                             }
                             case HEALTH: {
@@ -1424,6 +1425,7 @@ public enum RootNode implements ConfigNode {
                             }
                         }
                     }
+                }
                 break;
             }
             case STRING: {

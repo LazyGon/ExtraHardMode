@@ -6,12 +6,15 @@ import com.extrahardmode.config.RootNode;
 import com.extrahardmode.config.messages.MsgCategory;
 import com.extrahardmode.module.MsgModule;
 import com.extrahardmode.module.PlayerModule;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class WeightCheckTask implements Runnable {
     private final ExtraHardMode mPlugin;

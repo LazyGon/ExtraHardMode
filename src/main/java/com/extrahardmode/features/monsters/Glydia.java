@@ -35,23 +35,38 @@ import com.extrahardmode.service.FindAndReplace;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.task.DragonAttackPatternTask;
 import com.extrahardmode.task.DragonAttackTask;
+import java.util.List;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import java.util.List;
 
 /**
  * Glydia is the Enderdragon changes to her include:
@@ -218,8 +233,9 @@ public class Glydia extends ListenerModule {
     @EventHandler
     public void onPlayerTpOut(PlayerChangedWorldEvent event) {
         String playerName = event.getPlayer().getName();
-        if (event.getFrom().getEnvironment() == World.Environment.THE_END)
+        if (event.getFrom().getEnvironment() == World.Environment.THE_END) {
             data.getPlayers().remove(playerName);
+        }
     }
 
     /**
@@ -295,20 +311,21 @@ public class Glydia extends ListenerModule {
         World world = event.getFrom();
 
         // Ignore if world is not EHM-enabled
-        if (!CFG.isEnabledIn(world.getName()))
+        if (!CFG.isEnabledIn(world.getName())) {
             return;
+        }
 
         final boolean respawnDragon = CFG.getBoolean(RootNode.RESPAWN_ENDER_DRAGON, world.getName());
 
         // FEATURE: respawn the ender dragon when the last player leaves the end
         if (world.getEnvironment() == World.Environment.THE_END && world.getPlayers().isEmpty()) // Once everyone has
-                                                                                                   // left
+        // left
         {
             // look for an ender dragon
             EnderDragon enderDragon = null;
             for (Entity entity : world.getEntities()) {
                 if (enderDragon != null && entity instanceof EnderDragon) { // If there is already a dragon for whatever
-                                                                            // reason, remove it
+                    // reason, remove it
                     entity.remove();
                 }
                 if (entity instanceof EnderDragon) {
@@ -337,7 +354,6 @@ public class Glydia extends ListenerModule {
     /**
      * when ender dragon spawns
      * set new max health
-     * 
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEnderDragonSpawn(final CreatureSpawnEvent event) {
@@ -345,8 +361,9 @@ public class Glydia extends ListenerModule {
             Location location = event.getLocation();
             World world = location.getWorld();
             final int enderDragonHealth = CFG.getInt(RootNode.ENDER_DRAGON_HEALTH, world.getName());
-            if (enderDragonHealth <= 0)
+            if (enderDragonHealth <= 0) {
                 return;
+            }
             event.getEntity().setMaxHealth(enderDragonHealth);
             event.getEntity().setHealth(event.getEntity().getMaxHealth());
         }
@@ -389,8 +406,9 @@ public class Glydia extends ListenerModule {
      */
     @EventHandler
     public void onExplosion(EntityExplodeEvent event) {
-        if (event instanceof FakeEntityExplodeEvent)
+        if (event instanceof FakeEntityExplodeEvent) {
             return;
+        }
         World world = event.getLocation().getWorld();
         Entity entity = event.getEntity();
 

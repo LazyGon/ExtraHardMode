@@ -16,9 +16,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.ShapedRecipe;
 
-/** @author Diemex */
+/**
+ * @author Diemex
+ */
 public class MoreTnt extends ListenerModule {
     private RootConfig CFG;
 
@@ -55,7 +62,9 @@ public class MoreTnt extends ListenerModule {
                         break;
                     default:
                         if (event.getRecipe() == null) // 1.12 will return null I guess
+                        {
                             return;
+                        }
                         if (event.getRecipe().getResult().getType().equals(Material.TNT)) {
                             // TODO LOW EhmMoreTntEvent
                             // Recipe in CraftingGrid

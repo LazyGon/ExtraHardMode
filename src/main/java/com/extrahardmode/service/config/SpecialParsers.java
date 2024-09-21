@@ -45,13 +45,13 @@ public class SpecialParsers {
      * Match a ChatColor
      *
      * @param input input string to match
-     *
      * @return ChatColor or null if not a valid ChatColor
      */
     public static ChatColor parseColor(String input) {
         ChatColor color = null;
-        if (input == null)
+        if (input == null) {
             return null;
+        }
         try {
             color = ChatColor.valueOf(input.toUpperCase());
         } catch (IllegalArgumentException ignored) {

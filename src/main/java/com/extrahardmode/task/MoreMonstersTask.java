@@ -21,14 +21,6 @@
 
 package com.extrahardmode.task;
 
-import java.util.AbstractMap.SimpleEntry;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -37,6 +29,12 @@ import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
 import com.extrahardmode.service.OurRandom;
+import java.util.AbstractMap.SimpleEntry;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 /**
  * Task to spawn more monsters, especially in light.
@@ -90,10 +88,10 @@ public class MoreMonstersTask implements Runnable {
                 try {
                     location = verifyLocation(location);
                     if (location != null && location.getChunk().isLoaded() && player.isOnline()) // fix monsters
-                                                                                                 // spawning at previous
-                                                                                                 // locations on login
+                    // spawning at previous
+                    // locations on login
                     {// Check if the player is within 64 blocks, but there are no other players
-                     // within 16 blocks
+                        // within 16 blocks
                         boolean worldOk = world.getEnvironment() == Environment.NORMAL;
                         boolean playerClose = (location.distanceSquared(player.getLocation()) < 64 * 64);
                         boolean tooClose = EntityHelper.arePlayersNearby(location, 16.0);
@@ -147,8 +145,9 @@ public class MoreMonstersTask implements Runnable {
         // is too extreme anyway, add config later
         int lightLvl = 15;
         double yLoc = location.getY();
-        if (yLoc > 255 || yLoc < 0)
+        if (yLoc > 255 || yLoc < 0) {
             lightLvl = location.getBlock().getLightFromSky();
+        }
         boolean worldOk = world.getEnvironment() == World.Environment.NORMAL;
         boolean depthOk = location.getY() < maxY;
 

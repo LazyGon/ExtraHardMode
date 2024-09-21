@@ -26,9 +26,10 @@ public class DebugToggleCommand implements ICommand {
                     sender.sendMessage(ChatColor.GREEN + plugin.getTag() + " Enabled DebugMode " + plugin.getName());
                 }
                 return true;
-            } else
+            } else {
                 sender.sendMessage(
                         ChatColor.RED + plugin.getTag() + "You need to be in game to use debugging functionality!");
+            }
         } else {
             sender.sendMessage(ChatColor.RED + plugin.getTag() + " Lack permission: " + PermissionNode.ADMIN.getNode());
         }

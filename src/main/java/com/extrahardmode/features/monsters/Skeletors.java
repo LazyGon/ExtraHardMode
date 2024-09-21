@@ -28,9 +28,22 @@ import com.extrahardmode.events.EhmSkeletonDeflectEvent;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.service.OurRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.SmallFireball;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -43,17 +56,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 /**
  * Changes to Skeletons include:
  * <p/>
  * Immunity to arrows
  */
 public class Skeletors extends ListenerModule {
-    /** Configuration */
+    /**
+     * Configuration
+     */
     private RootConfig CFG;
 
     private final static String key_knockbackArrow = "ehm.skeletors.knockbackarrow";
@@ -98,15 +109,15 @@ public class Skeletors extends ListenerModule {
             if (event.getDamager() instanceof Projectile bullet && event.getEntity() instanceof Player) {
                 // FEATURE: skeletons can knock back
                 // knock back target with half the arrow's velocity
-                if (bullet.hasMetadata(key_knockbackArrow))
+                if (bullet.hasMetadata(key_knockbackArrow)) {
                     entity.setVelocity(bullet.getVelocity().multiply(knockBackStrength));
-                else if (bullet.hasMetadata(key_slownessArrow))
+                } else if (bullet.hasMetadata(key_slownessArrow)) {
                     entity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, slownessLength, 3));
-                else if (bullet.hasMetadata(key_fireArrow)) {
+                } else if (bullet.hasMetadata(key_fireArrow)) {
                     // Allow for a variable amount of fireticks
                     int ticksBefore = entity.getFireTicks() >= 100 ? entity.getFireTicks() - 100 : 0; // fireticks from
-                                                                                                      // the arrow are
-                                                                                                      // already applied
+                    // the arrow are
+                    // already applied
                     entity.setFireTicks(ticksBefore + fireTicks);
                 }
             }
@@ -166,7 +177,8 @@ public class Skeletors extends ListenerModule {
         final boolean fireworks = CFG.getBoolean(RootNode.SKELETONS_FIREWORK_ENABLE, world.getName());
         final int fireworksPercent = CFG.getInt(RootNode.SKELETONS_FIREWORK_PERCENT, world.getName());
 
-        final boolean explosionArrowEnable = CFG.getBoolean(RootNode.SKELETONS_FIREBALL_ENABLE, world.getName());// CFG.getBoolean(RootNode.);
+        final boolean explosionArrowEnable =
+                CFG.getBoolean(RootNode.SKELETONS_FIREBALL_ENABLE, world.getName());// CFG.getBoolean(RootNode.);
         final int explosionPercent = CFG.getInt(RootNode.SKELETONS_FIREBALL_PERCENTAGE, world.getName());
 
         final boolean silverfishEnable = CFG.getBoolean(RootNode.SKELETONS_RELEASE_SILVERFISH_ENABLE, world.getName());
@@ -225,18 +237,21 @@ public class Skeletors extends ListenerModule {
     public void onSilverfishSpawn(CreatureSpawnEvent event) {
         final boolean tempFix = CFG.getBoolean(RootNode.SILVERFISH_TEMP_POTION_EFFECT_FIX,
                 event.getLocation().getWorld().getName());
-        if (event.getEntityType() == EntityType.SILVERFISH && tempFix)
+        if (event.getEntityType() == EntityType.SILVERFISH && tempFix) {
             event.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, Integer.MAX_VALUE, 1, false));
+        }
     }
 
-    /** When a skeleton dies kill all the spawned silverfish aswell */
+    /**
+     * When a skeleton dies kill all the spawned silverfish aswell
+     */
     @EventHandler
     public void onSkeletonDeath(EntityDeathEvent event) {
         final boolean removeSilverfish = CFG.getBoolean(RootNode.SKELETONS_RELEASE_SILVERFISH_KILL,
                 event.getEntity().getWorld().getName());
         if (removeSilverfish && event.getEntity() instanceof Skeleton) {
             // Kill all silverfish, but do it slowly as if they are burning up
-            for (LivingEntity silverfish : event.getEntity().getWorld().getLivingEntities())
+            for (LivingEntity silverfish : event.getEntity().getWorld().getLivingEntities()) {
                 if (isMinion(silverfish)) {
                     for (UUID id : getMinionsSpawnedBySkeli(event.getEntity(), plugin)) {
                         if (silverfish.getUniqueId() == id) {
@@ -247,6 +262,7 @@ public class Skeletors extends ListenerModule {
                         }
                     }
                 }
+            }
         }
     }
 
@@ -263,8 +279,9 @@ public class Skeletors extends ListenerModule {
 
                 // Try to find the parent by id
                 for (LivingEntity worldEntity : entity.getWorld().getLivingEntities()) {
-                    if (worldEntity.getUniqueId() == parent)
+                    if (worldEntity.getUniqueId() == parent) {
                         removeMinionFromSkeli(entity.getUniqueId(), worldEntity);
+                    }
                 }
             }
         }
@@ -282,10 +299,13 @@ public class Skeletors extends ListenerModule {
         List<UUID> idList = new ArrayList<>(1);
         // Get minions already set and append the new Minion
         List<MetadataValue> meta = summoner.getMetadata(key_spawnedMinions);
-        for (MetadataValue val : meta)
-            if (val.getOwningPlugin() == plugin)
-                if (val.value() instanceof List)
+        for (MetadataValue val : meta) {
+            if (val.getOwningPlugin() == plugin) {
+                if (val.value() instanceof List) {
                     idList = (List<UUID>) val.value();
+                }
+            }
+        }
         idList.add(minion.getUniqueId());
         summoner.setMetadata(key_spawnedMinions, new FixedMetadataValue(plugin, idList));
 
@@ -316,18 +336,20 @@ public class Skeletors extends ListenerModule {
      *
      * @param entity entity to get the minions for
      * @param plugin owning plugin to access meta
-     *
      * @return Unique ids of all minions that have been spawned (minions can be
-     *         dead)
+     * dead)
      */
     @SuppressWarnings("unchecked")
     public static List<UUID> getMinionsSpawnedBySkeli(LivingEntity entity, Plugin plugin) {
         List<MetadataValue> meta = entity.getMetadata(key_spawnedMinions);
         List<UUID> ids = new ArrayList<>(meta.size());
-        for (MetadataValue val : meta)
-            if (val.getOwningPlugin() == plugin)
-                if (val.value() instanceof List)
+        for (MetadataValue val : meta) {
+            if (val.getOwningPlugin() == plugin) {
+                if (val.value() instanceof List) {
                     ids = (List<UUID>) val.value();
+                }
+            }
+        }
         return ids;
     }
 
@@ -336,7 +358,6 @@ public class Skeletors extends ListenerModule {
      *
      * @param entity entity to get minion count
      * @param plugin owning plugin to access MetaData
-     *
      * @return count or 0 if not set
      */
     public static int getTotalMinionsSummonedBySkeli(LivingEntity entity, Plugin plugin) {
@@ -344,8 +365,9 @@ public class Skeletors extends ListenerModule {
         int totalCount = 0;
         if (!meta.isEmpty()) {
             MetadataValue value = meta.get(0);
-            if (value.value() instanceof Integer)
+            if (value.value() instanceof Integer) {
                 totalCount = (Integer) value.value();
+            }
         }
         return totalCount;
     }
@@ -374,15 +396,15 @@ public class Skeletors extends ListenerModule {
      *
      * @param minion minion to get the parent for
      * @param plugin owning plugin for MetaData
-     *
      * @return id of parent or id of minion if parent not set
      */
     public static UUID getParentOfMinion(LivingEntity minion, Plugin plugin) {
         List<MetadataValue> meta = minion.getMetadata(key_parent);
         if (!meta.isEmpty()) {
             MetadataValue metaVal = meta.get(0);
-            if (metaVal.value() instanceof UUID)
+            if (metaVal.value() instanceof UUID) {
                 return (UUID) metaVal.value();
+            }
         }
         return minion.getUniqueId();
     }
@@ -396,8 +418,9 @@ public class Skeletors extends ListenerModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (EntityHelper.isMarkedAsOurs(entity))
+        if (EntityHelper.isMarkedAsOurs(entity)) {
             return;
+        }
         Location location = event.getLocation();
         World world = location.getWorld();
         EntityType entityType = entity.getType();

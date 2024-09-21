@@ -29,51 +29,59 @@ public class PotionEffectHolder {
     }
 
     public static PotionEffectType parseEffect(String input) {
-        if (input == null)
+        if (input == null) {
             return null;
+        }
 
         PotionEffectType effect = null;
         // figure out if it's an id or string PotionType
         boolean containsNumbers = RegexHelper.containsNumbers(input),
                 containsLetters = RegexHelper.containsLetters(input);
 
-        if (containsLetters)
+        if (containsLetters) {
             effect = PotionEffectType.getByName(input);
+        }
         if (effect == null) // Strip values that are most likely invalid
+        {
             effect = PotionEffectType.getByName(RegexHelper.stripEnum(input));
-        if (effect == null && containsNumbers)
+        }
+        if (effect == null && containsNumbers) {
             effect = PotionEffectType.getById(RegexHelper.parseNumber(input)); // TODO: Fix deprecation
+        }
 
         return effect;
     }
 
     public PotionEffect toBukkitEffect(boolean ambient) {
-        if (bukkitEffect == null && bukkitEffectType != null && duration > 0 && amplifier > 0)
+        if (bukkitEffect == null && bukkitEffectType != null && duration > 0 && amplifier > 0) {
             bukkitEffect = new PotionEffect(bukkitEffectType, duration, amplifier, ambient);
+        }
         return bukkitEffect;
     }
 
     public void applyEffect(LivingEntity entity, boolean ambient) {
-        if (toBukkitEffect(ambient) != null)
+        if (toBukkitEffect(ambient) != null) {
             entity.addPotionEffect(bukkitEffect);
+        }
     }
 
     /**
      * Load a PotionEffect from disk
      *
      * @param section to load from
-     *
      * @return loaded object or null if an error occurred
      */
     public static PotionEffectHolder loadFromConfig(ConfigurationSection section) {
-        if (section == null)
+        if (section == null) {
             return null;
+        }
         String effect = section.getString(key_effect, ""),
                 length = section.getString(key_duration, ""),
                 strength = section.getString(key_amplifier, "");
 
-        if (effect.equals("") || length.equals("") || strength.equals(""))
+        if (effect.equals("") || length.equals("") || strength.equals("")) {
             return null;
+        }
 
         PotionEffectHolder potionEffect = new PotionEffectHolder();
 

@@ -24,6 +24,8 @@ package com.extrahardmode.module;
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.EHMModule;
 import com.extrahardmode.service.OurRandom;
+import java.util.ArrayList;
+import java.util.Map;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -37,9 +39,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Put all the Utility Stuff here that doesn't fit into the other modules
@@ -81,14 +80,14 @@ public class UtilityModule extends EHMModule {
      *
      * @param item   Item to damage
      * @param blocks amount of blocks the item can break
-     *
      * @return the damaged Item, can be completely broken
      */
     public static ItemStack damage(ItemStack item, int blocks) {
         short maxDurability = item.getType().getMaxDurability();
         Validate.isTrue(maxDurability > 1, "This item is not damageable");
-        if (blocks <= 0)
+        if (blocks <= 0) {
             return item;
+        }
 
         short damagePerBlock = (short) (maxDurability / blocks);
         // Because tooldmg is an int we have to sometimes break the tool twice, I
@@ -100,8 +99,9 @@ public class UtilityModule extends EHMModule {
             int durability = item.getDurability();
             durability += damagePerBlock;
 
-            if (OurRandom.nextDouble() < percent)
+            if (OurRandom.nextDouble() < percent) {
                 durability += (damagePerBlock > 0 ? damagePerBlock : 1);
+            }
 
             item.setDurability((short) durability);
         }
@@ -112,8 +112,9 @@ public class UtilityModule extends EHMModule {
         // compare recipes
         boolean isSame = true;
         for (int i = 0; i < recipe1.size(); i++) {
-            if (!recipe1.get(i).getType().equals(recipe2.get(i).getType()))
+            if (!recipe1.get(i).getType().equals(recipe2.get(i).getType())) {
                 isSame = false;
+            }
         }
         return isSame;
     }
@@ -137,8 +138,9 @@ public class UtilityModule extends EHMModule {
             char id = flatShape.charAt(i);
             ItemStack itemStack = ingredientMap.get(id);
             // to avoid null pointers, empty slots will be filled with air
-            if (itemStack == null)
+            if (itemStack == null) {
                 itemStack = new ItemStack(Material.AIR);
+            }
             craftRecipe.add(itemStack);
         }
         return craftRecipe;

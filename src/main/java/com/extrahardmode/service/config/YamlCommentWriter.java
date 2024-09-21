@@ -1,9 +1,13 @@
 package com.extrahardmode.service.config;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.*;
 import java.util.Map;
 
 /**
@@ -17,17 +21,13 @@ public class YamlCommentWriter {
      * @param comments path = key, comment lines = values
      */
     public static void write(File input, Map<String, String[]> comments) {
-        BufferedReader br;
-        // output
-        ByteArrayOutputStream memStream = new ByteArrayOutputStream(1024);
-        FileOutputStream outStream = null;
-        OutputStreamWriter writer = null;
-        // nodes
-        String[] nodes = new String[20];
-        try {
-            br = new BufferedReader(new FileReader(input));
-            writer = new OutputStreamWriter(memStream, StandardCharsets.UTF_8.newEncoder());
+        try (BufferedReader br = new BufferedReader(new FileReader(input));
+             ByteArrayOutputStream memStream = new ByteArrayOutputStream(1024);
+             FileOutputStream outStream = new FileOutputStream(input);
+             OutputStreamWriter writer = new OutputStreamWriter(memStream, StandardCharsets.UTF_8.newEncoder())) {
 
+            // nodes
+            String[] nodes = new String[20];
             String line;
             while ((line = br.readLine()) != null) {
                 boolean comment = isComment(line);
@@ -40,32 +40,29 @@ public class YamlCommentWriter {
                 nodes[level + 1] = null; // bcs
                 // path
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i <= level; i++)
+                for (int i = 0; i <= level; i++) {
                     if (nodes[i] != null) {
-                        if (i > 0)
+                        if (i > 0) {
                             sb.append('.');
+                        }
                         sb.append(nodes[i]);
                     }
+                }
                 String path = sb.toString();
 
                 // we have a comment?
-                if (comments.containsKey(path) && !(comment || listItem)) // TODO split long lines
-                    for (String commentLine : comments.get(path))
-                        writer.write(StringUtils.repeat(" ", level * 2) + "# " + commentLine + String.format("%n"));
+                if (comments.containsKey(path) && !(comment || listItem)) {
+                    // TODO split long lines
+                    for (String commentLine : comments.get(path)) {
+                        writer.write(" ".repeat(level * 2) + "# " + commentLine + String.format("%n"));
+                    }
+                }
                 line += String.format("%n");
                 writer.write(line);
-
-                line.length(); // useless breakpoint line
             }
-            br.close();
             // Overwrite the original file
-            outStream = new FileOutputStream(input);
-            writer.close();
             memStream.writeTo(outStream);
-            outStream.close();
-        }
-        // BLABLABLA EXCEPTIONS BLABLA
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -79,18 +76,20 @@ public class YamlCommentWriter {
     }
 
     private static String getNodeName(String line) {
-        if (isComment(line) || !line.contains(":"))
+        if (isComment(line) || !line.contains(":")) {
             return null;
+        }
         return line.substring(getIndentation(line)).split(":")[0];
     }
 
     private static int getIndentation(String line) {
         int level = 0;
         for (char c : line.toCharArray()) {
-            if (c == ' ')
+            if (c == ' ') {
                 level++;
-            else
+            } else {
                 break;
+            }
         }
         return level;
     }

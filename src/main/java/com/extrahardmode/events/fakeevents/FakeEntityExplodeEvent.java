@@ -1,12 +1,11 @@
 package com.extrahardmode.events.fakeevents;
 
+import java.util.List;
 import org.bukkit.ExplosionResult;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
-import java.util.List;
 
 /**
  * @author Diemex

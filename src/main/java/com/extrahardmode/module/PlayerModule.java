@@ -40,7 +40,9 @@ import org.bukkit.inventory.PlayerInventory;
 public class PlayerModule extends EHMModule {
     private RootConfig CFG;
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public PlayerModule(ExtraHardMode plugin) {
         super(plugin);
     }
@@ -53,8 +55,9 @@ public class PlayerModule extends EHMModule {
     public boolean playerBypasses(Player player, Feature feature) {
         // Validate.notNull(player, "We can't check if a Player bypasses if there is no
         // Player!");
-        if (player == null)
+        if (player == null) {
             return false;
+        }
 
         final boolean bypassPermsEnabled = CFG.getBoolean(RootNode.BYPASS_PERMISSION, player.getWorld().getName());
         final boolean opsBypass = CFG.getBoolean(RootNode.BYPASS_OPS, player.getWorld().getName());
@@ -62,17 +65,22 @@ public class PlayerModule extends EHMModule {
 
         boolean bypasses = false;
 
-        if (bypassPermsEnabled)
+        if (bypassPermsEnabled) {
             bypasses = player.hasPermission(feature.getBypassNode().getNode());
-        if (!bypasses && opsBypass)
+        }
+        if (!bypasses && opsBypass) {
             bypasses = player.isOp();
-        if (!bypasses && creativeBypasses)
+        }
+        if (!bypasses && creativeBypasses) {
             bypasses = player.getGameMode().equals(GameMode.CREATIVE);
+        }
 
         return bypasses;
     }
 
-    /** Is the player currently on a ladder? */
+    /**
+     * Is the player currently on a ladder?
+     */
     public boolean isPlayerOnLadder(Player player) {
         return player.getLocation().getBlock().getType().equals(Material.LADDER);
     }
@@ -117,7 +125,6 @@ public class PlayerModule extends EHMModule {
      *
      * @param inv     to count in
      * @param toCount the Material to count
-     *
      * @return the number of items as Integer
      */
     public static int countInvItem(PlayerInventory inv, Material toCount) {
@@ -134,7 +141,6 @@ public class PlayerModule extends EHMModule {
      * Get the percentage of how much less damage a player will take.
      *
      * @param player to check the armor contents for
-     *
      * @return the percentage as double. Example 0.8 when full armor is worn
      */
     public static float getArmorPoints(final Player player) {

@@ -21,10 +21,9 @@
 
 package com.extrahardmode.task;
 
+import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 /**
  * Task to drop items at a specified location.

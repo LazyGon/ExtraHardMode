@@ -22,34 +22,52 @@
 package com.extrahardmode.module;
 
 import com.extrahardmode.compatibility.CompatHandler;
+import java.util.List;
+import java.util.Random;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Wither;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.List;
-import java.util.Random;
-
-/** Module that contains logic dealing with entities. */
+/**
+ * Module that contains logic dealing with entities.
+ */
 public class EntityHelper {
 
-    /** Getter for environmental damage for the specified entity */
+    /**
+     * Getter for environmental damage for the specified entity
+     */
     private static final String IGNORE = "extrahardmode.ignore.me";
 
-    /** Getter to set a flag to ignore a entity in further processing */
+    /**
+     * Getter to set a flag to ignore a entity in further processing
+     */
     private static final String ENVIRONMENTAL_DAMAGE = "extrahard_environmentalDamage";
 
-    /** Process this Entity */
+    /**
+     * Process this Entity
+     */
     private static final String PROCESS_ENTITY = "extrahardmode_process_entity";
 
-    /** Our Entity - created by us */
+    /**
+     * Our Entity - created by us
+     */
     private static final String OURS = "extrahardmode_our_entity";
 
     /**
@@ -71,8 +89,9 @@ public class EntityHelper {
     public static void addEnvironmentalDamage(Plugin plugin, LivingEntity entity, double damage) {
         double currentTotalDamage = 0.0;
         List<MetadataValue> meta = entity.getMetadata(ENVIRONMENTAL_DAMAGE);
-        if (!meta.isEmpty())
+        if (!meta.isEmpty()) {
             currentTotalDamage = meta.get(0).asDouble();
+        }
         entity.setMetadata(ENVIRONMENTAL_DAMAGE, new FixedMetadataValue(plugin, currentTotalDamage + damage));
     }
 
@@ -80,14 +99,14 @@ public class EntityHelper {
      * Checks whether an entity should drop items when it dies
      *
      * @param entity - Entity to check.
-     *
      * @return True if the entity is lootable, else false.
      */
     public static boolean isLootLess(LivingEntity entity) {
         double currentTotalDamage = 0.0;
         List<MetadataValue> meta = entity.getMetadata(ENVIRONMENTAL_DAMAGE);
-        if (!meta.isEmpty())
+        if (!meta.isEmpty()) {
             currentTotalDamage = meta.get(0).asDouble();
+        }
         // wither is exempt. he can't be farmed because creating him requires combining
         // non-farmable components
         return !(entity instanceof Wither) && (currentTotalDamage > entity.getMaxHealth() / 2.0);
@@ -103,7 +122,7 @@ public class EntityHelper {
         Block feetBlock = entity.getLocation().getBlock();
         Block headBlock = feetBlock.getRelative(BlockFace.UP);
 
-        Block[] blocks = { feetBlock, headBlock };
+        Block[] blocks = {feetBlock, headBlock};
         for (Block block : blocks) {
             if (block.getType() == Material.COBWEB) {
                 block.setType(Material.AIR);
@@ -116,11 +135,14 @@ public class EntityHelper {
      * called multiple times
      */
     public static void flagIgnore(Plugin plugin, Entity entity) {
-        if (entity != null)
+        if (entity != null) {
             entity.setMetadata(IGNORE, new FixedMetadataValue(plugin, true));
+        }
     }
 
-    /** Check if an entity has been flagged to be ignored */
+    /**
+     * Check if an entity has been flagged to be ignored
+     */
     public static boolean hasFlagIgnore(Entity entity) {
         return entity != null && entity.hasMetadata(IGNORE);
     }
@@ -136,7 +158,9 @@ public class EntityHelper {
         }
     }
 
-    /** Check if an entity has been flagged to be processed */
+    /**
+     * Check if an entity has been flagged to be processed
+     */
     public static boolean isMarkedForProcessing(Entity entity) {
         Validate.notNull(entity, "Entity can't be null");
         List<MetadataValue> meta = entity.getMetadata(PROCESS_ENTITY);
@@ -155,7 +179,9 @@ public class EntityHelper {
         }
     }
 
-    /** Check if an entity has been flagged to be processed */
+    /**
+     * Check if an entity has been flagged to be processed
+     */
     public static boolean isMarkedAsOurs(Entity entity) {
         Validate.notNull(entity, "Entity can't be null");
         List<MetadataValue> meta = entity.getMetadata(PROCESS_ENTITY);
@@ -163,14 +189,18 @@ public class EntityHelper {
         return entity.hasMetadata(OURS) && meta != null;
     }
 
-    /** Is the Monster farmable cattle, which drops something on death? */
+    /**
+     * Is the Monster farmable cattle, which drops something on death?
+     */
     public static boolean isCattle(Entity entity) {
         return entity instanceof Cow
                 || entity instanceof Chicken
                 || entity instanceof Pig;
     }
 
-    /** Simple check if there is enough space for a monster to spawn */
+    /**
+     * Simple check if there is enough space for a monster to spawn
+     */
     public static boolean simpleIsLocSafeSpawn(Location loc) {
         // quickly check if 2 blocks above this is clear
         Block oneAbove = loc.getBlock();
@@ -220,17 +250,18 @@ public class EntityHelper {
      * Entities which are not LivingEntities
      *
      * @return a reference to the spawned Entity, might be dead if the monster can't
-     *         spawn in that location or null if the EntityType was not a
-     *         LivingEntity
+     * spawn in that location or null if the EntityType was not a
+     * LivingEntity
      */
     public static LivingEntity spawn(Location loc, EntityType type) {
         LivingEntity entity = null;
         {
             Entity ent = loc.getWorld().spawnEntity(loc, type);
-            if (ent instanceof LivingEntity)
+            if (ent instanceof LivingEntity) {
                 entity = (LivingEntity) ent;
+            }
         }
-        if (entity != null)
+        if (entity != null) {
             switch (type) {
                 case SKELETON:
                     entity.getEquipment().setItemInHand(new ItemStack(Material.BOW));
@@ -243,12 +274,16 @@ public class EntityHelper {
                     EnderDragon dragon = (EnderDragon) entity;
                     dragon.setPhase(EnderDragon.Phase.CIRCLING);
             }
-        if (entity != null && CompatHandler.canMonsterSpawn(loc))
+        }
+        if (entity != null && CompatHandler.canMonsterSpawn(loc)) {
             entity.remove();
+        }
         return entity;
     }
 
-    /** Spawns a random monster with the probabilities given by the config */
+    /**
+     * Spawns a random monster with the probabilities given by the config
+     */
     public static Entity spawnRandomMob(Location loc) {
         int randomMonster = new Random().nextInt(90);
         EntityType monsterType;
@@ -275,7 +310,6 @@ public class EntityHelper {
      *
      * @param loc      location around which to check
      * @param distance distance around the location to check for players
-     *
      * @return false if no players found, true if there where one or more players
      */
     public static boolean arePlayersNearby(Location loc, double distance) {
@@ -287,8 +321,9 @@ public class EntityHelper {
             // bug report on it :S
             // continue;
             double playerDist = player.getLocation().distanceSquared(loc);
-            if (playerDist < squared)
+            if (playerDist < squared) {
                 return true;
+            }
         }
         return false;
     }
@@ -296,7 +331,7 @@ public class EntityHelper {
     /**
      * Computes the EntityType of the given Projectile's shooter, so we can add
      * damage or effect to impacts, nerf things, etc.
-     * 
+     *
      * @param projectile
      * @return
      */

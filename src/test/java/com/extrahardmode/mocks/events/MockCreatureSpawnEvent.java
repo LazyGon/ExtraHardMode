@@ -21,6 +21,9 @@
 
 package com.extrahardmode.mocks.events;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.extrahardmode.mocks.MockBlock;
 import com.extrahardmode.mocks.MockLivingEntity;
 import com.extrahardmode.mocks.MockLocation;
@@ -28,18 +31,15 @@ import com.extrahardmode.mocks.MockWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 /**
  * Mocks frequently used methods that are called on this event, by default
- * 
+ *
  * <pre>
  *     getWorld()
  *     getEntity()
  *     getSpawnReason()
  * </pre>
- * 
+ * <p>
  * Generates a World Object, which can be retrieved via getWorld()
  */
 public class MockCreatureSpawnEvent {

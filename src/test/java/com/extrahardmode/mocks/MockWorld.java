@@ -21,14 +21,14 @@
 
 package com.extrahardmode.mocks;
 
-import org.bukkit.World;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.bukkit.World;
+
 /**
  * Mocks commonly used methods like
- * 
+ *
  * <pre>
  * getName()
  * </pre>

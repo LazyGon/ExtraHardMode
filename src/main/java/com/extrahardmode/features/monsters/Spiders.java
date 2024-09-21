@@ -27,6 +27,8 @@ import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.EntityHelper;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.task.WebCleanupTask;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -39,9 +41,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Changes to Spoiders include:
@@ -69,8 +68,9 @@ public class Spiders extends ListenerModule {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (EntityHelper.isMarkedAsOurs(entity))
+        if (EntityHelper.isMarkedAsOurs(entity)) {
             return;
+        }
         Location location = event.getLocation();
         World world = location.getWorld();
         EntityType entityType = entity.getType();
@@ -82,7 +82,7 @@ public class Spiders extends ListenerModule {
         if (entityType == EntityType.ZOMBIE && world.getEnvironment() == World.Environment.NORMAL
                 && location.getBlockY() < world.getSeaLevel() - 5
                 && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) // Don't change type from respawned
-                                                                                     // zombies etc.
+        // zombies etc.
         {
             if (plugin.random(spiderBonusSpawnPercent)) {
                 event.setCancelled(true);
@@ -127,22 +127,24 @@ public class Spiders extends ListenerModule {
                     Block block = location.getBlock();
 
                     // don't replace anything solid with web
-                    if (block.getType() != Material.AIR)
+                    if (block.getType() != Material.AIR) {
                         continue;
+                    }
 
                     // only place web on the ground, not hanging up in the air
                     for (int i = 0; i < 5 || block.getY() < -64; i++) {
-                        if (block.getRelative(BlockFace.DOWN).getType() == Material.AIR)
+                        if (block.getRelative(BlockFace.DOWN).getType() == Material.AIR) {
                             block = block.getRelative(BlockFace.DOWN);
+                        }
                     }
 
                     // only place web if Block is empty
                     if (block.getRelative(BlockFace.DOWN).getType() != Material.AIR) {
                         // don't place next to cactus, because it will break the
                         // cactus
-                        Block[] adjacentBlocks = new Block[] { block.getRelative(BlockFace.EAST),
+                        Block[] adjacentBlocks = new Block[] {block.getRelative(BlockFace.EAST),
                                 block.getRelative(BlockFace.WEST),
-                                block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH) };
+                                block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH)};
 
                         boolean nextToCactus = false;
                         for (Block adjacentBlock : adjacentBlocks) {

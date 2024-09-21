@@ -2,6 +2,9 @@ package com.extrahardmode.module.temporaryblock;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.ListenerModule;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,10 +14,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TemporaryBlockHandler extends ListenerModule {
     private Map<LiteLocation, TemporaryBlock> temporaryBlockList = new HashMap<>();

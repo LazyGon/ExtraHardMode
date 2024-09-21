@@ -38,14 +38,13 @@ package com.extrahardmode.service.config;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.EHMModule;
-import java.util.Objects;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * Modular configuration class that utilizes a ConfigNode enumeration as easy
@@ -143,7 +142,6 @@ public abstract class ModularConfig extends EHMModule {
      * Get the integer value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns -1 if unknown.
      */
     public int getInt(final ConfigNode node) {
@@ -165,7 +163,6 @@ public abstract class ModularConfig extends EHMModule {
      * Get the string value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns and empty string if unknown.
      */
     protected String getString(final ConfigNode node) {
@@ -186,7 +183,6 @@ public abstract class ModularConfig extends EHMModule {
      * Get the list value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns an empty list if unknown.
      */
     @SuppressWarnings("unchecked")
@@ -209,7 +205,6 @@ public abstract class ModularConfig extends EHMModule {
      * Get the double value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns 0 if unknown.
      */
     public double getDouble(final ConfigNode node) {
@@ -231,7 +226,6 @@ public abstract class ModularConfig extends EHMModule {
      * Get the boolean value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns false if unknown.
      */
     public boolean getBoolean(final ConfigNode node) {
@@ -249,18 +243,19 @@ public abstract class ModularConfig extends EHMModule {
      * Get the (chat)color value of the node.
      *
      * @param node - Node to use.
-     *
      * @return Value of the node. Returns null if no color set.
      */
     public ChatColor getColor(final ConfigNode node) {
         ChatColor color;
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.COLOR) {
             Object value = OPTIONS.get(node);
-            if (value instanceof ChatColor)
+            if (value instanceof ChatColor) {
                 color = (ChatColor) value;
-            else // ConcurrentHashMap doesn't allow null values, so we just put an object of
-                // another type in the map to symbolize a null value
+            } else // ConcurrentHashMap doesn't allow null values, so we just put an object of
+            // another type in the map to symbolize a null value
+            {
                 color = null;
+            }
         } else {
             throw new IllegalArgumentException(
                     "Attempted to get " + node + " of type " + node.getVarType() + " as a color.");

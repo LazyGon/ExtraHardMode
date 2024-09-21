@@ -52,14 +52,14 @@ public class TestDamageTool {
      * ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
      * breakXBlocks(pick, (short) 35);
      * }
-     * 
+     *
      * @Test
      * public void damageHighBlockCount()
      * {
      * ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
      * breakXBlocks(pick, (short) 800);
      * }
-     * 
+     *
      * private void breakXBlocks(ItemStack item, short blocks)
      * {
      * //Because we are working with randoms we need some kind of tolerance

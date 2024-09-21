@@ -27,6 +27,10 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.service.EHMModule;
 import com.extrahardmode.task.BlockPhysicsCheckTask;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -39,12 +43,9 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
-/** Module that manages blocks and physics logic. */
+/**
+ * Module that manages blocks and physics logic.
+ */
 public class BlockModule extends EHMModule {
     /**
      * Marks a block/location for whatever reason... currently used by waterbucket
@@ -94,18 +95,19 @@ public class BlockModule extends EHMModule {
      *
      * @param block          Block to apply physics to.
      * @param damageEntities if Entities should be damaged
-     *
      * @return the UUID of this FallingBlock
      */
     public UUID applyPhysics(Block block, boolean damageEntities) {
         /* Spawning Falling Blocks with type = AIR crashes the Minecraft client */
-        if (block.getType() == Material.AIR)
+        if (block.getType() == Material.AIR) {
             return null;
+        }
 
         // grass and mycel become dirt when they fall
         if ((block.getType() == Material.GRASS_BLOCK || block.getType() == Material.MYCELIUM)
-                && CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_TURN_TO_DIRT, block.getWorld().getName()))
+                && CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_TURN_TO_DIRT, block.getWorld().getName())) {
             block.setType(Material.DIRT);
+        }
 
         FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0.5D, 0.0D, 0.5D),
                 block.getBlockData());
@@ -125,8 +127,9 @@ public class BlockModule extends EHMModule {
             for (int y = current.getY(); y > 0; y--) {
                 // Only breaks if the block below is solid and the block on top is transparent
                 if (below.getType().isSolid()) {
-                    if (breaksFallingBlock(current.getType()))
+                    if (breaksFallingBlock(current.getType())) {
                         current.breakNaturally();
+                    }
                     // Will land on the block below
                     break;
                 }
@@ -136,7 +139,9 @@ public class BlockModule extends EHMModule {
         }
 
         if (damageEntities) // mark so we know the block is from us
+        {
             EntityHelper.markForProcessing(plugin, fallingBlock);
+        }
 
         EntityHelper.markAsOurs(plugin, fallingBlock);
 
@@ -171,7 +176,6 @@ public class BlockModule extends EHMModule {
      * Has this block been marked?
      *
      * @param block to check
-     *
      * @return if it has been marked
      */
     public boolean isMarked(Block block) {
@@ -183,7 +187,6 @@ public class BlockModule extends EHMModule {
      *
      * @param block        - Block to check.
      * @param newDataValue - Data value to replace.
-     *
      * @return True if plant should die, else false.
      */
     public boolean plantDies(Block block, MaterialData newDataValue) {
@@ -244,7 +247,9 @@ public class BlockModule extends EHMModule {
         return false;
     }
 
-    /** Get all "touching" BlockFaces including top/bottom */
+    /**
+     * Get all "touching" BlockFaces including top/bottom
+     */
     public BlockFace[] getTouchingFaces() {
         return new BlockFace[] {
                 BlockFace.WEST,
@@ -281,7 +286,6 @@ public class BlockModule extends EHMModule {
      * @param height how many blocks up to check
      * @param radius of the search (cubic search radius)
      * @param tag    of Material to search for
-     *
      * @return all the Block with the given Type in the specified radius
      */
     public Block[] getBlocksInArea(Location loc, int height, int radius, Tag<Material> tag) {
@@ -305,7 +309,6 @@ public class BlockModule extends EHMModule {
      * ground?
      *
      * @param mat to check
-     *
      * @return boolean
      */
     public boolean breaksFallingBlock(Material mat) {
@@ -337,7 +340,6 @@ public class BlockModule extends EHMModule {
      * Is this Material food for horses?
      *
      * @param material material to test
-     *
      * @return true if vegetable
      */
     public static boolean isHorseFood(Material material) {
@@ -348,7 +350,9 @@ public class BlockModule extends EHMModule {
                 || material.equals(Material.WHEAT);
     }
 
-    /** Is the given material a tool, e.g. doesn't stack */
+    /**
+     * Is the given material a tool, e.g. doesn't stack
+     */
     public static boolean isTool(Material material) {
         return material.name().endsWith("AXE") // axe & pickaxe
                 || material.name().endsWith("SHOVEL")
@@ -362,7 +366,9 @@ public class BlockModule extends EHMModule {
                 || material.equals(Material.FLINT_AND_STEEL);
     }
 
-    /** is the given material armor */
+    /**
+     * is the given material armor
+     */
     public boolean isArmor(Material material) {
         return material.name().endsWith("HELMET")
                 || material.name().endsWith("CHESTPLATE")
@@ -370,7 +376,9 @@ public class BlockModule extends EHMModule {
                 || material.name().endsWith("BOOTS");
     }
 
-    /** Consider this block a natural block for spawning? */
+    /**
+     * Consider this block a natural block for spawning?
+     */
     public boolean isNaturalSpawnMaterial(Material material) {
         return material == Material.GRASS_BLOCK
                 || material == Material.DIRT
@@ -385,7 +393,9 @@ public class BlockModule extends EHMModule {
                 || material == Material.WATER; // Squid
     }
 
-    /** Is this a natural block for netherspawning? */
+    /**
+     * Is this a natural block for netherspawning?
+     */
     public boolean isNaturalNetherSpawn(Material material) {
         return switch (material) { // I'm guessing this is the nether brick item, not the block. If so, this should
             // be removed.
@@ -410,10 +420,13 @@ public class BlockModule extends EHMModule {
          * | x
          * x |
          */
-        if (placed.getRelative(BlockFace.DOWN).getType() == Material.AIR)
-            if (placed.getX() != against.getX() /* placed onto the side */ && playerBlock.getX() == against.getX())
+        if (placed.getRelative(BlockFace.DOWN).getType() == Material.AIR) {
+            if (placed.getX() != against.getX() /* placed onto the side */ && playerBlock.getX() == against.getX()) {
                 return true;
-            else return placed.getZ() != against.getZ() && playerBlock.getZ() == against.getZ();
+            } else {
+                return placed.getZ() != against.getZ() && playerBlock.getZ() == against.getZ();
+            }
+        }
         return false;
     }
 
@@ -426,8 +439,9 @@ public class BlockModule extends EHMModule {
      * @param mat to get the drop for
      */
     public static Material getDroppedMaterial(Material mat) {
-        if (Tag.LEAVES.isTagged(mat))
+        if (Tag.LEAVES.isTagged(mat)) {
             return Material.AIR;
+        }
 
         return switch (mat) {
             case GRASS_BLOCK, FARMLAND -> Material.DIRT;
@@ -444,13 +458,16 @@ public class BlockModule extends EHMModule {
     }
 
     public static boolean isOneOf(Block block, Material... materials) {
-        for (Material material : materials)
-            if (block.getType() == material)
+        for (Material material : materials) {
+            if (block.getType() == material) {
                 return true;
+            }
+        }
         return false;
     }
 
     @Override
     public void closing() {
-        /* ignored */}
+        /* ignored */
+    }
 }

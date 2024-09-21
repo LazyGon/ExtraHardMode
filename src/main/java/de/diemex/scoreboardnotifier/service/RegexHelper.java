@@ -32,10 +32,11 @@ public class RegexHelper {
     public static int parseNumber(String input) throws NumberFormatException {
         int num;
         input = onlyNums.matcher(input).replaceAll("");
-        if (!input.isEmpty())
+        if (!input.isEmpty()) {
             num = Integer.parseInt(input);
-        else
+        } else {
             throw new NumberFormatException("Not a readable number \"" + input + "\"");
+        }
         return num;
     }
 

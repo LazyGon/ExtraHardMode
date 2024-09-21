@@ -80,7 +80,7 @@ public class Torches extends ListenerModule {
         Player player = placeEvent.getPlayer();
         Block block = placeEvent.getBlock();
         Material blockType = null; // cached only if either feature is enabled. Helps minimize extra calls to this
-                                   // semi-expensive(?) method
+        // semi-expensive(?) method
         World world = block.getWorld();
 
         final boolean limitedTorchPlacement = CFG.getBoolean(RootNode.LIMITED_TORCH_PLACEMENT, world.getName());
@@ -95,8 +95,9 @@ public class Torches extends ListenerModule {
                 blockType = block.getType();
                 switch (blockType) {
                     case FIRE:
-                        if (block.getRelative(BlockFace.DOWN).getType() != Material.NETHERRACK)
+                        if (block.getRelative(BlockFace.DOWN).getType() != Material.NETHERRACK) {
                             break;
+                        }
                     case TORCH:
                     case WALL_TORCH:
                     case JACK_O_LANTERN:
@@ -110,8 +111,9 @@ public class Torches extends ListenerModule {
 
         // FEATURE: players can't attach torches to common "soft" blocks
         if (limitedTorchPlacement && !playerBypasses) {
-            if (blockType == null)
+            if (blockType == null) {
                 blockType = block.getType();
+            }
 
             if (LooseTags.TORCH.isTagged(blockType)) {
 
@@ -131,10 +133,11 @@ public class Torches extends ListenerModule {
                     case MYCELIUM:
                     case PODZOL:
                     case SOUL_SAND:
-                        if (soundFizzEnabled)
+                        if (soundFizzEnabled) {
                             messenger.send(player, MessageNode.LIMITED_TORCH_PLACEMENTS,
                                     PermissionNode.SILENT_LIMITED_TORCH_PLACEMENT, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE,
                                     20);
+                        }
                         placeEvent.setCancelled(true);
                 }
             }

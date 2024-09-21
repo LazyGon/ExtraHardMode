@@ -67,7 +67,7 @@ public class Commander extends CommandHandler {
 
         @Override
         public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label,
-                String[] args) {
+                               String[] args) {
             return noArgs(sender, command, label);
         }
 

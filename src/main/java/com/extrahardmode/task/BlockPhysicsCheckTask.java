@@ -25,11 +25,10 @@ import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.BlockModule;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
-import java.util.List;
 
 /**
  * Called to apply physics to a block and its neighbors if necessary.
@@ -96,7 +95,7 @@ public class BlockPhysicsCheckTask implements Runnable {
         if ((underType == Material.AIR || underType == Material.CAVE_AIR || underBlock.isLiquid()
                 || underType == Material.TORCH)
                 && (material == Material.SAND || material == Material.GRAVEL || fallingBlocks.contains(block.getType())
-                        && fallingBlocksEnabled && material != Material.AIR)) {
+                && fallingBlocksEnabled && material != Material.AIR)) {
             module.applyPhysics(block, true);
             fall = true;
         }

@@ -24,7 +24,11 @@ package com.extrahardmode.task;
 import com.extrahardmode.ExtraHardMode;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 /**
@@ -70,8 +74,9 @@ public class DragonAttackTask implements Runnable {
         }
 
         World world = this.dragon.getWorld();
-        if (world != this.player.getWorld())
+        if (world != this.player.getWorld()) {
             return;
+        }
 
         Location dragonLocation = this.dragon.getLocation();
 
@@ -88,7 +93,7 @@ public class DragonAttackTask implements Runnable {
 
         Vector vector = new Vector(offsetLocation.getX() - dragonLocation.getX(),
                 offsetLocation.getY() - dragonLocation.getY(), offsetLocation.getZ()
-                        - dragonLocation.getZ());
+                - dragonLocation.getZ());
 
         Fireball fireball = (Fireball) world.spawnEntity(dragonLocation, EntityType.FIREBALL);
         fireball.setShooter((EnderDragon) this.dragon);

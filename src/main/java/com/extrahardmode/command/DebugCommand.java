@@ -30,9 +30,10 @@ public class DebugCommand implements ICommand {
                             ChatColor.RED + plugin.getTag() + " You need to specify what you want to debug!");
                     sender.sendMessage(ChatColor.RED + plugin.getTag() + " Available methods \"RemoveTorches\"");
                 }
-            } else
+            } else {
                 sender.sendMessage(
                         ChatColor.RED + plugin.getTag() + "You need to be in game to use debugging functionality!");
+            }
         } else {
             sender.sendMessage(ChatColor.RED + plugin.getTag() + " Lack permission: " + PermissionNode.ADMIN.getNode());
         }

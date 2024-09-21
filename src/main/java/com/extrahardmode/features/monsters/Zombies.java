@@ -41,7 +41,11 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Rotatable;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -103,8 +107,9 @@ public class Zombies extends ListenerModule {
                 Zombie zombie = (Zombie) entity;
 
                 Player player = null;
-                if (zombie.getTarget() instanceof Player)
+                if (zombie.getTarget() instanceof Player) {
                     player = (Player) zombie.getTarget();
+                }
 
                 // Zombies which have respawned already are less likely to respawn
                 int respawnCount = !entity.getMetadata("extrahardmode.zombie.respawncount").isEmpty()
@@ -129,8 +134,9 @@ public class Zombies extends ListenerModule {
                             Location location = block.getLocation();
                             location.setY(location.getY() + 1);
                             block = location.getBlock();
-                            if (block.getType() != Material.AIR)
+                            if (block.getType() != Material.AIR) {
                                 return;
+                            }
                         }
                         block.setType(Material.ZOMBIE_HEAD);
                         // Random rotation
@@ -142,10 +148,11 @@ public class Zombies extends ListenerModule {
                     }
                     RespawnZombieTask task = new RespawnZombieTask(plugin, entity.getLocation(), player, tempBlock);
                     int respawnSeconds = plugin.getRandom().nextInt(6) + 3; // 3-8 seconds
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 20L * respawnSeconds); // /20L
-                                                                                                                   // ~
-                                                                                                                   // 1
-                                                                                                                   // second
+                    plugin.getServer().getScheduler()
+                            .scheduleSyncDelayedTask(plugin, task, 20L * respawnSeconds); // /20L
+                    // ~
+                    // 1
+                    // second
                 }
             }
         }
@@ -183,24 +190,29 @@ public class Zombies extends ListenerModule {
                     // TODO EhmZombieSlowEvent
                     if (stackEffect && effect != null && player.hasPotionEffect(effect.getBukkitEffectType())) {
                         int amplifier = 1;
-                        for (PotionEffect potion : player.getActivePotionEffects())
+                        for (PotionEffect potion : player.getActivePotionEffects()) {
                             if (potion.getType().equals(effect.getBukkitEffectType())) {
                                 amplifier = potion.getAmplifier();
                                 break;
                             }
-                        if (amplifier + 1 < maxEffectAmplifier)
+                        }
+                        if (amplifier + 1 < maxEffectAmplifier) {
                             amplifier++;
+                        }
                         player.removePotionEffect(effect.getBukkitEffectType());
                         player.addPotionEffect(
                                 new PotionEffect(effect.getBukkitEffectType(), effect.getDuration(), amplifier));
-                    } else if (effect != null)
+                    } else if (effect != null) {
                         effect.applyEffect(player, false);
+                    }
                 }
             }
         }
     }
 
-    /** Flag Zombies that have been called in as reinforcements to not respawn */
+    /**
+     * Flag Zombies that have been called in as reinforcements to not respawn
+     */
     @EventHandler(ignoreCancelled = true)
     public void onZombieReinforcements(CreatureSpawnEvent event) {
         if (hasReinforcements && event.getEntity() instanceof Zombie

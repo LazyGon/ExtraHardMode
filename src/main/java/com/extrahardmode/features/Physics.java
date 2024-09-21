@@ -35,7 +35,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -132,7 +134,7 @@ public class Physics extends ListenerModule {
      * provide compatibility for block loggers that don't log correctly
      */
     @EventHandler(priority = EventPriority.HIGHEST) // so we are pretty late and hopefully don't get cancelled
-                                                    // afterwards
+    // afterwards
     public void whenBlockLands(EntityChangeBlockEvent event) {
         Entity entity = event.getEntity();
         // World world = entity.getWorld();

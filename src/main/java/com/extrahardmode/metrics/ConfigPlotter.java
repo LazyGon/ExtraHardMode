@@ -12,8 +12,8 @@ import org.bukkit.plugin.Plugin;
  * Output all the choosen modules to mcstats in nice plots
  *
  * @author Diemex
- *
- *         Well, now it goes to bstats.
+ * <p>
+ * Well, now it goes to bstats.
  */
 public class ConfigPlotter {
     private final Plugin plugin;
@@ -163,7 +163,7 @@ public class ConfigPlotter {
 
     /**
      * Get a value to be used by metrics
-     * 
+     *
      * <pre>
      * Boolean values:
      * 0 = completely disabled
@@ -200,8 +200,9 @@ public class ConfigPlotter {
     public int getMetricsValue(ConfigNode node) {
         if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.BOOLEAN) {// Add up how often it's enabled
             int value = 0;
-            for (String world : CFG.getEnabledWorlds())
+            for (String world : CFG.getEnabledWorlds()) {
                 value += CFG.getBoolean(node, world) ? 1 : 0;
+            }
             return value == 0 ? 0 : value == CFG.getEnabledWorlds().length ? 1 : 2;
         }
         throw new UnsupportedOperationException(

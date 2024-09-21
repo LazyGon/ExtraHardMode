@@ -102,8 +102,9 @@ public class RespawnZombieTask implements Runnable {
             }
             EhmZombieRespawnEvent zombieEvent = new EhmZombieRespawnEvent(player, zombie, false);
             plugin.getServer().getPluginManager().callEvent(zombieEvent);
-            if (block != null)
+            if (block != null) {
                 block.getLoc().getBlock().setType(Material.AIR);
+            }
         }
     }
 }

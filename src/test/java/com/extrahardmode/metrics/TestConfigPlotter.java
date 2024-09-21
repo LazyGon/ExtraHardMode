@@ -1,9 +1,9 @@
 package com.extrahardmode.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.extrahardmode.service.MockConfigNode;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Diemex

@@ -31,15 +31,16 @@ import com.extrahardmode.service.PermissionNode;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import de.diemex.scoreboardnotifier.NotificationManager;
+import java.util.Calendar;
+import java.util.List;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.util.Calendar;
-import java.util.List;
-
-/** @author Max */
+/**
+ * @author Max
+ */
 public class MsgModule extends EHMModule {
     private MessageConfig messages;
     private MsgPersistModule persistModule;
@@ -48,7 +49,9 @@ public class MsgModule extends EHMModule {
 
     private final Table<String, MessageNode, Long> timeouts = HashBasedTable.create();
 
-    /** Constructor */
+    /**
+     * Constructor
+     */
     public MsgModule(ExtraHardMode plugin) {
         super(plugin);
     }
@@ -89,10 +92,11 @@ public class MsgModule extends EHMModule {
                     long now = Calendar.getInstance().getTimeInMillis();
 
                     if (!node.equals(playerData.lastMessageSent) || now - playerData.lastMessageTimestamp > 30000) {
-                        if (popupsAreEnabled(MsgCategory.NOTIFICATION))
+                        if (popupsAreEnabled(MsgCategory.NOTIFICATION)) {
                             sendPopup(player, MsgCategory.NOTIFICATION, message);
-                        else
+                        } else {
                             player.sendMessage(message);
+                        }
                         playerData.lastMessageSent = node;
                         playerData.lastMessageTimestamp = now;
                     }
@@ -109,14 +113,16 @@ public class MsgModule extends EHMModule {
                     {
                         timeouts.put(player.getName(), node, now);
                         String msgText = messages.getString(node);
-                        if (manager != null && popupsAreEnabled(MsgCategory.TUTORIAL))
+                        if (manager != null && popupsAreEnabled(MsgCategory.TUTORIAL)) {
                             sendPopup(player, MsgCategory.TUTORIAL, msgText);
-                        else
+                        } else {
                             player.sendMessage(ChatColor.DARK_RED + plugin.getTag() + ChatColor.WHITE + " " + msgText);
+                        }
                         persistModule.increment(node, player.getName());
                     }
-                } else
+                } else {
                     timeouts.remove(player.getName(), node);
+                }
                 break;
             case BROADCAST:
                 plugin.getServer().broadcastMessage(message);
@@ -146,8 +152,9 @@ public class MsgModule extends EHMModule {
      */
     public void send(Player player, MessageNode node) {
         // Don't send a message if node is empty/null
-        if (messages.getString(node).isEmpty() || messages.getString(node) == null)
+        if (messages.getString(node).isEmpty() || messages.getString(node) == null) {
             return;
+        }
         send(player, node, messages.getString(node));
     }
 
@@ -178,8 +185,9 @@ public class MsgModule extends EHMModule {
     public void send(Player player, MessageNode node, PermissionNode perm, Sound sound, float soundPitch) {
         if (!player.hasPermission(perm.getNode())) {
             send(player, node, messages.getString(node));
-            if (sound != null)
+            if (sound != null) {
                 player.playSound(player.getLocation(), sound, 1, soundPitch);
+            }
         }
     }
 
@@ -209,8 +217,9 @@ public class MsgModule extends EHMModule {
             ChatColor textColor;
             String titleText = messages.getString(MessageNode.SB_MSG_TITLE);
 
-            if (messages.getBoolean(MessageNode.SB_MSG_REMOVE_COLOR))
+            if (messages.getBoolean(MessageNode.SB_MSG_REMOVE_COLOR)) {
                 message = ChatColor.stripColor(message);
+            }
 
             switch (category) {
                 case BROADCAST:
@@ -267,8 +276,9 @@ public class MsgModule extends EHMModule {
             ChatColor textColor;
             String titleText = messages.getString(MessageNode.SB_MSG_TITLE);
 
-            if (stripColors)
+            if (stripColors) {
                 message.replaceAll(ChatColor::stripColor);
+            }
 
             switch (category) {
                 case BROADCAST:
@@ -314,8 +324,9 @@ public class MsgModule extends EHMModule {
      * @param identifier uique identifier of this message
      */
     public void hidePopup(Player player, String identifier) {
-        if (manager != null && player != null)
+        if (manager != null && player != null) {
             manager.removePopup(player.getName(), identifier);
+        }
     }
 
     /**
@@ -324,7 +335,7 @@ public class MsgModule extends EHMModule {
      * @return if popupmanager is loaded
      */
     public boolean popupsAreEnabled(MsgCategory category) {
-        if (messages.getBoolean(MessageNode.SB_MSG_ENABLE))
+        if (messages.getBoolean(MessageNode.SB_MSG_ENABLE)) {
             return switch (category.getSubcategory() != null ? category.getSubcategory() :
                     category) // Some messages might
                     // inherit from another
@@ -335,6 +346,7 @@ public class MsgModule extends EHMModule {
                 case BROADCAST -> messages.getBoolean(MessageNode.SB_MSG_BROADCAST);
                 default -> false;
             };
+        }
         return false;
     }
 }

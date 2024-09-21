@@ -5,12 +5,19 @@ import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.config.messages.MessageNode;
 import com.extrahardmode.config.messages.MsgCategory;
-import com.extrahardmode.events.*;
+import com.extrahardmode.events.EhmCreeperDropTntEvent;
+import com.extrahardmode.events.EhmPlayerExtinguishFireEvent;
+import com.extrahardmode.events.EhmPlayerInventoryLossEvent;
+import com.extrahardmode.events.EhmSkeletonDeflectEvent;
+import com.extrahardmode.events.EhmZombieRespawnEvent;
 import com.extrahardmode.module.BlockModule;
 import com.extrahardmode.module.MsgModule;
 import com.extrahardmode.service.FindAndReplace;
 import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.task.WeightCheckTask;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -25,10 +32,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Diemex
@@ -67,40 +70,47 @@ public class Tutorial extends ListenerModule {
                     if (CFG.getBoolean(RootNode.CHARGED_CREEPERS_EXPLODE_ON_HIT, world.getName())
                             && CFG.getInt(RootNode.CHARGED_CREEPER_SPAWN_PERCENT, world.getName()) > 0) {
                         Creeper creeper = (Creeper) event.getEntity();
-                        if (creeper.isPowered())
+                        if (creeper.isPowered()) {
                             messenger.send(player, MessageNode.CHARGED_CREEPER_TARGET);
+                        }
                     }
                     break;
                 }
                 case BLAZE: {
                     switch (world.getEnvironment()) {
                         case NORMAL:
-                            if (CFG.getBoolean(RootNode.BLAZES_EXPLODE_ON_DEATH, world.getName()))
+                            if (CFG.getBoolean(RootNode.BLAZES_EXPLODE_ON_DEATH, world.getName())) {
                                 messenger.send(player, MessageNode.BLAZE_TARGET_NORMAL);
+                            }
                             break;
                         case NETHER:
-                            if (CFG.getInt(RootNode.BONUS_NETHER_BLAZE_SPAWN_PERCENT, world.getName()) > 0)
+                            if (CFG.getInt(RootNode.BONUS_NETHER_BLAZE_SPAWN_PERCENT, world.getName()) > 0) {
                                 messenger.send(player, MessageNode.BLAZE_TARGET_NETHER);
+                            }
                             break;
                     }
                     break;
                 }
                 case GHAST: {
-                    if (CFG.getInt(RootNode.GHASTS_DEFLECT_ARROWS, world.getName()) > 0)
+                    if (CFG.getInt(RootNode.GHASTS_DEFLECT_ARROWS, world.getName()) > 0) {
                         messenger.send(player, MessageNode.GHAST_TARGET);
+                    }
                     break;
                 }
                 case ZOMBIFIED_PIGLIN: {
-                    if (CFG.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, world.getName()))
+                    if (CFG.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, world.getName())) {
                         messenger.send(player, MessageNode.PIGZOMBIE_TARGET);
-                    if (CFG.getInt(RootNode.NETHER_PIGS_DROP_WART, world.getName()) > 0)
+                    }
+                    if (CFG.getInt(RootNode.NETHER_PIGS_DROP_WART, world.getName()) > 0) {
                         plugin.getServer().getScheduler().runTaskLater(plugin,
                                 () -> messenger.send(player, MessageNode.PIGZOMBIE_TARGET_WART), 300L);
+                    }
                     break;
                 }
                 case MAGMA_CUBE: {
-                    if (CFG.getBoolean(RootNode.MAGMA_CUBES_BECOME_BLAZES_ON_DAMAGE, world.getName()))
+                    if (CFG.getBoolean(RootNode.MAGMA_CUBES_BECOME_BLAZES_ON_DAMAGE, world.getName())) {
                         messenger.send(player, MessageNode.MAGMACUBE_TARGET);
+                    }
                     break;
                 }
                 case SKELETON: {
@@ -116,13 +126,15 @@ public class Tutorial extends ListenerModule {
                     break;
                 }
                 case ENDERMAN: {
-                    if (CFG.getBoolean(RootNode.IMPROVED_ENDERMAN_TELEPORTATION, world.getName()))
+                    if (CFG.getBoolean(RootNode.IMPROVED_ENDERMAN_TELEPORTATION, world.getName())) {
                         messenger.send(player, MessageNode.ENDERMAN_GENERAL);
+                    }
                     break;
                 }
                 case ZOMBIE: {
-                    if (CFG.getBoolean(RootNode.ZOMBIES_DEBILITATE_PLAYERS, world.getName()))
+                    if (CFG.getBoolean(RootNode.ZOMBIES_DEBILITATE_PLAYERS, world.getName())) {
                         messenger.send(player, MessageNode.ZOMBIE_SLOW_PLAYERS);
+                    }
                     break;
                 }
             }
@@ -250,17 +262,19 @@ public class Tutorial extends ListenerModule {
                     break;
                 }
             }
-            if (index >= 0)
+            if (index >= 0) {
                 lostItems.get(index).setAmount(lostItems.get(index).getAmount() + item.getAmount());
-            else
+            } else {
                 lostItems.add(item);
+            }
 
         }
 
         // Build the output String
         for (ItemStack item : lostItems) {
-            if (!items.isEmpty())
+            if (!items.isEmpty()) {
                 items.append(", ");
+            }
             items.append(item.getType());
         }
 
@@ -278,8 +292,9 @@ public class Tutorial extends ListenerModule {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (CFG.getBoolean(RootNode.NO_SWIMMING_IN_ARMOR, event.getWhoClicked().getWorld().getName())
-                && event.getWhoClicked() instanceof Player && messenger.popupsAreEnabled(MsgCategory.NOTIFICATION))
+                && event.getWhoClicked() instanceof Player && messenger.popupsAreEnabled(MsgCategory.NOTIFICATION)) {
             WeightCheckTask.updateLastCLick(event.getWhoClicked().getUniqueId());
+        }
     }
 
     // TODO Farming: NetherWart, Mushrooms

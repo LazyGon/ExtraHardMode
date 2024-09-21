@@ -132,11 +132,13 @@ public class CoolCreeperExplosion implements Runnable {
             if (creeper != null && !creeper.isDead()) {
                 final boolean creeperExplosion = CFG.getBoolean(RootNode.EXPLOSIONS_CREEPERS_ENABLE,
                         creeper.getWorld().getName());
-                if (creeperExplosion)
+                if (creeperExplosion) {
                     new CreateExplosionTask(plugin, creeper.getLocation(), ExplosionType.CREEPER, creeper).run();
+                }
             }
-            if (creeper != null)
+            if (creeper != null) {
                 creeper.remove();
+            }
         }
     }
 }

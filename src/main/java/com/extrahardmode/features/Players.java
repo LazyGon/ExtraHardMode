@@ -68,7 +68,7 @@ public class Players extends ListenerModule {
 
     private boolean isArmorWeightEnabled = false;
 
-    private Map<Player, Integer> armorCheckingPlayers = new HashMap<Player, Integer>();
+    private Map<Player, Integer> armorCheckingPlayers = new HashMap<>();
 
     /**
      * Constructor
@@ -88,7 +88,7 @@ public class Players extends ListenerModule {
                 break;
             }
         // In case the plugin is reloaded...
-        if (isArmorWeightEnabled && plugin.getServer().getOnlinePlayers().size() > 0) {
+        if (isArmorWeightEnabled && !plugin.getServer().getOnlinePlayers().isEmpty()) {
             for (Player player : plugin.getServer().getOnlinePlayers())
                 armorCheckingPlayers.put(player, plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,
                         new ArmorWeightTask(plugin, player), 20L * 5, 20L * 3));
@@ -172,12 +172,12 @@ public class Players extends ListenerModule {
         // FEATURE: some portion of player inventory is permanently lost on death
         if (!playerBypasses && enableItemLoss) {
             List<ItemStack> drops = event.getDrops();
-            List<ItemStack> removedDrops = new ArrayList<ItemStack>();
+            List<ItemStack> removedDrops = new ArrayList<>();
 
             int numberOfStacksToRemove = (int) (drops.size() * (deathLossPercent / 100.0f));
             if (numberOfStacksToRemove == 0 && deathLossPercent > 0)
                 numberOfStacksToRemove = 1;
-            loop: for (int i = 0; i < numberOfStacksToRemove && drops.size() > 0; i++) {
+            loop: for (int i = 0; i < numberOfStacksToRemove && !drops.isEmpty(); i++) {
                 ItemStack toRemove = drops.get(plugin.getRandom().nextInt(drops.size()));
                 for (Material material : blacklisted)
                     if (material == toRemove.getType())
@@ -197,7 +197,7 @@ public class Players extends ListenerModule {
                         if (tool == item.getType()) {
                             short dur = item.getDurability();
                             short maxDurability = item.getType().getMaxDurability();
-                            dur += maxDurability / 100 * toolDmgPercent;
+                            dur += (short) (maxDurability / 100 * toolDmgPercent);
                             // Prevent complete destroyal of heavily damaged items
                             if (dur >= maxDurability && !destroyTools)
                                 dur = --maxDurability;
@@ -219,8 +219,7 @@ public class Players extends ListenerModule {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
 
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        if (entity instanceof Player player) {
             final boolean enhancedEnvironmentalDmg = CFG.getBoolean(RootNode.ENHANCED_ENVIRONMENTAL_DAMAGE,
                     world.getName());
             final boolean playerBypasses = playerModule.playerBypasses(player, Feature.ENVIRONMENTAL_EFFECTS);

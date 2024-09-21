@@ -75,16 +75,16 @@ public class TestInventoryWeight {
     @Test
     public void armorTest() {
         new MockPlayerInventory(myPlayer, emptyArmor, emptyInv);
-        assertEquals(0, module.inventoryWeight(myPlayer, 15, 5, 5), 0, "Empty inventory = no weight ");
+        assertEquals(0, PlayerModule.inventoryWeight(myPlayer, 15, 5, 5), 0, "Empty inventory = no weight ");
 
         new MockPlayerInventory(myPlayer, oneArmor, emptyInv);
-        assertEquals(15, module.inventoryWeight(myPlayer, 15, 5, 5), 0, "One piece ");
+        assertEquals(15, PlayerModule.inventoryWeight(myPlayer, 15, 5, 5), 0, "One piece ");
 
         new MockPlayerInventory(myPlayer, twoArmor, emptyInv);
-        assertEquals(12, module.inventoryWeight(myPlayer, 6, 5, 5), 0, "Two pieces ");
+        assertEquals(12, PlayerModule.inventoryWeight(myPlayer, 6, 5, 5), 0, "Two pieces ");
 
         new MockPlayerInventory(myPlayer, fullArmor, emptyInv);
-        assertEquals(8, module.inventoryWeight(myPlayer, 2, 5, 5), 0, "Full armor ");
+        assertEquals(8, PlayerModule.inventoryWeight(myPlayer, 2, 5, 5), 0, "Full armor ");
     }
 
     /**
@@ -115,6 +115,6 @@ public class TestInventoryWeight {
 
         new MockPlayerInventory(myPlayer, fullArmor, inv);
 
-        assertEquals(143, module.inventoryWeight(myPlayer, 5, 64, 1), 0, "See comment for calculation");
+        assertEquals(143, PlayerModule.inventoryWeight(myPlayer, 5, 64, 1), 0, "See comment for calculation");
     }
 }

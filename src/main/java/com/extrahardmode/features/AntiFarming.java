@@ -147,7 +147,6 @@ public class AntiFarming extends ListenerModule {
         // FEATURE: no farming/placing nether wart
         if (!playerBypasses && noFarmingNetherWart && block.getType() == Material.NETHER_WART) {
             placeEvent.setCancelled(true);
-            return;
         }
     }
 
@@ -262,7 +261,6 @@ public class AntiFarming extends ListenerModule {
             Sheep sheep = (Sheep) entity;
             if (reason.equals(CreatureSpawnEvent.SpawnReason.BREEDING)) {
                 sheep.setColor(DyeColor.WHITE);
-                return;
             }
         }
     }
@@ -339,7 +337,6 @@ public class AntiFarming extends ListenerModule {
             if (result == Material.MELON_SEEDS || result == Material.PUMPKIN_SEEDS) {
                 event.setCancelled(true);
                 plugin.getModuleForClass(MsgModule.class).send(player, MessageNode.NO_CRAFTING_MELON_SEEDS);
-                return;
             }
         }
     }
@@ -380,12 +377,9 @@ public class AntiFarming extends ListenerModule {
             event.setCancelled(true);
             final Player player = event.getPlayer();
             // Bucket displays as full, derpy inventories, run next tick
-            plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    if (player != null)
-                        player.updateInventory();
-                }
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                if (player != null)
+                    player.updateInventory();
             });
         }
     }

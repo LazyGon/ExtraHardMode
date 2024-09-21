@@ -45,16 +45,13 @@ public class MoreTnt extends ListenerModule {
 
         if (inv != null && inv.getHolder() != null) {
             InventoryHolder human = inv.getHolder();
-            if (human instanceof Player) {
-                Player player = (Player) human;
+            if (human instanceof Player player) {
                 World world = player.getWorld();
 
                 final int multiplier = CFG.getInt(RootNode.MORE_TNT_NUMBER, world.getName());
 
                 switch (multiplier) {
-                    case 0:
-                        break;
-                    case 1:
+                    case 0, 1:
                         break;
                     default:
                         if (event.getRecipe() == null) // 1.12 will return null I guess
@@ -91,8 +88,7 @@ public class MoreTnt extends ListenerModule {
     public void onItemCrafted(CraftItemEvent event) {
         InventoryHolder human = event.getInventory().getHolder();
 
-        if (human instanceof Player) {
-            Player player = (Player) human;
+        if (human instanceof Player player) {
 
             World world = player.getWorld();
 
@@ -101,23 +97,20 @@ public class MoreTnt extends ListenerModule {
 
             // Are we crafting tnt and is more tnt enabled, from BeforeCraftEvent
             if (event.getRecipe().getResult().equals(new ItemStack(Material.TNT, multiplier)) && !playerBypasses) {
-                switch (multiplier) {
-                    case 0:
-                        event.setCancelled(true); // Feature disable tnt crafting
-                        break;
-                    default:
-                        Validate.isTrue(multiplier > 0, "Multiplier for tnt can't be negative");
-                        PlayerInventory inv = player.getInventory();
-                        // ShiftClick only causes this event to be called once
-                        if (event.isShiftClick()) {
-                            int amountBefore = PlayerModule.countInvItem(inv, Material.TNT);
-                            // Add the missing tnt 1 tick later, we count what has been added by
-                            // shiftclicking and multiply it
-                            UtilityModule.AddExtraItemsLater task = new UtilityModule.AddExtraItemsLater(inv,
-                                    amountBefore, Material.TNT, multiplier - 1);
-                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 1L);
-                        }
-                        break;
+                if (multiplier == 0) {
+                    event.setCancelled(true); // Feature disable tnt crafting
+                } else {
+                    Validate.isTrue(multiplier > 0, "Multiplier for tnt can't be negative");
+                    PlayerInventory inv = player.getInventory();
+                    // ShiftClick only causes this event to be called once
+                    if (event.isShiftClick()) {
+                        int amountBefore = PlayerModule.countInvItem(inv, Material.TNT);
+                        // Add the missing tnt 1 tick later, we count what has been added by
+                        // shiftclicking and multiply it
+                        UtilityModule.AddExtraItemsLater task = new UtilityModule.AddExtraItemsLater(inv,
+                                amountBefore, Material.TNT, multiplier - 1);
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 1L);
+                    }
                 }
             }
         }

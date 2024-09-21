@@ -65,7 +65,7 @@ public class NotificationHolder {
     public NotificationHolder(MsgSettings type, String title, List<MsgLineHolder> msg) {
         StringBuilder sb = new StringBuilder();
         for (MsgLineHolder line : msg) {
-            if (sb.length() != 0)
+            if (!sb.isEmpty())
                 sb.append(" ");
             Validate.isTrue(line.length() <= 40, "Scoreboards have a max of 40 characters per line. Given line was "
                     + line.length() + " long. Content: \"" + line + "\"");

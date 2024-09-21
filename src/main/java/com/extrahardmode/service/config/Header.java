@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Header {
     private String mHeading;
-    private final List<String> mLines = new LinkedList<String>();
+    private final List<String> mLines = new LinkedList<>();
     private final int mLineSize = 100;
 
     public void addLines(Collection<String> lines) {

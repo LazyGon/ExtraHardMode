@@ -1,9 +1,9 @@
 package com.extrahardmode.service.config;
 
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -26,7 +26,7 @@ public class YamlCommentWriter {
         String[] nodes = new String[20];
         try {
             br = new BufferedReader(new FileReader(input));
-            writer = new OutputStreamWriter(memStream, Charset.forName("UTF-8").newEncoder());
+            writer = new OutputStreamWriter(memStream, StandardCharsets.UTF_8.newEncoder());
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -65,9 +65,7 @@ public class YamlCommentWriter {
             outStream.close();
         }
         // BLABLABLA EXCEPTIONS BLABLA
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

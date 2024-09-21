@@ -23,7 +23,6 @@ package com.extrahardmode.features;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
-import com.extrahardmode.config.RootNode;
 import com.extrahardmode.module.BlockModule;
 import com.extrahardmode.module.PlayerModule;
 import com.extrahardmode.service.Feature;
@@ -115,7 +114,7 @@ public class RealisticChopping extends ListenerModule {
                     Material aboveLogType = aboveLog.getType();// can air fall?
                     // we reached something that is not part of a tree or leaves
                     if (aboveLogType == Material.AIR) {
-                        List<Block> logs = new LinkedList<Block>(
+                        List<Block> logs = new LinkedList<>(
                                 Arrays.asList(blockModule.getBlocksInArea(aboveLog.getLocation(), 3, 5, Tag.LOGS)));
                         for (Block log : logs) {
                             // TODO EhmRealisticChoppingLooseLogEvent

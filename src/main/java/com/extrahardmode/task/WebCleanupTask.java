@@ -35,7 +35,7 @@ public class WebCleanupTask implements Runnable {
     /**
      * List of blocks to check.
      */
-    private final List<Block> webs = new ArrayList<Block>();
+    private final List<Block> webs = new ArrayList<>();
 
     /**
      * Constructor.
@@ -50,9 +50,7 @@ public class WebCleanupTask implements Runnable {
     public void run() {
         for (Block block : webs) {
             // don't load a chunk just to clean up webs
-            if (!block.getChunk().isLoaded()) {
-                continue;
-            } else if (block.getType() == Material.COBWEB) {
+            if (block.getChunk().isLoaded() && block.getType() == Material.COBWEB) {
                 // only turn webs to air. there's a chance the web may have been
                 // replaced since it was placed.
                 block.setType(Material.AIR);

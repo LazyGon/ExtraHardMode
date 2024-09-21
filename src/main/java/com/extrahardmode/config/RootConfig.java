@@ -28,7 +28,6 @@ import com.extrahardmode.service.config.MultiWorldConfig;
 import com.extrahardmode.service.config.YamlCommentWriter;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +103,7 @@ public class RootConfig extends MultiWorldConfig {
         mainEhmConfig.save();
 
         // Prepare comments
-        Map<String, String[]> comments = new HashMap<String, String[]>();
+        Map<String, String[]> comments = new HashMap<>();
         for (RootNode node : RootNode.values())
             if (node.getComments() != null)
                 comments.put(node.getPath(), node.getComments());
@@ -152,18 +151,15 @@ public class RootConfig extends MultiWorldConfig {
      * @return File[] containing all the *.yml Files in a lexical order
      */
     protected File[] findAllYmlFiles(File baseDir) {
-        String[] filePaths = baseDir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".yml"); // TODO - disables
-            }
+        String[] filePaths = baseDir.list((dir, name) -> {
+            return name.endsWith(".yml"); // TODO - disables
         });
         if (filePaths == null)
             filePaths = new String[] {};
         Arrays.sort(filePaths); // lexically
-        ArrayList<File> files = new ArrayList<File>();
+        ArrayList<File> files = new ArrayList<>();
         for (String fileName : filePaths)
             files.add(new File(plugin.getDataFolder() + File.separator + fileName));
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 }

@@ -44,7 +44,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,8 +86,7 @@ public class Skeletors extends ListenerModule {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerHitByArrow(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
-            LivingEntity entity = (LivingEntity) event.getEntity();
+        if (event.getEntity() instanceof LivingEntity entity) {
             World world = entity.getWorld();
 
             // final int deflect = CFG.getInt(RootNode.SKELETONS_DEFLECT_ARROWS,
@@ -97,8 +95,7 @@ public class Skeletors extends ListenerModule {
             final int slownessLength = CFG.getInt(RootNode.SKELETONS_SNOWBALLS_SLOW_LEN, world.getName());
             final int fireTicks = CFG.getInt(RootNode.SKELETONS_FIREBALL_PLAYER_FIRETICKS, world.getName());
 
-            if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
-                Projectile bullet = (Projectile) event.getDamager();
+            if (event.getDamager() instanceof Projectile bullet && event.getEntity() instanceof Player) {
                 // FEATURE: skeletons can knock back
                 // knock back target with half the arrow's velocity
                 if (bullet.hasMetadata(key_knockbackArrow))
@@ -127,8 +124,7 @@ public class Skeletors extends ListenerModule {
             Entity damageSource = event.getDamager();
 
             // only arrows
-            if (damageSource instanceof Arrow) {
-                Arrow arrow = (Arrow) damageSource;
+            if (damageSource instanceof Arrow arrow) {
 
                 Player player = arrow.getShooter() instanceof Player ? (Player) arrow.getShooter() : null;
                 EhmSkeletonDeflectEvent skeliEvent = new EhmSkeletonDeflectEvent(player, (Skeleton) entity,
@@ -179,9 +175,7 @@ public class Skeletors extends ListenerModule {
         final int totalLimit = CFG.getInt(RootNode.SKELETONS_RELEASE_SILVERFISH_LIMIT_TOTAL, world.getName());
 
         // FEATURE: skeletons sometimes release silverfish to attack their targets
-        if (event.getEntity() instanceof Arrow && event.getEntity().getShooter() instanceof Skeleton) {
-            Arrow arrow = (Arrow) event.getEntity();
-            Skeleton skeleton = (Skeleton) event.getEntity().getShooter();
+        if (event.getEntity() instanceof Arrow arrow && event.getEntity().getShooter() instanceof Skeleton skeleton) {
             // Slowness Arrows
             if (snowballs && OurRandom.percentChance(snowballsPercent)) {
                 arrow.setMetadata(key_slownessArrow, new FixedMetadataValue(plugin, true));
@@ -285,7 +279,7 @@ public class Skeletors extends ListenerModule {
      */
     @SuppressWarnings("unchecked")
     public static void addMinionToSkeli(LivingEntity summoner, LivingEntity minion, Plugin plugin) {
-        List<UUID> idList = new ArrayList<UUID>(1);
+        List<UUID> idList = new ArrayList<>(1);
         // Get minions already set and append the new Minion
         List<MetadataValue> meta = summoner.getMetadata(key_spawnedMinions);
         for (MetadataValue val : meta)
@@ -311,12 +305,8 @@ public class Skeletors extends ListenerModule {
         List<MetadataValue> meta = summoner.getMetadata(key_spawnedMinions);
         if (!meta.isEmpty()) {
             MetadataValue value = meta.get(0);
-            if (value.value() instanceof List) {
-                Iterator<UUID> iter = ((List<UUID>) value.value()).iterator();
-                while (iter.hasNext()) {
-                    if (minionId == iter.next())
-                        iter.remove();
-                }
+            if (value.value() instanceof List<?> v) {
+                v.removeIf(minionId::equals);
             }
         }
     }
@@ -333,7 +323,7 @@ public class Skeletors extends ListenerModule {
     @SuppressWarnings("unchecked")
     public static List<UUID> getMinionsSpawnedBySkeli(LivingEntity entity, Plugin plugin) {
         List<MetadataValue> meta = entity.getMetadata(key_spawnedMinions);
-        List<UUID> ids = new ArrayList<UUID>(meta.size());
+        List<UUID> ids = new ArrayList<>(meta.size());
         for (MetadataValue val : meta)
             if (val.getOwningPlugin() == plugin)
                 if (val.value() instanceof List)

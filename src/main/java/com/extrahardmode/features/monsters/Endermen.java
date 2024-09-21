@@ -70,12 +70,11 @@ public class Endermen extends ListenerModule {
         final boolean improvedEndermanTeleportation = CFG.getBoolean(RootNode.IMPROVED_ENDERMAN_TELEPORTATION,
                 world.getName());
 
-        if (entity instanceof Enderman && improvedEndermanTeleportation
+        if (entity instanceof Enderman enderman && improvedEndermanTeleportation
                 && world.getEnvironment().equals(World.Environment.NORMAL)) {
-            Enderman enderman = (Enderman) entity;
 
             // ignore endermen which aren't fighting players
-            if (!(enderman.getTarget() instanceof Player))
+            if (!(enderman.getTarget() instanceof Player player))
                 return;
 
             // ignore endermen which are taking damage from the environment (to avoid rapid
@@ -83,8 +82,6 @@ public class Endermen extends ListenerModule {
             if (enderman.getLastDamageCause() != null
                     && enderman.getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK)
                 return;
-
-            Player player = (Player) enderman.getTarget();
 
             // ignore when player is in a different world from the enderman
             if (!player.getWorld().equals(enderman.getWorld()))

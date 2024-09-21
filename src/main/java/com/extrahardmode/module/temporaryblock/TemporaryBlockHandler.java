@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TemporaryBlockHandler extends ListenerModule {
-    private Map<LiteLocation, TemporaryBlock> temporaryBlockList = new HashMap<LiteLocation, TemporaryBlock>();
+    private Map<LiteLocation, TemporaryBlock> temporaryBlockList = new HashMap<>();
 
     public TemporaryBlockHandler(ExtraHardMode plugin) {
         super(plugin);
@@ -50,7 +50,7 @@ public class TemporaryBlockHandler extends ListenerModule {
     // And explosions
     @EventHandler(ignoreCancelled = true)
     public void onEntityExplosionBreak(EntityExplodeEvent event) {
-        ArrayList<Block> blocks = new ArrayList<Block>(event.blockList());
+        ArrayList<Block> blocks = new ArrayList<>(event.blockList());
         for (Block block : blocks) {
             if (fireTemporaryBlockBreakEvent(block)) {
                 event.blockList().remove(block);
@@ -62,7 +62,7 @@ public class TemporaryBlockHandler extends ListenerModule {
     // And also other plugin-caused explosions (and beds in the nether)
     @EventHandler(ignoreCancelled = true)
     public void onBlockExplosionBreak(BlockExplodeEvent event) {
-        ArrayList<Block> blocks = new ArrayList<Block>(event.blockList());
+        ArrayList<Block> blocks = new ArrayList<>(event.blockList());
         for (Block block : blocks) {
             if (fireTemporaryBlockBreakEvent(block)) {
                 event.blockList().remove(block);

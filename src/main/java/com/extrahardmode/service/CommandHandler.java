@@ -28,6 +28,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract class to handle the majority of the logic dealing with commands.
@@ -38,12 +39,12 @@ public abstract class CommandHandler implements CommandExecutor {
     /**
      * Registered commands for this handler.
      */
-    private final Map<String, ICommand> registeredCommands = new HashMap<String, ICommand>();
+    private final Map<String, ICommand> registeredCommands = new HashMap<>();
 
     /**
      * Registered subcommands and the handler associated with it.
      */
-    private final Map<String, CommandHandler> registeredHandlers = new HashMap<String, CommandHandler>();
+    private final Map<String, CommandHandler> registeredHandlers = new HashMap<>();
 
     /**
      * Root plugin so that commands and handlers have access to the information.
@@ -115,7 +116,7 @@ public abstract class CommandHandler implements CommandExecutor {
      * handler to do the logic for.
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
             return noArgs(sender, command, label);
         } else {
@@ -178,9 +179,9 @@ public abstract class CommandHandler implements CommandExecutor {
     String[] shortenArgs(String[] args) {
         if (args.length == 0)
             return args;
-        final List<String> argList = new LinkedList<String>(Arrays.asList(args));
+        final List<String> argList = new LinkedList<>(Arrays.asList(args));
         argList.remove(0);
-        return argList.toArray(new String[argList.size()]);
+        return argList.toArray(new String[0]);
     }
 
     /**

@@ -50,7 +50,7 @@ public class BlockRelationsList {
      * @return list of block relations
      */
     public String[] toConfigStrings() {
-        if (mBlockRelations.size() == 0)
+        if (mBlockRelations.isEmpty())
             return new String[] { "" };
         String[] configStrings = new String[mBlockRelations.size()];
         int i = 0;

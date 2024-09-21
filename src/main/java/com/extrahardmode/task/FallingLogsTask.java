@@ -22,7 +22,6 @@
 package com.extrahardmode.task;
 
 import com.extrahardmode.ExtraHardMode;
-import com.extrahardmode.module.BlockModule;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.block.Block;
 
@@ -30,20 +29,6 @@ import org.bukkit.block.Block;
  * Gradually let's Logs which have been marked as loose fall down.
  */
 public class FallingLogsTask implements Runnable {
-    /**
-     * Reference to the plugin using this class
-     */
-    private final ExtraHardMode plugin;
-
-    /**
-     * BlockModule to spawn FallingBlocks
-     */
-    private final BlockModule blockModule;
-
-    /**
-     * Block to apply physics to
-     */
-    private final Block block;
 
     /**
      * Constructor
@@ -55,10 +40,6 @@ public class FallingLogsTask implements Runnable {
     public FallingLogsTask(ExtraHardMode plugin, Block block) {
         Validate.notNull(block, "Block can't be null");
         Validate.notNull(plugin, "Plugin can't be null");
-
-        this.block = block;
-        this.plugin = plugin;
-        blockModule = plugin.getModuleForClass(BlockModule.class);
     }
 
     // TODO: 1.13

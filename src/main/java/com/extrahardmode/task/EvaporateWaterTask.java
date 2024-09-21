@@ -60,8 +60,7 @@ public class EvaporateWaterTask implements Runnable {
             Levelled waterLevel = (Levelled) block.getBlockData();
             waterLevel.setLevel(1);
             block.setBlockData(waterLevel, true);
-        } else if (block.getBlockData() instanceof Waterlogged) {
-            Waterlogged wowWater = (Waterlogged) block.getBlockData();
+        } else if (block.getBlockData() instanceof Waterlogged wowWater) {
             wowWater.setWaterlogged(false);
             block.setBlockData(wowWater, true);
         }

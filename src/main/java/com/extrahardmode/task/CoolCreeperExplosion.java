@@ -50,12 +50,6 @@ public class CoolCreeperExplosion implements Runnable {
 
     private int numOfFireworks = 3;
 
-    private final int ticksBetweenFireworks = 5;
-
-    private final int ticksBeforeCatapult = 3;
-
-    private final int ticksBeforeSuicide = 8;
-
     private long mainDelay = 0L;
 
     private double creeperAscendSpeed = 0.5;
@@ -78,10 +72,12 @@ public class CoolCreeperExplosion implements Runnable {
     public void run() {
         // Everyone loves fireworks
         for (int i = 0; i < numOfFireworks; i++) {
+            int ticksBetweenFireworks = 5;
             mainDelay += ticksBetweenFireworks;
             scheduler.runTaskLater(plugin, new Firework(), mainDelay);
         }
         // Catapult into air and explode midair
+        int ticksBeforeCatapult = 3;
         mainDelay += ticksBeforeCatapult;
         scheduler.runTaskLater(plugin, new AscendToHeaven(), mainDelay);
     }
@@ -104,9 +100,10 @@ public class CoolCreeperExplosion implements Runnable {
                 int ticksInbetween = 1;
                 creeper.setTarget(null);
                 for (int i = 0; i < 10; i++) {
-                    scheduler.runTaskLater(plugin, new RiseToGlory(), (long) ticksInbetween);
+                    scheduler.runTaskLater(plugin, new RiseToGlory(), ticksInbetween);
                     ticksInbetween += i;
                 }
+                int ticksBeforeSuicide = 8;
                 scheduler.runTaskLater(plugin, new Suicide(), ticksBeforeSuicide);
             }
         }

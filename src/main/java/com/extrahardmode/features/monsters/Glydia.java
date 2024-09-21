@@ -138,7 +138,6 @@ public class Glydia extends ListenerModule {
             placeEvent.setCancelled(true);
             // TODO EhmLimitedBuildingEvent End
             messenger.send(player, MessageNode.LIMITED_END_BUILDING);
-            return;
         }
     }
 
@@ -219,7 +218,7 @@ public class Glydia extends ListenerModule {
     @EventHandler
     public void onPlayerTpOut(PlayerChangedWorldEvent event) {
         String playerName = event.getPlayer().getName();
-        if (event.getFrom().getEnvironment() == World.Environment.THE_END && data.getPlayers().contains(playerName))
+        if (event.getFrom().getEnvironment() == World.Environment.THE_END)
             data.getPlayers().remove(playerName);
     }
 
@@ -248,8 +247,7 @@ public class Glydia extends ListenerModule {
             Player damager = null;
             if (damageByEntityEvent.getDamager() instanceof Player) {
                 damager = (Player) damageByEntityEvent.getDamager();
-            } else if (damageByEntityEvent.getDamager() instanceof Projectile) {
-                Projectile projectile = (Projectile) damageByEntityEvent.getDamager();
+            } else if (damageByEntityEvent.getDamager() instanceof Projectile projectile) {
                 if (projectile.getShooter() != null && projectile.getShooter() instanceof Player) {
                     damager = (Player) projectile.getShooter();
                 }
@@ -303,7 +301,7 @@ public class Glydia extends ListenerModule {
         final boolean respawnDragon = CFG.getBoolean(RootNode.RESPAWN_ENDER_DRAGON, world.getName());
 
         // FEATURE: respawn the ender dragon when the last player leaves the end
-        if (world.getEnvironment() == World.Environment.THE_END && world.getPlayers().size() == 0) // Once everyone has
+        if (world.getEnvironment() == World.Environment.THE_END && world.getPlayers().isEmpty()) // Once everyone has
                                                                                                    // left
         {
             // look for an ender dragon

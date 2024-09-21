@@ -48,7 +48,7 @@ public class StringUtil {
         if (suffix == null)
             suffix = "";
 
-        List<MsgLineHolder> lines = new ArrayList<MsgLineHolder>();
+        List<MsgLineHolder> lines = new ArrayList<>();
 
         String[] words;
         if (message.contains(" "))
@@ -110,7 +110,7 @@ public class StringUtil {
             }
         }
         // Append suffix to last MsgLineHolder
-        if (suffix.length() > 0) {
+        if (!suffix.isEmpty()) {
             if (line.length() + suffix.length() < maxLineLength)
                 line.setSuffix(suffix);
             else {
@@ -131,8 +131,8 @@ public class StringUtil {
      * @return true if one or more elements are the same, false if lists are
      *         completely different
      */
-    public static boolean containsOneEqualElem(List first, List second) {
-        for (Object str : first) {
+    public static <T> boolean containsOneEqualElem(List<T> first, List<T> second) {
+        for (T str : first) {
             if (second.contains(str))
                 return true;
         }

@@ -116,7 +116,7 @@ public class MsgModule extends EHMModule {
                         persistModule.increment(node, player.getName());
                     }
                 } else
-                    timeouts.remove(player, message);
+                    timeouts.remove(player.getName(), node);
                 break;
             case BROADCAST:
                 plugin.getServer().broadcastMessage(message);
@@ -268,8 +268,7 @@ public class MsgModule extends EHMModule {
             String titleText = messages.getString(MessageNode.SB_MSG_TITLE);
 
             if (stripColors)
-                for (int i = 0; i < message.size(); i++)
-                    message.set(i, ChatColor.stripColor(message.get(i)));
+                message.replaceAll(ChatColor::stripColor);
 
             switch (category) {
                 case BROADCAST:
@@ -326,19 +325,16 @@ public class MsgModule extends EHMModule {
      */
     public boolean popupsAreEnabled(MsgCategory category) {
         if (messages.getBoolean(MessageNode.SB_MSG_ENABLE))
-            switch (category.getSubcategory() != null ? category.getSubcategory() : category) // Some messages might
-                                                                                              // inherit from another
-                                                                                              // MsgCategory
+            return switch (category.getSubcategory() != null ? category.getSubcategory() :
+                    category) // Some messages might
+                    // inherit from another
+                    // MsgCategory
             {
-                case TUTORIAL:
-                    return messages.getBoolean(MessageNode.SB_MSG_TUTORIAL);
-                case NOTIFICATION:
-                    return messages.getBoolean(MessageNode.SB_MSG_NOTIFICATION);
-                case BROADCAST:
-                    return messages.getBoolean(MessageNode.SB_MSG_BROADCAST);
-                default:
-                    return false;
-            }
+                case TUTORIAL -> messages.getBoolean(MessageNode.SB_MSG_TUTORIAL);
+                case NOTIFICATION -> messages.getBoolean(MessageNode.SB_MSG_NOTIFICATION);
+                case BROADCAST -> messages.getBoolean(MessageNode.SB_MSG_BROADCAST);
+                default -> false;
+            };
         return false;
     }
 }

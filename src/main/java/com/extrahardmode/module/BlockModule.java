@@ -175,7 +175,7 @@ public class BlockModule extends EHMModule {
      * @return if it has been marked
      */
     public boolean isMarked(Block block) {
-        return block.getMetadata(MARK).size() > 0;
+        return !block.getMetadata(MARK).isEmpty();
     }
 
     /**
@@ -237,9 +237,7 @@ public class BlockModule extends EHMModule {
                     }
                 }
 
-                if (plugin.random(deathProbability)) {
-                    return true;
-                }
+                return plugin.random(deathProbability);
             }
         }
 
@@ -286,8 +284,8 @@ public class BlockModule extends EHMModule {
      *
      * @return all the Block with the given Type in the specified radius
      */
-    public Block[] getBlocksInArea(Location loc, int height, int radius, Tag tag) {
-        List<Block> blocks = new ArrayList<Block>();
+    public Block[] getBlocksInArea(Location loc, int height, int radius, Tag<Material> tag) {
+        List<Block> blocks = new ArrayList<>();
         // Height
         for (int y = 0; y < height; y++) {
             for (int x = -radius; x <= radius; x++) {
@@ -299,7 +297,7 @@ public class BlockModule extends EHMModule {
                 }
             }
         }
-        return blocks.toArray(new Block[blocks.size()]);
+        return blocks.toArray(new Block[0]);
     }
 
     /**
@@ -389,18 +387,11 @@ public class BlockModule extends EHMModule {
 
     /** Is this a natural block for netherspawning? */
     public boolean isNaturalNetherSpawn(Material material) {
-        switch (material) {
-            case NETHERRACK:
-            case NETHER_BRICK: // I'm guessing this is the nether brick item, not the block. If so, this should
-                               // be removed.
-            case NETHER_BRICKS:
-            case NETHER_BRICK_SLAB:
-            case SOUL_SAND:
-            case GRAVEL:
-            case AIR:
-                return true;
-        }
-        return false;
+        return switch (material) { // I'm guessing this is the nether brick item, not the block. If so, this should
+            // be removed.
+            case NETHERRACK, NETHER_BRICK, NETHER_BRICKS, NETHER_BRICK_SLAB, SOUL_SAND, GRAVEL, AIR -> true;
+            default -> false;
+        };
     }
 
     /**
@@ -422,8 +413,7 @@ public class BlockModule extends EHMModule {
         if (placed.getRelative(BlockFace.DOWN).getType() == Material.AIR)
             if (placed.getX() != against.getX() /* placed onto the side */ && playerBlock.getX() == against.getX())
                 return true;
-            else if (placed.getZ() != against.getZ() && playerBlock.getZ() == against.getZ())
-                return true;
+            else return placed.getZ() != against.getZ() && playerBlock.getZ() == against.getZ();
         return false;
     }
 
@@ -439,29 +429,18 @@ public class BlockModule extends EHMModule {
         if (Tag.LEAVES.isTagged(mat))
             return Material.AIR;
 
-        switch (mat) {
-            case GRASS_BLOCK:
-            case FARMLAND:
-                return Material.DIRT;
-            case STONE:
-                return Material.COBBLESTONE;
-            case COAL_ORE:
-                return Material.COAL;
-            case LAPIS_ORE:
-                return Material.INK_SAC;
-            case EMERALD_ORE:
-                return Material.EMERALD;
-            case REDSTONE_ORE:
-                return Material.REDSTONE;
-            case DIAMOND_ORE:
-                return Material.DIAMOND;
-            case NETHER_QUARTZ_ORE:
-                return Material.QUARTZ;
-            case ICE:
-            case SPAWNER:
-                return Material.AIR;
-        }
-        return mat;
+        return switch (mat) {
+            case GRASS_BLOCK, FARMLAND -> Material.DIRT;
+            case STONE -> Material.COBBLESTONE;
+            case COAL_ORE -> Material.COAL;
+            case LAPIS_ORE -> Material.INK_SAC;
+            case EMERALD_ORE -> Material.EMERALD;
+            case REDSTONE_ORE -> Material.REDSTONE;
+            case DIAMOND_ORE -> Material.DIAMOND;
+            case NETHER_QUARTZ_ORE -> Material.QUARTZ;
+            case ICE, SPAWNER -> Material.AIR;
+            default -> mat;
+        };
     }
 
     public static boolean isOneOf(Block block, Material... materials) {

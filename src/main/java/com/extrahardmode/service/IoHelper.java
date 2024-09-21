@@ -2,9 +2,9 @@ package com.extrahardmode.service;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 
 import com.google.common.io.Files;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Helper Functions for general IoStuff
@@ -27,20 +27,9 @@ public class IoHelper {
             destFile.createNewFile();
         }
 
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile, append).getChannel();
+        try (FileChannel source = new FileInputStream(sourceFile).getChannel();
+             FileChannel destination = new FileOutputStream(destFile, append).getChannel()) {
             destination.transferFrom(source, 0L, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
         }
     }
 
@@ -73,7 +62,7 @@ public class IoHelper {
             FileOutputStream outFileStream = new FileOutputStream(input);
 
             // header + original file
-            OutputStreamWriter memWriter = new OutputStreamWriter(headerStream, Charset.forName("UTF-8").newEncoder());
+            OutputStreamWriter memWriter = new OutputStreamWriter(headerStream, StandardCharsets.UTF_8.newEncoder());
             memWriter.write(sb.toString());
             memWriter.close();
             headerStream.writeTo(outFileStream);
@@ -81,8 +70,6 @@ public class IoHelper {
             headerStream.close();
             outFileStream.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

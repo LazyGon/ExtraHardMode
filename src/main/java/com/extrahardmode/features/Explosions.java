@@ -113,7 +113,7 @@ public class Explosions extends ListenerModule {
 
         // TNT
         if (sourceEntity instanceof TNTPrimed) {
-            if (customTntExplosion && event.blockList().size() > 0 && (flyOtherPlugins || event.getYield() == 0.25)) // getYield
+            if (customTntExplosion && !event.blockList().isEmpty() && (flyOtherPlugins || event.getYield() == 0.25F)) // getYield
                                                                                                                      // value
                                                                                                                      // of
                                                                                                                      // 0.25
@@ -282,13 +282,11 @@ public class Explosions extends ListenerModule {
         final int distance = (int) Math.pow(
                 CFG.getInt(RootNode.EXPLOSIONS_FLYING_BLOCKS_AUTOREMOVE_RADIUS, event.getBlock().getWorld().getName()),
                 2);
-        if (event.getEntity() instanceof FallingBlock) {
+        if (event.getEntity() instanceof FallingBlock fallBaby) {
             Block block = event.getBlock();
-            FallingBlock fallBaby = (FallingBlock) event.getEntity();
             if (fallBaby.hasMetadata(tag)) {
-                Object obj = fallBaby.getMetadata(tag).size() > 0 ? fallBaby.getMetadata(tag).get(0).value() : null;
-                if (obj instanceof Location) {
-                    Location loc = (Location) obj;
+                Object obj = !fallBaby.getMetadata(tag).isEmpty() ? fallBaby.getMetadata(tag).get(0).value() : null;
+                if (obj instanceof Location loc) {
                     // Compare the distance to the original explosion, dont place block if the block
                     // landed far away (dont make landscape ugly)
                     if (event.getBlock().getLocation().distanceSquared(loc) > distance) {
@@ -385,9 +383,9 @@ public class Explosions extends ListenerModule {
 
         Location[] locations = new Location[] {
                 location.add(random1, 1, random2),
-                location.add(-random2, 0, random1 / 2),
-                location.add(-random1 / 2, -1, -random2),
-                location.add(random1 / 2, 0, -random2 / 2)
+                location.add(-random2, 0, (double) random1 / 2),
+                location.add((double) -random1 / 2, -1, -random2),
+                location.add((double) random1 / 2, 0, (double) -random2 / 2)
         };
 
         final int explosionsNum = locations.length;
@@ -423,7 +421,7 @@ public class Explosions extends ListenerModule {
      */
     public void applyExplosionPhysics(Collection<Block> blocks, final Location center, final int flyPercentage,
             final double upVel, final double spreadVel) {
-        final List<FallingBlock> fallingBlockList = new ArrayList<FallingBlock>();
+        final List<FallingBlock> fallingBlockList = new ArrayList<>();
         for (Block block : blocks) {
             if (block.getType().isSolid()) {
                 // Only a few of the blocks fly as an effect
@@ -443,12 +441,9 @@ public class Explosions extends ListenerModule {
             }
         }
 
-        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-                for (FallingBlock fall : fallingBlockList) {
-                    UtilityModule.moveAway(fall, center, spreadVel);
-                }
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            for (FallingBlock fall : fallingBlockList) {
+                UtilityModule.moveAway(fall, center, spreadVel);
             }
         }, 2L);
     }

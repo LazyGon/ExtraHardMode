@@ -22,20 +22,11 @@ import java.util.Map;
  * @author Diemex
  */
 public class PlayerNotificationHandler {
-    /**
-     * Title of the Scoreboard
-     */
-    private final String scoreboardTitle;
 
     /**
      * Name of the Player
      */
     private final String playerName;
-
-    /**
-     * Reference to the Plugin using this
-     */
-    private final Plugin plugin;
 
     /**
      * Scoreboard before we have shown our scoreboard
@@ -60,16 +51,14 @@ public class PlayerNotificationHandler {
     /**
      * All the popups currently shown
      */
-    private Map<Integer, NotificationHolder> notifications = new HashMap<Integer, NotificationHolder>();
+    private Map<Integer, NotificationHolder> notifications = new HashMap<>();
 
     /**
      * Messages Id RelationShip if available
      */
-    private Map<String, Integer> idMap = new HashMap<String, Integer>();
+    private Map<String, Integer> idMap = new HashMap<>();
 
     public PlayerNotificationHandler(String scoreboardTitle, Plugin plugin, String playerName) {
-        this.scoreboardTitle = scoreboardTitle;
-        this.plugin = plugin;
         this.playerName = playerName;
         msgBoard = Bukkit.getScoreboardManager().getNewScoreboard();
         Player player = Bukkit.getPlayer(playerName);
@@ -181,7 +170,7 @@ public class PlayerNotificationHandler {
                 NotificationHolder popup = notifications.get(i);
 
                 // Use the title and color of the newest message
-                if (updateTitle && objective.getScoreboard().getEntries().size() > 0) {
+                if (updateTitle && !objective.getScoreboard().getEntries().isEmpty()) {
                     objective.setDisplayName(notifications.get(i).getTitle());
                     updateTitle = false;
                 }

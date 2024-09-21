@@ -53,7 +53,7 @@ public class VersionCommand implements ICommand {
                     Manifest manifest = pluginFile.getManifest();
                     if (manifest != null) {
                         String buildNumber = manifest.getMainAttributes().getValue("Build-Number");
-                        if (buildNumber != null && buildNumber.length() > 0)
+                        if (buildNumber != null && !buildNumber.isEmpty())
                             sender.sendMessage(ChatColor.BLUE + "Build: " + ChatColor.WHITE + buildNumber);
                     }
                 } catch (IOException ignored) {

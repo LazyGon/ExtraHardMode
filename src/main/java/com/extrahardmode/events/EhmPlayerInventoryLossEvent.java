@@ -8,6 +8,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Called whenever a Player died and items will be removed from his inventory
@@ -124,7 +125,7 @@ public class EhmPlayerInventoryLossEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 

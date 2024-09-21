@@ -38,13 +38,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class DataStoreModule extends EHMModule {
 
     /** In-memory cache for player data */
-    private final Map<String, PlayerData> playerNameToPlayerDataMap = new ConcurrentHashMap<String, PlayerData>();
+    private final Map<String, PlayerData> playerNameToPlayerDataMap = new ConcurrentHashMap<>();
 
     /** List of previous locations. */
-    private final List<SimpleEntry<Player, Location>> previousLocations = new CopyOnWriteArrayList<SimpleEntry<Player, Location>>();
+    private final List<SimpleEntry<Player, Location>> previousLocations = new CopyOnWriteArrayList<>();
 
     /** List of Players fighting the dragon */
-    private final List<String> playersFightingDragon = new ArrayList<String>();
+    private final List<String> playersFightingDragon = new ArrayList<>();
 
     /** Config */
     private RootConfig CFG;

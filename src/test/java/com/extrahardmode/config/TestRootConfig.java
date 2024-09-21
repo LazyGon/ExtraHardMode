@@ -162,10 +162,10 @@ class TestRootConfig {
     @Test
     public void testGetEnabledWorlds() {
         // HashSet because the order doesn't matter
-        HashSet<String> expectedWorlds = new HashSet<String>(Arrays
-                .asList(new String[] { "world", "pvp", "world_the_end", "miningWorld", "world_nether", "worlds" }));
-        HashSet<String> inputWorlds = new HashSet<String>(Arrays.asList(cfg.getEnabledWorlds()));
-        assertTrue(expectedWorlds.equals(inputWorlds));
+        HashSet<String> expectedWorlds = new HashSet<>(Arrays
+                .asList("world", "pvp", "world_the_end", "miningWorld", "world_nether", "worlds"));
+        HashSet<String> inputWorlds = new HashSet<>(Arrays.asList(cfg.getEnabledWorlds()));
+        assertEquals(expectedWorlds, inputWorlds);
     }
 
     // @Test

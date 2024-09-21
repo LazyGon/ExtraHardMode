@@ -1238,7 +1238,7 @@ public enum RootNode implements ConfigNode {
      * @param type - Variable type.
      * @param def  - Default value.
      */
-    private RootNode(String path, VarType type, Object def) {
+    RootNode(String path, VarType type, Object def) {
         this.comments = null;
         this.path = path;
         this.type = type;
@@ -1253,14 +1253,14 @@ public enum RootNode implements ConfigNode {
      * @param def      - Default value.
      * @param comments - Explaining this node
      */
-    private RootNode(String path, VarType type, Object def, String... comments) {
+    RootNode(String path, VarType type, Object def, String... comments) {
         this.path = path;
         this.type = type;
         this.defaultValue = def;
         this.comments = comments;
     }
 
-    private RootNode(String path, VarType type, SubType subType, Object def) {
+    RootNode(String path, VarType type, SubType subType, Object def) {
         this.comments = null;
         this.path = path;
         this.type = type;
@@ -1268,7 +1268,7 @@ public enum RootNode implements ConfigNode {
         this.subType = subType;
     }
 
-    private RootNode(String path, VarType type, SubType subType, Object def, String... comments) {
+    RootNode(String path, VarType type, SubType subType, Object def, String... comments) {
         this.path = path;
         this.type = type;
         this.defaultValue = def;
@@ -1276,7 +1276,7 @@ public enum RootNode implements ConfigNode {
         this.comments = comments;
     }
 
-    private RootNode(String path, VarType type, SubType subType, Disable disable, Object def) {
+    RootNode(String path, VarType type, SubType subType, Disable disable, Object def) {
         this.comments = null;
         this.path = path;
         this.type = type;
@@ -1285,7 +1285,7 @@ public enum RootNode implements ConfigNode {
         this.disableValue = disable;
     }
 
-    private RootNode(String path, VarType type, SubType subType, Disable disable, Object def, String... comments) {
+    RootNode(String path, VarType type, SubType subType, Disable disable, Object def, String... comments) {
         this.comments = comments;
         this.path = path;
         this.type = type;
@@ -1297,7 +1297,7 @@ public enum RootNode implements ConfigNode {
     /**
      * Comment Constructor
      */
-    private RootNode(String path, String... comments) {
+    RootNode(String path, String... comments) {
         this.path = path;
         this.comments = comments;
         this.type = VarType.COMMENT;
@@ -1376,16 +1376,12 @@ public enum RootNode implements ConfigNode {
                     else {
                         switch (subType) {
                             case NATURAL_NUMBER:
-                            case Y_VALUE: {
+                            case Y_VALUE, PERCENTAGE: {
                                 obj = 0;
                                 break;
                             }
                             case HEALTH: {
                                 obj = 20;
-                                break;
-                            }
-                            case PERCENTAGE: {
-                                obj = 0;
                                 break;
                             }
                             default: {
@@ -1409,7 +1405,7 @@ public enum RootNode implements ConfigNode {
                             case NATURAL_NUMBER:
                             case Y_VALUE: {
                                 if (disableValue != null)
-                                    obj = (Double) disableValue.get();
+                                    obj = disableValue.get();
                                 break;
                             }
                             case HEALTH: {
@@ -1471,7 +1467,7 @@ public enum RootNode implements ConfigNode {
          */
         HUNDRED(100);
 
-        private Disable(Object obj) {
+        Disable(Object obj) {
             disable = obj;
         }
 

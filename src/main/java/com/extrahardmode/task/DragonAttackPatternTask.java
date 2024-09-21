@@ -39,11 +39,6 @@ public class DragonAttackPatternTask implements Runnable {
     private final ExtraHardMode plugin;
 
     /**
-     * Config instance
-     */
-    private final RootConfig CFG;
-
-    /**
      * Target player.
      */
     private final Player player;
@@ -64,7 +59,6 @@ public class DragonAttackPatternTask implements Runnable {
     public DragonAttackPatternTask(ExtraHardMode plugin, LivingEntity dragon, Player player,
             List<String> playersFightingDragon) {
         this.plugin = plugin;
-        CFG = plugin.getModuleForClass(RootConfig.class);
         this.dragon = dragon;
         this.player = player;
     }

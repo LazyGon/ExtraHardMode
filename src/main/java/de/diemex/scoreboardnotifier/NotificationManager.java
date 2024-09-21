@@ -27,7 +27,7 @@ public class NotificationManager implements Listener {
      * {@link de.diemex.scoreboardnotifier.PlayerNotificationHandler} that handles
      * messages of a given player
      */
-    Map<String, PlayerNotificationHandler> managerScoreboards;
+    Map<String, PlayerNotificationHandler> managerScoreboards = new HashMap<>();
 
     /**
      * Constructor
@@ -36,7 +36,6 @@ public class NotificationManager implements Listener {
      */
     public NotificationManager(Plugin plugin) {
         this.plugin = plugin;
-        managerScoreboards = new HashMap<String, PlayerNotificationHandler>();
     }
 
     private boolean show_Popup(final String player, final String scoreboardTitle, final MsgSettings type,
@@ -234,12 +233,7 @@ public class NotificationManager implements Listener {
      */
     private void removeNotificationLater(final int id, final PlayerNotificationHandler store, final int length) {
         // Remove a message after a given time
-        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-                store.removeMessage(id);
-            }
-        }, length);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> store.removeMessage(id), length);
     }
 
     /**

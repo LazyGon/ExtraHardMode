@@ -149,9 +149,8 @@ public class BumBumBens extends ListenerModule {
                             damager = (Player) damageByEntityEvent.getDamager();
                             if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS))
                                 return;
-                        } else if (damageByEntityEvent.getDamager() instanceof Projectile) { // Damaged by an arrow shot
+                        } else if (damageByEntityEvent.getDamager() instanceof Projectile bullet) { // Damaged by an arrow shot
                                                                                              // by a player
-                            Projectile bullet = (Projectile) damageByEntityEvent.getDamager();
                             if (bullet.getShooter() instanceof Player)// otherwise skeli/dispenser etc.
                                 damager = (Player) bullet.getShooter();
                             if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS))

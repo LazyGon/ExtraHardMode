@@ -13,6 +13,7 @@ import com.extrahardmode.service.ListenerModule;
 import com.extrahardmode.task.WeightCheckTask;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Creeper;
@@ -58,8 +59,7 @@ public class Tutorial extends ListenerModule {
      */
     @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
-        if (event.getTarget() instanceof Player) {
-            final Player player = (Player) event.getTarget();
+        if (event.getTarget() instanceof Player player) {
             final World world = player.getWorld();
 
             switch (event.getEntity().getType()) {
@@ -94,12 +94,8 @@ public class Tutorial extends ListenerModule {
                     if (CFG.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, world.getName()))
                         messenger.send(player, MessageNode.PIGZOMBIE_TARGET);
                     if (CFG.getInt(RootNode.NETHER_PIGS_DROP_WART, world.getName()) > 0)
-                        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                messenger.send(player, MessageNode.PIGZOMBIE_TARGET_WART);
-                            }
-                        }, 300L);
+                        plugin.getServer().getScheduler().runTaskLater(plugin,
+                                () -> messenger.send(player, MessageNode.PIGZOMBIE_TARGET_WART), 300L);
                     break;
                 }
                 case MAGMA_CUBE: {
@@ -216,13 +212,10 @@ public class Tutorial extends ListenerModule {
             // Warn players before they build big farms in the desert
             if (block.getType() == Material.DIRT) {
                 try {
-                    switch (block.getBiome()) {
-                        case DESERT: {
-                            messenger.send(player, MessageNode.ANTIFARMING_DESSERT_WARNING);
-                            break;
-                        }
+                    if (block.getBiome() == Biome.DESERT) {
+                        messenger.send(player, MessageNode.ANTIFARMING_DESSERT_WARNING);
                     }
-                } catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException ignored) {
                 } // ignore custom biomes
 
             }
@@ -245,7 +238,7 @@ public class Tutorial extends ListenerModule {
         StringBuilder items = new StringBuilder();
 
         // Merge the item amounts: 1 stone, 1 stone => 2 stones
-        List<ItemStack> lostItems = new ArrayList<ItemStack>();
+        List<ItemStack> lostItems = new ArrayList<>();
         for (int i = 0; i < event.getStacksToRemove().size(); i++) {
             ItemStack item = event.getStacksToRemove().get(i);
             // Does an item of the same type exist already?
@@ -266,13 +259,13 @@ public class Tutorial extends ListenerModule {
 
         // Build the output String
         for (ItemStack item : lostItems) {
-            if (items.length() > 0)
+            if (!items.isEmpty())
                 items.append(", ");
-            items.append(item.getType().toString());
+            items.append(item.getType());
         }
 
         // Only print if items have been removed
-        if (event.getStacksToRemove().size() > 0) {
+        if (!event.getStacksToRemove().isEmpty()) {
             messenger.send(event.getPlayer(), MessageNode.LOST_ITEMS,
                     new FindAndReplace(items.toString(), MessageNode.Variables.ITEMS.getVarNames()));
             messenger.send(event.getPlayer(), MessageNode.LOST_ITEMS_PLAYER);

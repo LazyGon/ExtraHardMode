@@ -65,7 +65,7 @@ public enum PermissionNode {
      *
      * @param subperm - specific permission path.
      */
-    private PermissionNode(String subperm) {
+    PermissionNode(String subperm) {
         this.node = PREFIX + subperm;
     }
 

@@ -94,7 +94,7 @@ public class ExtraHardMode extends JavaPlugin {
     /**
      * Registered modules.
      */
-    private final Map<Class<? extends IModule>, IModule> modules = new LinkedHashMap<Class<? extends IModule>, IModule>();
+    private final Map<Class<? extends IModule>, IModule> modules = new LinkedHashMap<>();
 
     /**
      * for computing random chance

@@ -37,7 +37,6 @@ import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
 import com.extrahardmode.task.RespawnZombieTask;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.SkullType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -108,7 +107,7 @@ public class Zombies extends ListenerModule {
                     player = (Player) zombie.getTarget();
 
                 // Zombies which have respawned already are less likely to respawn
-                int respawnCount = entity.getMetadata("extrahardmode.zombie.respawncount").size() > 0
+                int respawnCount = !entity.getMetadata("extrahardmode.zombie.respawncount").isEmpty()
                         ? entity.getMetadata("extrahardmode.zombie.respawncount").get(0).asInt()
                         : 0;
                 respawnCount++;
@@ -167,8 +166,7 @@ public class Zombies extends ListenerModule {
         final int maxEffectAmplifier = CFG.getInt(RootNode.ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK_MAX,
                 world.getName());
 
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        if (entity instanceof Player player) {
 
             final boolean zombiesSlowPlayers = CFG.getBoolean(RootNode.ZOMBIES_DEBILITATE_PLAYERS, world.getName());
             final boolean playerBypasses = playerModule.playerBypasses(player, Feature.MONSTER_ZOMBIES);

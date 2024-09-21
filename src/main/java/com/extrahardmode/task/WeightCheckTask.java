@@ -17,7 +17,7 @@ public class WeightCheckTask implements Runnable {
     private final ExtraHardMode mPlugin;
     private final RootConfig CFG;
     private final MsgModule mMessenger;
-    private static HashMap<UUID, Long> mLastClicks = new HashMap<UUID, Long>();
+    private static HashMap<UUID, Long> mLastClicks = new HashMap<>();
     private static Lock lock = new ReentrantLock();
 
     public WeightCheckTask(ExtraHardMode plugin) {
@@ -49,7 +49,7 @@ public class WeightCheckTask implements Runnable {
                 final float weight = PlayerModule.inventoryWeight(player, (float) armorPoints, (float) invPoints,
                         (float) toolPoints);
 
-                List<String> weightMessage = new ArrayList<String>(2);
+                List<String> weightMessage = new ArrayList<>(2);
                 weightMessage.add(String.format("Weight %.1f/%.1f", weight, maxPoints));
                 weightMessage
                         .add(weight > maxPoints ? ChatColor.RED + "U will drown" : ChatColor.GREEN + "U won't drown");

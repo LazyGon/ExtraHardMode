@@ -9,5 +9,5 @@ public interface ICompat {
      *
      * @return true if loaded
      */
-    public boolean isEnabled();
+    boolean isEnabled();
 }

@@ -98,7 +98,7 @@ public class RemoveExposedTorchesTask implements Runnable {
 
                         switch (blockType) {
                             case AIR: /* we continue down until we hit something which isn't AIR */
-                                continue loopDown;
+                                continue;
                             case TORCH:
                             case WALL_TORCH: {
                                 if (rainBreaksTorches && temperature < 1.0) // excludes warmer biomes like mesa and

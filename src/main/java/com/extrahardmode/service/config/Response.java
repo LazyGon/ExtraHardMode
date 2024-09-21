@@ -21,6 +21,8 @@
 
 package com.extrahardmode.service.config;
 
+import java.util.Objects;
+
 /**
  * Attach some status information to a returned value For example Status.OK when
  * everything went fine
@@ -46,9 +48,8 @@ public class Response<T> {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof Response) {
-            Response otherR = (Response) other;
-            return otherR.getStatusCode() == this.getStatusCode() && otherR.getContent() == this.getContent();
+        if (other instanceof Response<?> otherR) {
+            return otherR.getStatusCode() == this.getStatusCode() && Objects.equals(this.getContent(), otherR.getContent());
         } else
             return false;
     }

@@ -3,28 +3,18 @@ package com.extrahardmode.task;
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
-import com.extrahardmode.module.MsgModule;
 import com.extrahardmode.module.PlayerModule;
 import org.bukkit.entity.Player;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  *
  */
 public class ArmorWeightTask implements Runnable {
-    private final ExtraHardMode mPlugin;
     private final RootConfig CFG;
-    private final MsgModule mMessenger;
     private final Player player;
-    private static Set<UUID> mPlayerList = new HashSet<UUID>();
 
     public ArmorWeightTask(ExtraHardMode plugin, Player player) {
-        mPlugin = plugin;
         CFG = plugin.getModuleForClass(RootConfig.class);
-        mMessenger = plugin.getModuleForClass(MsgModule.class);
         this.player = player;
     }
 

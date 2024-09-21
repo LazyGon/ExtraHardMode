@@ -213,7 +213,7 @@ public enum MessageNode implements ConfigNode {
             "You can pick up water, but once you place it, it evaporates. Get some ice if you want to farm!"),
     ANTIFARMING_UNWATERD_MODE("AntifarmingUnwatered.Mode", MsgCategory.TUTORIAL),
     ANTIFARMING_UNWATERD("AntifarmingUnwatered.Msg", MsgCategory.TUTORIAL, "antifarm_unwatered",
-            "Your crops need sufficient water, otherwise they\'ll dry out!"),
+            "Your crops need sufficient water, otherwise they'll dry out!"),
     ANTIFARMING_NO_LIGHT_MODE("AntifarmingNotEnoughLight.Mode", MsgCategory.TUTORIAL),
     ANTIFARMING_NO_LIGHT("AntifarmingNotEnoughLight.Msg", MsgCategory.TUTORIAL, "antifarm_natural_light",
             "Your crops require natural light to grow!"),
@@ -266,7 +266,7 @@ public enum MessageNode implements ConfigNode {
      * @param path        path in yml
      * @param msgCategory mode of the message this nod eis for
      */
-    private MessageNode(String path, MsgCategory msgCategory) {
+    MessageNode(String path, MsgCategory msgCategory) {
         this.path = path;
         this.msgCategory = msgCategory;
         this.column = null;
@@ -280,7 +280,7 @@ public enum MessageNode implements ConfigNode {
      *
      * @param value - Default Value
      */
-    private MessageNode(String path, MsgCategory msgCategory, String column, String value) {
+    MessageNode(String path, MsgCategory msgCategory, String column, String value) {
         this.path = path;
         this.msgCategory = null; // This is important: Shows that this node actually holds a value and not the
                                  // mode of a node
@@ -290,11 +290,11 @@ public enum MessageNode implements ConfigNode {
         this.value = value;
     }
 
-    private MessageNode(String path, VarType varType, Object value) {
+    MessageNode(String path, VarType varType, Object value) {
         this(path, varType, null, value);
     }
 
-    private MessageNode(String path, VarType varType, SubType subType, Object value) {
+    MessageNode(String path, VarType varType, SubType subType, Object value) {
         this.path = path;
         this.msgCategory = null;
         this.column = null;
@@ -348,7 +348,7 @@ public enum MessageNode implements ConfigNode {
      * Get all nodes that hold a string value, aka a message to be displayed
      */
     public static Collection<MessageNode> getMessageNodes() {
-        List<MessageNode> categories = new ArrayList<MessageNode>();
+        List<MessageNode> categories = new ArrayList<>();
         for (MessageNode node : MessageNode.values())
             if (node.name().toUpperCase().endsWith("_MODE")) {
                 MessageNode msg = null;
@@ -372,7 +372,7 @@ public enum MessageNode implements ConfigNode {
      * Get all Nodes that hold the category of a node //TODO describe better
      */
     public static Collection<MessageNode> getCategoryNodes() {
-        List<MessageNode> categories = new ArrayList<MessageNode>();
+        List<MessageNode> categories = new ArrayList<>();
         for (MessageNode node : MessageNode.values())
             if (node.name().toUpperCase().endsWith("_MODE"))
                 categories.add(node);
@@ -403,7 +403,7 @@ public enum MessageNode implements ConfigNode {
 
         private final String[] variable;
 
-        private Variables(String... variable) {
+        Variables(String... variable) {
             this.variable = variable;
         }
 

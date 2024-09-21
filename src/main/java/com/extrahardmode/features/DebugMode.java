@@ -5,7 +5,6 @@ import com.extrahardmode.module.DataStoreModule;
 import com.extrahardmode.module.MsgModule;
 import com.extrahardmode.service.ListenerModule;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,7 +49,7 @@ public class DebugMode extends ListenerModule {
     public void onPlayerTurn(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (isInDebugMode(player.getName())) {
-            Block target = player.getTargetBlock(new HashSet<Material>(), 50);
+            Block target = player.getTargetBlock(new HashSet<>(), 50);
             for (int line = 0; line < 6; line++)
                 msgModule.getManager().removePopup(player.getName(), key_blockdata_msg + line);
             DecimalFormat twoDecimalPlaces = new DecimalFormat("#.##");

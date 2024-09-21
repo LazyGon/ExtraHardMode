@@ -104,12 +104,10 @@ public class Ghasts extends ListenerModule {
                 Entity damageSource = event.getDamager();
 
                 // only arrows
-                if (damageSource instanceof Arrow) {
+                if (damageSource instanceof Arrow arrow) {
                     // who shot it?
-                    Arrow arrow = (Arrow) damageSource;
-                    if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+                    if (arrow.getShooter() != null && arrow.getShooter() instanceof Player player) {
                         // check permissions when it's shot by a player
-                        Player player = (Player) arrow.getShooter();
                         if (!playerModule.playerBypasses(player, Feature.MONSTER_GHASTS))
                             event.setDamage(event.getDamage() * arrowDamagePercent / 100);
                     }

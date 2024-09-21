@@ -42,10 +42,8 @@ public class TestBlockModule {
     @Mock
     private ExtraHardMode plugin;
 
-    private BlockModule module;
-
     public TestBlockModule() {
-        module = new BlockModule(plugin);
+        BlockModule module = new BlockModule(plugin);
     }
 
     @Test

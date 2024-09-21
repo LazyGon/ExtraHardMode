@@ -31,38 +31,38 @@ public interface ConfigNode {
      *
      * @return Config path.
      */
-    public String getPath();
+    String getPath();
 
     /**
      * Get the variable type.
      *
      * @return Variable type.
      */
-    public VarType getVarType();
+    VarType getVarType();
 
     /**
      * Get the SubType Used especially for verfification
      *
      * @return SubType
      */
-    public SubType getSubType();
+    SubType getSubType();
 
     /**
      * Get the default value.
      *
      * @return Default value.
      */
-    public Object getDefaultValue();
+    Object getDefaultValue();
 
     /**
      * Get a value to disable this Node
      */
-    public Object getValueToDisable();
+    Object getValueToDisable();
 
     /**
      * Variable Types.
      */
-    public enum VarType {
+    enum VarType {
         STRING,
         INTEGER,
         DOUBLE,
@@ -81,7 +81,7 @@ public interface ConfigNode {
     /**
      * SubTypes, like percentage, y-value, custom etc
      */
-    public enum SubType {
+    enum SubType {
         PERCENTAGE,
         Y_VALUE,
         HEALTH,

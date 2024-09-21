@@ -295,8 +295,7 @@ public class AntiGrinder extends ListenerModule {
                 EntityHelper.addEnvironmentalDamage(plugin, (LivingEntity) entity, event.getDamage());
             }
             // Prevent people from using dogs to grind monsters
-            else if (event instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent byEntityEvent = (EntityDamageByEntityEvent) event;
+            else if (event instanceof EntityDamageByEntityEvent byEntityEvent) {
                 if (byEntityEvent.getDamager() instanceof Wolf) {
                     EntityHelper.addEnvironmentalDamage(plugin, (LivingEntity) entity, event.getDamage());
                 }

@@ -40,34 +40,15 @@ public class MockPlayerInventory {
     private final PlayerInventory inv = mock(PlayerInventory.class);
 
     /**
-     * InventoryHolder
-     */
-    private final Player player;
-
-    /**
-     * Armor worn by player
-     */
-    private final ItemStack[] armorContents;
-
-    /**
-     * Rest of the inventory
-     */
-    private final ItemStack[] inventory;
-
-    /**
      * Constructor
      *
      * @param player name of the Player to whom this inventory belongs to
      */
     public MockPlayerInventory(Player player, ItemStack[] armorContents, ItemStack[] inventoryContents) {
-        this.player = player;
-        this.armorContents = armorContents;
-        this.inventory = inventoryContents;
-
-        when(this.player.getInventory()).thenReturn(inv);
-        when(inv.getHolder()).thenReturn(this.player);
-        when(inv.getArmorContents()).thenReturn(this.armorContents);
-        when(inv.getContents()).thenReturn(this.inventory);
+        when(player.getInventory()).thenReturn(inv);
+        when(inv.getHolder()).thenReturn(player);
+        when(inv.getArmorContents()).thenReturn(armorContents);
+        when(inv.getContents()).thenReturn(inventoryContents);
     }
 
     /**

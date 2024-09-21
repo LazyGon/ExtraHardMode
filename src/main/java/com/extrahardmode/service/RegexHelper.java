@@ -41,7 +41,7 @@ public class RegexHelper {
     }
 
     public static int safeCast(int input, int minValue, int maxValue) {
-        return (input < minValue) ? minValue : (input > maxValue) ? maxValue : input;
+        return Math.max(Math.min(input, maxValue), minValue);
     }
 
     public static Short parseShort(String input) {

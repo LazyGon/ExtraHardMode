@@ -31,11 +31,11 @@ public enum MsgCategory {
      */
     WEIGHT_MSG("extrahardmode.player.weight", NOTIFICATION);
 
-    private MsgCategory() {
+    MsgCategory() {
         this(null, null);
     }
 
-    private MsgCategory(String identifier, MsgCategory owning) {
+    MsgCategory(String identifier, MsgCategory owning) {
         this.identifier = identifier;
         this.cat = owning;
     }

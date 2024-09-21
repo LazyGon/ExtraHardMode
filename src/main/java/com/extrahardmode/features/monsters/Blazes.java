@@ -162,28 +162,28 @@ public class Blazes extends ListenerModule {
         // FEATURE: nether blazes may multiply on death
         if (blazeSplitPercent > 0 && world.getEnvironment() == World.Environment.NETHER && entity instanceof Blaze) {
             // Blazes which have split already are less likely to split
-            int respawnCount = entity.getMetadata("extrahardmode.blaze.splitcount").size() > 0
+            int respawnCount = !entity.getMetadata("extrahardmode.blaze.splitcount").isEmpty()
                     ? entity.getMetadata("extrahardmode.blaze.splitcount").get(0).asInt()
                     : 0;
             respawnCount++;
             blazeSplitPercent = (int) (1.0D / respawnCount * blazeSplitPercent);
             if (plugin.random(blazeSplitPercent)) {
                 // TODO EhmBlazeSplitEvent
-                Entity firstNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
+                LivingEntity firstNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
                 firstNewBlaze.setVelocity(new Vector(1, 0, 1));
                 // Save the new splitcounter
                 firstNewBlaze.setMetadata("extrahardmode.blaze.splitcount",
                         new FixedMetadataValue(plugin, respawnCount));
 
-                Entity secondNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
+                LivingEntity secondNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
                 secondNewBlaze.setVelocity(new Vector(-1, 0, -1));
                 secondNewBlaze.setMetadata("extrahardmode.blaze.splitcount",
                         new FixedMetadataValue(plugin, respawnCount));
 
                 // if this blaze was marked lootless, mark the new blazes the same
                 if (EntityHelper.isLootLess(entity)) {
-                    EntityHelper.markLootLess(plugin, (LivingEntity) firstNewBlaze);
-                    EntityHelper.markLootLess(plugin, (LivingEntity) secondNewBlaze);
+                    EntityHelper.markLootLess(plugin, firstNewBlaze);
+                    EntityHelper.markLootLess(plugin, secondNewBlaze);
                 }
             }
         }

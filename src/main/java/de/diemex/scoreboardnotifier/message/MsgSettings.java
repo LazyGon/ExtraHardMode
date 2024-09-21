@@ -31,7 +31,7 @@ public class MsgSettings {
     }
 
     public boolean hasUniqueIdentifier() {
-        return uniqueIdentifier != null && uniqueIdentifier.length() > 0;
+        return uniqueIdentifier != null && !uniqueIdentifier.isEmpty();
     }
 
     public String getUniqueIdentifier() {

@@ -38,6 +38,7 @@ package com.extrahardmode.service.config;
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.EHMModule;
+import java.util.Objects;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -58,7 +59,7 @@ public abstract class ModularConfig extends EHMModule {
     /**
      * Cache of options for the config.
      */
-    protected final Map<ConfigNode, Object> OPTIONS = new ConcurrentHashMap<ConfigNode, Object>();
+    protected final Map<ConfigNode, Object> OPTIONS = new ConcurrentHashMap<>();
 
     /**
      * Constructor.
@@ -147,19 +148,15 @@ public abstract class ModularConfig extends EHMModule {
      */
     public int getInt(final ConfigNode node) {
         int i = -1;
-        switch (node.getVarType()) {
-            case INTEGER: {
-                try {
-                    i = (Integer) OPTIONS.get(node);
-                } catch (NullPointerException npe) {
-                    i = (Integer) node.getDefaultValue();
-                }
-                break;
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.INTEGER) {
+            try {
+                i = (Integer) OPTIONS.get(node);
+            } catch (NullPointerException npe) {
+                i = (Integer) node.getDefaultValue();
             }
-            default: {
-                throw new IllegalArgumentException(
-                        "Attempted to get " + node.toString() + " of type " + node.getVarType() + " as an integer.");
-            }
+        } else {
+            throw new IllegalArgumentException(
+                    "Attempted to get " + node + " of type " + node.getVarType() + " as an integer.");
         }
         return i;
     }
@@ -173,18 +170,14 @@ public abstract class ModularConfig extends EHMModule {
      */
     protected String getString(final ConfigNode node) {
         String out = "";
-        switch (node.getVarType()) {
-            case STRING: {
-                out = (String) OPTIONS.get(node);
-                if (out == null) {
-                    out = (String) node.getDefaultValue();
-                }
-                break;
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.STRING) {
+            out = (String) OPTIONS.get(node);
+            if (out == null) {
+                out = (String) node.getDefaultValue();
             }
-            default: {
-                throw new IllegalArgumentException(
-                        "Attempted to get " + node.toString() + " of type " + node.getVarType() + " as a string.");
-            }
+        } else {
+            throw new IllegalArgumentException(
+                    "Attempted to get " + node + " of type " + node.getVarType() + " as a string.");
         }
         return out;
     }
@@ -198,20 +191,16 @@ public abstract class ModularConfig extends EHMModule {
      */
     @SuppressWarnings("unchecked")
     public List<String> getStringList(final ConfigNode node) {
-        List<String> list = new ArrayList<String>();
-        switch (node.getVarType()) {
-            case LIST: {
-                final ConfigurationSection config = plugin.getConfig();
-                list = config.getStringList(node.getPath());
-                if (list == null) {
-                    list = (List<String>) node.getDefaultValue();
-                }
-                break;
+        List<String> list = new ArrayList<>();
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.LIST) {
+            final ConfigurationSection config = plugin.getConfig();
+            list = config.getStringList(node.getPath());
+            if (list == null) {
+                list = (List<String>) node.getDefaultValue();
             }
-            default: {
-                throw new IllegalArgumentException("Attempted to get " + node.toString() + " of type "
-                        + node.getVarType() + " as a List<String>.");
-            }
+        } else {
+            throw new IllegalArgumentException("Attempted to get " + node + " of type "
+                    + node.getVarType() + " as a List<String>.");
         }
         return list;
     }
@@ -225,19 +214,15 @@ public abstract class ModularConfig extends EHMModule {
      */
     public double getDouble(final ConfigNode node) {
         double d = 0.0;
-        switch (node.getVarType()) {
-            case DOUBLE: {
-                try {
-                    d = (Double) OPTIONS.get(node);
-                } catch (NullPointerException npe) {
-                    d = (Double) node.getDefaultValue();
-                }
-                break;
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.DOUBLE) {
+            try {
+                d = (Double) OPTIONS.get(node);
+            } catch (NullPointerException npe) {
+                d = (Double) node.getDefaultValue();
             }
-            default: {
-                throw new IllegalArgumentException(
-                        "Attempted to get " + node.toString() + " of type " + node.getVarType() + " as a double.");
-            }
+        } else {
+            throw new IllegalArgumentException(
+                    "Attempted to get " + node + " of type " + node.getVarType() + " as a double.");
         }
         return d;
     }
@@ -251,15 +236,11 @@ public abstract class ModularConfig extends EHMModule {
      */
     public boolean getBoolean(final ConfigNode node) {
         boolean bool = false;
-        switch (node.getVarType()) {
-            case BOOLEAN: {
-                bool = (Boolean) OPTIONS.get(node);
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException(
-                        "Attempted to get " + node.toString() + " of type " + node.getVarType() + " as a boolean.");
-            }
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.BOOLEAN) {
+            bool = (Boolean) OPTIONS.get(node);
+        } else {
+            throw new IllegalArgumentException(
+                    "Attempted to get " + node + " of type " + node.getVarType() + " as a boolean.");
         }
         return bool;
     }
@@ -273,20 +254,16 @@ public abstract class ModularConfig extends EHMModule {
      */
     public ChatColor getColor(final ConfigNode node) {
         ChatColor color;
-        switch (node.getVarType()) {
-            case COLOR: {
-                Object value = OPTIONS.get(node);
-                if (value instanceof ChatColor)
-                    color = (ChatColor) value;
-                else // ConcurrentHashMap doesn't allow null values, so we just put an object of
-                     // another type in the map to symbolize a null value
-                    color = null;
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException(
-                        "Attempted to get " + node.toString() + " of type " + node.getVarType() + " as a color.");
-            }
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.COLOR) {
+            Object value = OPTIONS.get(node);
+            if (value instanceof ChatColor)
+                color = (ChatColor) value;
+            else // ConcurrentHashMap doesn't allow null values, so we just put an object of
+                // another type in the map to symbolize a null value
+                color = null;
+        } else {
+            throw new IllegalArgumentException(
+                    "Attempted to get " + node + " of type " + node.getVarType() + " as a color.");
         }
         return color;
     }

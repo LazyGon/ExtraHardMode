@@ -71,7 +71,7 @@ public class EntityHelper {
     public static void addEnvironmentalDamage(Plugin plugin, LivingEntity entity, double damage) {
         double currentTotalDamage = 0.0;
         List<MetadataValue> meta = entity.getMetadata(ENVIRONMENTAL_DAMAGE);
-        if (meta.size() > 0)
+        if (!meta.isEmpty())
             currentTotalDamage = meta.get(0).asDouble();
         entity.setMetadata(ENVIRONMENTAL_DAMAGE, new FixedMetadataValue(plugin, currentTotalDamage + damage));
     }
@@ -86,7 +86,7 @@ public class EntityHelper {
     public static boolean isLootLess(LivingEntity entity) {
         double currentTotalDamage = 0.0;
         List<MetadataValue> meta = entity.getMetadata(ENVIRONMENTAL_DAMAGE);
-        if (meta.size() > 0)
+        if (!meta.isEmpty())
             currentTotalDamage = meta.get(0).asDouble();
         // wither is exempt. he can't be farmed because creating him requires combining
         // non-farmable components
@@ -302,7 +302,7 @@ public class EntityHelper {
      */
     public static EntityType shooterType(Projectile projectile) {
         ProjectileSource source = projectile.getShooter();
-        if ((source instanceof LivingEntity) == false) {
+        if (!(source instanceof LivingEntity)) {
             return EntityType.UNKNOWN;
         }
 

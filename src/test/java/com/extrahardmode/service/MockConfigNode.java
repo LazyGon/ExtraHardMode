@@ -65,13 +65,13 @@ public enum MockConfigNode implements ConfigNode {
 
     private Disable disableValue;
 
-    private MockConfigNode(String path, VarType type, Object defaultValue) {
+    MockConfigNode(String path, VarType type, Object defaultValue) {
         this.path = path;
         this.type = type;
         this.defaultValue = defaultValue;
     }
 
-    private MockConfigNode(String path, VarType type, SubType subType, Object defaultValue) {
+    MockConfigNode(String path, VarType type, SubType subType, Object defaultValue) {
         this(path, type, defaultValue);
         this.subType = subType;
     }
@@ -116,7 +116,7 @@ public enum MockConfigNode implements ConfigNode {
                         case NATURAL_NUMBER:
                         case Y_VALUE: {
                             if (disableValue != null)
-                                obj = (Integer) disableValue.get();
+                                obj = disableValue.get();
                             break;
                         }
                         case HEALTH: {
@@ -169,7 +169,7 @@ public enum MockConfigNode implements ConfigNode {
          */
         ONE(1);
 
-        private Disable(Object obj) {
+        Disable(Object obj) {
             disable = obj;
         }
 

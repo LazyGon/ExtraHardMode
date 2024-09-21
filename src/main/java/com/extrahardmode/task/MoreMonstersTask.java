@@ -121,7 +121,7 @@ public class MoreMonstersTask implements Runnable {
             }
 
             if (verifiedLocation != null) {
-                dataStore.getPreviousLocations().add(new SimpleEntry<Player, Location>(player, verifiedLocation));
+                dataStore.getPreviousLocations().add(new SimpleEntry<>(player, verifiedLocation));
             }
         }
     }

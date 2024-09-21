@@ -25,6 +25,8 @@ import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.IoHelper;
 import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.ModularConfig;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,7 +35,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 
 /** Configuration handler for the messages.yml file. */
@@ -77,17 +78,14 @@ public class MessageConfig extends ModularConfig {
             for (MessageNode node : MessageNode.values()) {
                 if (node.isCategoryNode()) // convert the parsed enum value to a string representation
                     reorderedConfig.set(node.getPath(), getCat(node).name().toLowerCase());
-                else
-                    switch (node.getVarType()) {
-                        case COLOR:
-                            if (getColor(node) == null)
-                                reorderedConfig.set(node.getPath(), "NONE");
-                            else
-                                reorderedConfig.set(node.getPath(), getColor(node).name());
-                            break;
-                        default:
-                            reorderedConfig.set(node.getPath(), OPTIONS.get(node));
-                    }
+                else if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.COLOR) {
+                    if (getColor(node) == null)
+                        reorderedConfig.set(node.getPath(), "NONE");
+                    else
+                        reorderedConfig.set(node.getPath(), getColor(node).name());
+                } else {
+                    reorderedConfig.set(node.getPath(), OPTIONS.get(node));
+                }
             }
             reorderedConfig.save(file);
         } catch (IOException e) {
@@ -106,7 +104,7 @@ public class MessageConfig extends ModularConfig {
         try {
             // Write header to a new file
             ByteArrayOutputStream memStream = new ByteArrayOutputStream();
-            OutputStreamWriter memWriter = new OutputStreamWriter(memStream, Charset.forName("UTF-8").newEncoder());
+            OutputStreamWriter memWriter = new OutputStreamWriter(memStream, StandardCharsets.UTF_8.newEncoder());
             String[] header = {
                     "Messages sent by ExtraHardMode",
                     "Messages are only sent for modules that are activated",
@@ -140,8 +138,6 @@ public class MessageConfig extends ModularConfig {
             memWriter.close();
 
             IoHelper.writeHeader(file, memStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -238,18 +234,12 @@ public class MessageConfig extends ModularConfig {
      * @return how often this message will be displayed. -1 = no limit
      */
     public int getMsgCount(MessageNode node) {
-        switch (getCat(node)) {
-            case TUTORIAL:
-                return 3;
-            case NOTIFICATION:
-                return -1;
-            case BROADCAST:
-                return -1;
-            case ONE_TIME:
-                return 1;
-            default:
-                throw new UnsupportedOperationException("Not Implemented MsgCategory");
-        }
+        return switch (getCat(node)) {
+            case TUTORIAL -> 3;
+            case NOTIFICATION, BROADCAST -> -1;
+            case ONE_TIME -> 1;
+            default -> throw new UnsupportedOperationException("Not Implemented MsgCategory");
+        };
     }
 
     @Override

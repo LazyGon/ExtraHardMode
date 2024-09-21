@@ -16,8 +16,7 @@ public class DebugCommand implements ICommand {
     @Override
     public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission(PermissionNode.ADMIN.getNode())) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
+            if (sender instanceof Player player) {
                 if (args.length > 0) {
                     if (args[0].equals("RemoveTorches")) {
                         plugin.getServer().getScheduler().runTask(plugin,

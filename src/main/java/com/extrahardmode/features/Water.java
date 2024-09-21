@@ -45,7 +45,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.util.Vector;
 
 /**
@@ -221,8 +220,7 @@ public class Water extends ListenerModule {
     void onPlayerInventoryClick(InventoryClickEvent event) {
         // FEATURE: players can't swim when they're carrying a lot of weight
         HumanEntity humanEntity = event.getWhoClicked();
-        if (humanEntity instanceof Player) {
-            Player player = (Player) humanEntity;
+        if (humanEntity instanceof Player player) {
             PlayerData playerData = plugin.getModuleForClass(DataStoreModule.class).getPlayerData(player.getName());
             playerData.cachedWeightStatus = -1.0F;
         }

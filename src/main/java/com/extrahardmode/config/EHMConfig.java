@@ -25,6 +25,7 @@ import com.extrahardmode.service.IoHelper;
 import com.extrahardmode.service.config.*;
 import com.extrahardmode.service.config.customtypes.BlockRelationsList;
 import com.extrahardmode.service.config.customtypes.PotionEffectHolder;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,7 +36,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -53,12 +53,12 @@ public class EHMConfig {
     /**
      * Nodes to load from the config
      */
-    private Set<ConfigNode> mConfigNodes = new LinkedHashSet<ConfigNode>();
+    private Set<ConfigNode> mConfigNodes = new LinkedHashSet<>();
 
     /**
      * Loaded config values
      */
-    private Map<ConfigNode, Object> mLoadedNodes = new HashMap<ConfigNode, Object>();
+    private Map<ConfigNode, Object> mLoadedNodes = new HashMap<>();
 
     /**
      * Location we loaded the File from
@@ -83,7 +83,7 @@ public class EHMConfig {
     /**
      * Worlds in which this config is active in
      */
-    private Set<String> mWorlds = new LinkedHashSet<String>(); // Linked: keeps inserted order
+    private Set<String> mWorlds = new LinkedHashSet<>(); // Linked: keeps inserted order
 
     /**
      * If this config is enabled for all worlds
@@ -378,33 +378,38 @@ public class EHMConfig {
      * Load all values from the config and save in our map
      */
     public void loadNodes() {
-        loop: for (ConfigNode node : mConfigNodes) {
+        for (ConfigNode node : mConfigNodes) {
             Object obj = null;
 
             switch (node.getVarType()) {
                 case LIST: {
-                    if (mConfig.get(node.getPath()) instanceof List)
+                    if (mConfig.get(node.getPath()) instanceof List) {
                         obj = mConfig.getStringList(node.getPath());
+                    }
                     break;
                 }
                 case DOUBLE: {
-                    if (mConfig.get(node.getPath()) instanceof Double)
+                    if (mConfig.get(node.getPath()) instanceof Double) {
                         obj = mConfig.getDouble(node.getPath());
+                    }
                     break;
                 }
                 case STRING: {
-                    if (mConfig.get(node.getPath()) instanceof String)
+                    if (mConfig.get(node.getPath()) instanceof String) {
                         obj = mConfig.getString(node.getPath());
+                    }
                     break;
                 }
                 case INTEGER: {
-                    if (mConfig.get(node.getPath()) instanceof Integer)
+                    if (mConfig.get(node.getPath()) instanceof Integer) {
                         obj = mConfig.getInt(node.getPath());
+                    }
                     break;
                 }
                 case BOOLEAN: {
-                    if (mConfig.get(node.getPath()) instanceof Boolean)
+                    if (mConfig.get(node.getPath()) instanceof Boolean) {
                         obj = mConfig.getBoolean(node.getPath());
+                    }
                     break;
                 }
                 case POTION_EFFECT: {
@@ -413,24 +418,27 @@ public class EHMConfig {
                     break;
                 }
                 case MATERIAL: {
-                    if (mConfig.getString(node.getPath()) != null)
+                    if (mConfig.getString(node.getPath()) != null) {
                         obj = Material.matchMaterial(mConfig.getString(node.getPath()));
+                    }
                     break;
                 }
                 case BLOCK_RELATION_LIST: {
                     if (mConfig.get(node.getPath()) instanceof List) {
                         List<String> list = mConfig.getStringList(node.getPath());
                         BlockRelationsList blocks = new BlockRelationsList();
-                        for (String str : list)
+                        for (String str : list) {
                             blocks.addFromConfig(str);
+                        }
                         obj = blocks;
-                    } else if (mConfig.isSet(node.getPath()))
+                    } else if (mConfig.isSet(node.getPath())) {
                         obj = BlockRelationsList.EMPTY_LIST;
+                    }
                     break;
                 }
                 // ignore comments
                 case COMMENT:
-                    continue loop;
+                    continue;
                 default: {
                     obj = mConfig.get(node.getPath());
                     throw new UnsupportedOperationException(
@@ -518,7 +526,7 @@ public class EHMConfig {
         try {
             // Write Header to a temporary file
             memHeaderStream = new ByteArrayOutputStream();
-            memWriter = new OutputStreamWriter(memHeaderStream, Charset.forName("UTF-8").newEncoder());
+            memWriter = new OutputStreamWriter(memHeaderStream, StandardCharsets.UTF_8.newEncoder());
             memWriter.write(String.format(mHeader.toString()));
             memWriter.close();
             // Copy Header to the beginning of the config file

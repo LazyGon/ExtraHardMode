@@ -3,6 +3,7 @@ package com.extrahardmode.metrics;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
 import com.extrahardmode.service.config.ConfigNode;
+import java.util.Objects;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
@@ -111,21 +112,12 @@ public class ConfigPlotter {
                     case WITCHES_ADDITIONAL_ATTACKS:
                     case ZOMBIES_DEBILITATE_PLAYERS: {
                         final int metricsVal = getMetricsValue(node);
-                        String result;
-                        switch (metricsVal) {
-                            case 0:
-                                result = "Completely disabled";
-                                break;
-                            case 1:
-                                result = "Enabled in all worlds";
-                                break;
-                            case 2:
-                                result = "Enabled in some";
-                                break;
-                            default:
-                                result = "Unknown";
-                                break;
-                        }
+                        String result = switch (metricsVal) {
+                            case 0 -> "Completely disabled";
+                            case 1 -> "Enabled in all worlds";
+                            case 2 -> "Enabled in some";
+                            default -> "Unknown";
+                        };
 
                         metrics.addCustomChart(new SimplePie(node.toString(), () -> result));
                         break;
@@ -206,17 +198,13 @@ public class ConfigPlotter {
      * @param node to get the value for
      */
     public int getMetricsValue(ConfigNode node) {
-        switch (node.getVarType()) {
-            case BOOLEAN: {
-                // Add up how often it's enabled
-                int value = 0;
-                for (String world : CFG.getEnabledWorlds())
-                    value += CFG.getBoolean(node, world) ? 1 : 0;
-                return value == 0 ? 0 : value == CFG.getEnabledWorlds().length ? 1 : 2;
-            }
-            default:
-                throw new UnsupportedOperationException(
-                        node.getPath() + " " + node.getVarType().name() + " not supported yet!");
+        if (Objects.requireNonNull(node.getVarType()) == ConfigNode.VarType.BOOLEAN) {// Add up how often it's enabled
+            int value = 0;
+            for (String world : CFG.getEnabledWorlds())
+                value += CFG.getBoolean(node, world) ? 1 : 0;
+            return value == 0 ? 0 : value == CFG.getEnabledWorlds().length ? 1 : 2;
         }
+        throw new UnsupportedOperationException(
+                node.getPath() + " " + node.getVarType().name() + " not supported yet!");
     }
 }

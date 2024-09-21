@@ -104,8 +104,7 @@ public class PigMen extends ListenerModule {
 
         // FEATURE: always-angry pig zombies
         if (pigsAlwaysAggro) {
-            if (entity instanceof PigZombie) {
-                PigZombie pigZombie = (PigZombie) entity;
+            if (entity instanceof PigZombie pigZombie) {
                 pigZombie.setAnger(Integer.MAX_VALUE);
             }
         }
@@ -126,8 +125,7 @@ public class PigMen extends ListenerModule {
         // FEATURE: always-angry pig zombies
         if (pigAlwaysAggro) {
             for (Entity entity : chunk.getEntities()) {
-                if (entity instanceof PigZombie) {
-                    PigZombie pigZombie = (PigZombie) entity;
+                if (entity instanceof PigZombie pigZombie) {
                     pigZombie.setAnger(Integer.MAX_VALUE);
                 }
             }

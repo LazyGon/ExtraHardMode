@@ -13,7 +13,7 @@ import java.util.Set;
 public enum LooseTags {
     TORCH;
 
-    private Set<Material> materials = new HashSet<>();
+    private final Set<Material> materials = new HashSet<>();
 
     LooseTags() {
         for (Material material : Material.values()) {

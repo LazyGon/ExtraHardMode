@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -57,30 +56,24 @@ import org.bukkit.material.MaterialData;
 /**
  * Antifarming module
  */
-public class AntiFarming extends ListenerModule
-{
+public class AntiFarming extends ListenerModule {
     private RootConfig CFG;
 
     private PlayerModule playerModule;
 
     private BlockModule blockModule;
 
-
-    public AntiFarming(ExtraHardMode plugin)
-    {
+    public AntiFarming(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         playerModule = plugin.getModuleForClass(PlayerModule.class);
         blockModule = plugin.getModuleForClass(BlockModule.class);
     }
-
 
     /**
      * when a player interacts with the world
@@ -90,8 +83,7 @@ public class AntiFarming extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    void onPlayerInteract(PlayerInteractEvent event)
-    {
+    void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         World world = event.getPlayer().getWorld();
         Action action = event.getAction();
@@ -100,23 +92,19 @@ public class AntiFarming extends ListenerModule
         final boolean playerBypasses = playerModule.playerBypasses(player, Feature.ANTIFARMING);
 
         // FEATURE: bonemeal doesn't work on mushrooms
-        if (noBonemealOnMushrooms && action == Action.RIGHT_CLICK_BLOCK && !playerBypasses)
-        {
+        if (noBonemealOnMushrooms && action == Action.RIGHT_CLICK_BLOCK && !playerBypasses) {
             Block block = event.getClickedBlock();
-            if (block.getType() == Material.RED_MUSHROOM || block.getType() == Material.BROWN_MUSHROOM)
-            {
+            if (block.getType() == Material.RED_MUSHROOM || block.getType() == Material.BROWN_MUSHROOM) {
                 // what's the player holding?
                 Material materialInHand = event.getItem().getType();
 
                 // if bonemeal, cancel the event
-                if (materialInHand == Material.BONE_MEAL)
-                {
+                if (materialInHand == Material.BONE_MEAL) {
                     event.setCancelled(true);
                 }
             }
         }
     }
-
 
     /**
      * When a player breaks a block...
@@ -124,8 +112,7 @@ public class AntiFarming extends ListenerModule
      * no netherwart farming
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockBreak(BlockBreakEvent breakEvent)
-    {
+    public void onBlockBreak(BlockBreakEvent breakEvent) {
         Player player = breakEvent.getPlayer();
         Block block = breakEvent.getBlock();
         World world = block.getWorld();
@@ -133,17 +120,15 @@ public class AntiFarming extends ListenerModule
         final boolean noFarmingNetherWart = CFG.getBoolean(RootNode.NO_FARMING_NETHER_WART, world.getName());
         final boolean playerBypasses = playerModule.playerBypasses(player, Feature.ANTIFARMING);
 
-        // FEATURE: no nether wart farming (always drops exactly 1 nether wart when broken)
-        if (!playerBypasses && noFarmingNetherWart)
-        {
-            if (block.getType() == Material.NETHER_WART)
-            {
+        // FEATURE: no nether wart farming (always drops exactly 1 nether wart when
+        // broken)
+        if (!playerBypasses && noFarmingNetherWart) {
+            if (block.getType() == Material.NETHER_WART) {
                 block.getDrops().clear();
                 block.getDrops().add(new ItemStack(Material.NETHER_WART));
             }
         }
     }
-
 
     /**
      * When a player places a block...
@@ -151,8 +136,7 @@ public class AntiFarming extends ListenerModule
      * no farming nether wart
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onBlockPlace(BlockPlaceEvent placeEvent)
-    {
+    public void onBlockPlace(BlockPlaceEvent placeEvent) {
         Player player = placeEvent.getPlayer();
         Block block = placeEvent.getBlock();
         World world = block.getWorld();
@@ -161,22 +145,20 @@ public class AntiFarming extends ListenerModule
         final boolean playerBypasses = playerModule.playerBypasses(player, Feature.ANTIFARMING);
 
         // FEATURE: no farming/placing nether wart
-        if (!playerBypasses && noFarmingNetherWart && block.getType() == Material.NETHER_WART)
-        {
+        if (!playerBypasses && noFarmingNetherWart && block.getType() == Material.NETHER_WART) {
             placeEvent.setCancelled(true);
             return;
         }
     }
 
-
     /**
      * When a block grows...
      * <p/>
-     * fewer seeds = shrinking crops. when a plant grows to its full size, it may be replaced by a dead shrub
+     * fewer seeds = shrinking crops. when a plant grows to its full size, it may be
+     * replaced by a dead shrub
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onBlockGrow(BlockGrowEvent event)
-    {
+    public void onBlockGrow(BlockGrowEvent event) {
         World world = event.getBlock().getWorld();
 
         final boolean weakCropsEnabled = CFG.getBoolean(RootNode.WEAK_FOOD_CROPS, world.getName());
@@ -186,18 +168,17 @@ public class AntiFarming extends ListenerModule
             return;
 
         Block block = event.getBlock();
-        plugin.debug(block.getWorld(), "BlockGrowEvent block material: " + block.getType().name() + ", location: " + block.getLocation());
+        plugin.debug(block.getWorld(),
+                "BlockGrowEvent block material: " + block.getType().name() + ", location: " + block.getLocation());
         MaterialData newStateData = event.getNewState().getData();
         plugin.debug(block.getWorld(), "Successfully retrieved getNewState#getData");
-        if (weakCropsEnabled && plugin.getModuleForClass(BlockModule.class).plantDies(block, newStateData))
-        {
+        if (weakCropsEnabled && plugin.getModuleForClass(BlockModule.class).plantDies(block, newStateData)) {
             event.setCancelled(true);
-            //shrub gets removed on farmland
+            // shrub gets removed on farmland
             event.getBlock().getRelative(BlockFace.DOWN).setType(Material.DIRT);
             event.getBlock().setType(Material.DEAD_BUSH); // dead shrub
         }
     }
-
 
     /**
      * when a tree or mushroom grows...
@@ -207,24 +188,19 @@ public class AntiFarming extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onStructureGrow(StructureGrowEvent event)
-    {
+    public void onStructureGrow(StructureGrowEvent event) {
         World world = event.getWorld();
         Block block = event.getLocation().getBlock();
 
         boolean aridDesertsEnabled = CFG.getBoolean(RootNode.ARID_DESSERTS, world.getName());
 
-
-        if (aridDesertsEnabled)
-        {
+        if (aridDesertsEnabled) {
             Biome biome = block.getBiome();
-            if (biome == Biome.DESERT)
-            {
+            if (biome == Biome.DESERT) {
                 event.setCancelled(true);
             }
         }
     }
-
 
     /**
      * when a dispenser dispenses...
@@ -232,23 +208,20 @@ public class AntiFarming extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    void onBlockDispense(BlockDispenseEvent event)
-    {
+    void onBlockDispense(BlockDispenseEvent event) {
         World world = event.getBlock().getWorld();
 
         final boolean dontMoveWaterEnabled = CFG.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, world.getName());
 
         // FEATURE: can't move water source blocks
-        if (dontMoveWaterEnabled)
-        {
+        if (dontMoveWaterEnabled) {
             // only care about water
             Material item = event.getItem().getType();
             if (item == Material.WATER_BUCKET
                     || item == Material.COD_BUCKET
                     || item == Material.SALMON_BUCKET
                     || item == Material.TROPICAL_FISH_BUCKET
-                    || item == Material.PUFFERFISH_BUCKET)
-            {
+                    || item == Material.PUFFERFISH_BUCKET) {
                 // plan to evaporate the water next tick
                 Block block = event.getVelocity().toLocation(world).getBlock();
                 EvaporateWaterTask task = new EvaporateWaterTask(block, plugin);
@@ -257,64 +230,54 @@ public class AntiFarming extends ListenerModule
         }
     }
 
-
     /**
      * when a sheep regrows its wool...
      *
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true)
-    public void onSheepRegrowWool(SheepRegrowWoolEvent event)
-    {
+    public void onSheepRegrowWool(SheepRegrowWoolEvent event) {
         World world = event.getEntity().getWorld();
 
         boolean sheepRegrowWhiteEnabled = CFG.getBoolean(RootNode.SHEEP_REGROW_WHITE_WOOL, world.getName());
 
         // FEATURE: sheep are all white, and may be dyed only temporarily
-        if (sheepRegrowWhiteEnabled)
-        {
+        if (sheepRegrowWhiteEnabled) {
             Sheep sheep = event.getEntity();
             if (sheep.isSheared())
                 sheep.setColor(DyeColor.WHITE);
         }
     }
 
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         CreatureSpawnEvent.SpawnReason reason = event.getSpawnReason();
         World world = event.getLocation().getWorld();
 
         final boolean sheepRegrowWhiteEnabled = CFG.getBoolean(RootNode.SHEEP_REGROW_WHITE_WOOL, world.getName());
 
-        //Breed Sheep spawn white
-        if (sheepRegrowWhiteEnabled && entity.getType() == EntityType.SHEEP)
-        {
+        // Breed Sheep spawn white
+        if (sheepRegrowWhiteEnabled && entity.getType() == EntityType.SHEEP) {
             Sheep sheep = (Sheep) entity;
-            if (reason.equals(CreatureSpawnEvent.SpawnReason.BREEDING))
-            {
+            if (reason.equals(CreatureSpawnEvent.SpawnReason.BREEDING)) {
                 sheep.setColor(DyeColor.WHITE);
                 return;
             }
         }
     }
 
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onSquidSpawn(CreatureSpawnEvent event)
-    {
+    public void onSquidSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         CreatureSpawnEvent.SpawnReason reason = event.getSpawnReason();
         World world = event.getLocation().getWorld();
 
         final boolean restrictedSquidSpawns = CFG.getBoolean(RootNode.SQUID_ONLY_SPAWN_IN_OCEAN, world.getName());
 
-        if (restrictedSquidSpawns && entity.getType() == EntityType.SQUID && reason.equals(CreatureSpawnEvent.SpawnReason.NATURAL))
-        {
-            switch (entity.getLocation().getBlock().getBiome())
-            {
+        if (restrictedSquidSpawns && entity.getType() == EntityType.SQUID
+                && reason.equals(CreatureSpawnEvent.SpawnReason.NATURAL)) {
+            switch (entity.getLocation().getBlock().getBiome()) {
                 case DEEP_OCEAN:
                 case OCEAN:
                     return;
@@ -324,39 +287,32 @@ public class AntiFarming extends ListenerModule
         }
     }
 
-
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
         final boolean animalExpNerfEnabled = CFG.getBoolean(RootNode.ANIMAL_EXP_NERF, world.getName());
 
         // FEATURE: animals don't drop experience (because they're easy to "farm")
-        if (animalExpNerfEnabled && entity instanceof Animals)
-        {
+        if (animalExpNerfEnabled && entity instanceof Animals) {
             event.setDroppedExp(0);
         }
     }
-
 
     /**
      * When an Iron Golem dies
      */
     @EventHandler
-    public void onGolemDeath(EntityDeathEvent event)
-    {
+    public void onGolemDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
 
         final boolean golemNerf = CFG.getBoolean(RootNode.IRON_GOLEM_NERF, entity.getWorld().getName());
 
-        if (event.getEntity() instanceof IronGolem && golemNerf)
-        {
+        if (event.getEntity() instanceof IronGolem && golemNerf) {
             event.getDrops().clear();
         }
     }
-
 
     /**
      * when a player crafts something...
@@ -364,27 +320,23 @@ public class AntiFarming extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onItemCrafted(CraftItemEvent event)
-    {
+    public void onItemCrafted(CraftItemEvent event) {
         World world = null;
         Material result = event.getRecipe().getResult().getType();
         InventoryHolder human = event.getInventory().getHolder();
         Player player = null;
-        if (human instanceof Player)
-        {
+        if (human instanceof Player) {
             player = (Player) human;
             world = player.getWorld();
         }
 
-        final boolean cantCraftMelons = world != null && CFG.getBoolean(RootNode.CANT_CRAFT_MELONSEEDS, world.getName());
+        final boolean cantCraftMelons = world != null
+                && CFG.getBoolean(RootNode.CANT_CRAFT_MELONSEEDS, world.getName());
         final boolean playerBypasses = playerModule.playerBypasses(player, Feature.ANTIFARMING);
 
-
-        if (!playerBypasses && cantCraftMelons)
-        {
+        if (!playerBypasses && cantCraftMelons) {
             // FEATURE: no crafting melon seeds
-            if (result == Material.MELON_SEEDS || result == Material.PUMPKIN_SEEDS)
-            {
+            if (result == Material.MELON_SEEDS || result == Material.PUMPKIN_SEEDS) {
                 event.setCancelled(true);
                 plugin.getModuleForClass(MsgModule.class).send(player, MessageNode.NO_CRAFTING_MELON_SEEDS);
                 return;
@@ -392,15 +344,13 @@ public class AntiFarming extends ListenerModule
         }
     }
 
-
     /**
      * when a player empties a bucket...
      *
      * @param event - Event that occurred.
      */
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerEmptyBucket(PlayerBucketEmptyEvent event)
-    {
+    public void onPlayerEmptyBucket(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
 
@@ -408,8 +358,8 @@ public class AntiFarming extends ListenerModule
         final boolean playerBypasses = playerModule.playerBypasses(player, Feature.ANTIFARMING);
 
         // FEATURE: can't move water source blocks
-        if (!playerBypasses && dontMoveWaterEnabled && (event.getBucket() != Material.LAVA_BUCKET && event.getBucket() != Material.MILK_BUCKET))
-        {
+        if (!playerBypasses && dontMoveWaterEnabled
+                && (event.getBucket() != Material.LAVA_BUCKET && event.getBucket() != Material.MILK_BUCKET)) {
             // plan to change this block into a non-source block on the next tick
             Block block = event.getBlock();
             blockModule.mark(block);
@@ -418,26 +368,21 @@ public class AntiFarming extends ListenerModule
         }
     }
 
-
     /**
      * When a player fills a bucket
      * <p/>
      * prevent players from quickly picking up buckets again (around lava etc.)
      */
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerFillBucket(PlayerBucketFillEvent event)
-    {
+    public void onPlayerFillBucket(PlayerBucketFillEvent event) {
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        if (blockModule.isMarked(block))
-        {
+        if (blockModule.isMarked(block)) {
             event.setCancelled(true);
             final Player player = event.getPlayer();
-            //Bucket displays as full, derpy inventories, run next tick
-            plugin.getServer().getScheduler().runTask(plugin, new Runnable()
-            {
+            // Bucket displays as full, derpy inventories, run next tick
+            plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     if (player != null)
                         player.updateInventory();
                 }

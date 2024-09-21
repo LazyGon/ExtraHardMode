@@ -21,7 +21,6 @@
 
 package com.extrahardmode.module;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.service.EHMModule;
@@ -36,8 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /** Manages miscellaneous data. */
-public class DataStoreModule extends EHMModule
-{
+public class DataStoreModule extends EHMModule {
 
     /** In-memory cache for player data */
     private final Map<String, PlayerData> playerNameToPlayerDataMap = new ConcurrentHashMap<String, PlayerData>();
@@ -51,17 +49,14 @@ public class DataStoreModule extends EHMModule
     /** Config */
     private RootConfig CFG;
 
-
     /**
      * Constructor.
      *
      * @param plugin - Plugin instance.
      */
-    public DataStoreModule(ExtraHardMode plugin)
-    {
+    public DataStoreModule(ExtraHardMode plugin) {
         super(plugin);
     }
-
 
     /**
      * TestConstructor (dependency injection)
@@ -69,28 +64,22 @@ public class DataStoreModule extends EHMModule
      * @param plugin Plugin instance
      * @param CFG    configinstance
      */
-    public DataStoreModule(ExtraHardMode plugin, RootConfig CFG)
-    {
+    public DataStoreModule(ExtraHardMode plugin, RootConfig CFG) {
         super(plugin);
         this.CFG = CFG;
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
 
-
     @Override
-    public void closing()
-    {
+    public void closing() {
         playerNameToPlayerDataMap.clear();
         previousLocations.clear();
         playersFightingDragon.clear();
     }
-
 
     /**
      * Retrieves player data from memory
@@ -99,14 +88,12 @@ public class DataStoreModule extends EHMModule
      *
      * @return PlayerData associated with it.
      */
-    public PlayerData getPlayerData(String playerName)
-    {
+    public PlayerData getPlayerData(String playerName) {
         // first, look in memory
         PlayerData playerData = this.playerNameToPlayerDataMap.get(playerName);
 
         // if not there, create a fresh entry
-        if (playerData == null)
-        {
+        if (playerData == null) {
             playerData = new PlayerData();
             this.playerNameToPlayerDataMap.put(playerName, playerData);
         }
@@ -115,25 +102,21 @@ public class DataStoreModule extends EHMModule
         return this.playerNameToPlayerDataMap.get(playerName);
     }
 
-
     /**
      * Get the list of previous locations of players.
      *
      * @return List of players to location entries.
      */
-    public List<SimpleEntry<Player, Location>> getPreviousLocations()
-    {
+    public List<SimpleEntry<Player, Location>> getPreviousLocations() {
         return previousLocations;
     }
-
 
     /**
      * Gets all Players fighting the Dragon
      *
      * @return List containing all Playernames
      */
-    public List<String> getPlayers()
-    {
+    public List<String> getPlayers() {
         return playersFightingDragon;
     }
 

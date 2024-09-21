@@ -21,7 +21,6 @@
 
 package com.extrahardmode.command;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.CommandHandler;
 import com.extrahardmode.service.ICommand;
@@ -30,11 +29,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-public class Commander extends CommandHandler
-{
+public class Commander extends CommandHandler {
 
-    public Commander(ExtraHardMode plugin)
-    {
+    public Commander(ExtraHardMode plugin) {
         super(plugin, "ehm");
         HelpCommand help = new HelpCommand();
         registerCommand("help", help);
@@ -46,37 +43,31 @@ public class Commander extends CommandHandler
         registerCommand("debug", new DebugCommand());
     }
 
-
     @Override
-    public boolean noArgs(CommandSender sender, Command command, String label)
-    {
-        sender.sendMessage(ChatColor.GRAY + "========= " + ChatColor.RED + plugin.getName() + ChatColor.GRAY + " =========");
+    public boolean noArgs(CommandSender sender, Command command, String label) {
+        sender.sendMessage(
+                ChatColor.GRAY + "========= " + ChatColor.RED + plugin.getName() + ChatColor.GRAY + " =========");
         sender.sendMessage(" /ehm");
         sender.sendMessage("    help" + ChatColor.YELLOW + " - Show the help menu");
         sender.sendMessage("    version" + ChatColor.YELLOW + " - Show version info");
-        if (sender.hasPermission(PermissionNode.ADMIN.getNode()))
-        {
+        if (sender.hasPermission(PermissionNode.ADMIN.getNode())) {
             sender.sendMessage("    reload " + ChatColor.YELLOW + "- Reload the plugin");
             sender.sendMessage("    enabled [world]" + ChatColor.YELLOW + "- Is extrahardmode enabled");
         }
         return true;
     }
 
-
     @Override
-    public boolean unknownCommand(CommandSender sender, Command command, String label, String[] args)
-    {
+    public boolean unknownCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.YELLOW + plugin.getTag() + " Unknown command: " + ChatColor.WHITE + args[0]);
         return true;
     }
 
-
-    private class HelpCommand implements ICommand
-    {
+    private class HelpCommand implements ICommand {
 
         @Override
-        public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label, String[] args)
-        {
+        public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label,
+                String[] args) {
             return noArgs(sender, command, label);
         }
 

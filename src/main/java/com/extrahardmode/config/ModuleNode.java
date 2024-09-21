@@ -35,24 +35,20 @@ public class ModuleNode implements ConfigNode {
         return baseNode() + "." + path;
     }
 
-
     @Override
     public VarType getVarType() {
         return type;
     }
-
 
     @Override
     public Object getDefaultValue() {
         return true;
     }
 
-
     @Override
     public SubType getSubType() {
         return null;
     }
-
 
     @Override
     public Object getValueToDisable() {

@@ -19,15 +19,12 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.service;
-
 
 /**
  * Represents a module.
  */
-public interface IModule
-{
+public interface IModule {
     /**
      * Called when the module has been registered to the API.
      */

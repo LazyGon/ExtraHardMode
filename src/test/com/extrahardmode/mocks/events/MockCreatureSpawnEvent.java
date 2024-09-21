@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks.events;
 
-
 import com.extrahardmode.mocks.MockBlock;
 import com.extrahardmode.mocks.MockLivingEntity;
 import com.extrahardmode.mocks.MockLocation;
@@ -33,16 +32,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Mocks frequently used  methods that are called on this event, by default
+ * Mocks frequently used methods that are called on this event, by default
+ * 
  * <pre>
  *     getWorld()
  *     getEntity()
  *     getSpawnReason()
  * </pre>
+ * 
  * Generates a World Object, which can be retrieved via getWorld()
  */
-public class MockCreatureSpawnEvent
-{
+public class MockCreatureSpawnEvent {
     /**
      * Our mocked Event Object
      */
@@ -68,7 +68,6 @@ public class MockCreatureSpawnEvent
      */
     private MockLocation location;
 
-
     /**
      * Constructor param entity Pass in an Entity with a mocked getWorld()-method
      *
@@ -76,8 +75,7 @@ public class MockCreatureSpawnEvent
      * @param worldName name of the world where this Event occured
      * @param reason    what caused the event
      */
-    public MockCreatureSpawnEvent(EntityType type, String worldName, CreatureSpawnEvent.SpawnReason reason)
-    {
+    public MockCreatureSpawnEvent(EntityType type, String worldName, CreatureSpawnEvent.SpawnReason reason) {
         world = new MockWorld(worldName);
         entity = new MockLivingEntity(world.get(), type);
         location = new MockLocation(world.get());
@@ -87,70 +85,56 @@ public class MockCreatureSpawnEvent
         when(cse.getSpawnReason()).thenReturn(reason);
     }
 
-
     /**
      * Set the Entity we mocked
      */
-    public void setEntity(MockLivingEntity entity)
-    {
+    public void setEntity(MockLivingEntity entity) {
         this.entity = entity;
         when(this.get().getEntity()).thenReturn(entity.get());
     }
 
-
     /**
      * Get the MockEntity we set
      */
-    public MockLivingEntity getEntity()
-    {
+    public MockLivingEntity getEntity() {
         return entity;
     }
-
 
     /**
      * Set the MockWorld Object for this Event
      *
      * @param world MockWorld where this Event occured
      */
-    public void setWorld(MockWorld world)
-    {
+    public void setWorld(MockWorld world) {
         this.world = world;
     }
-
 
     /**
      * Get the mocked World Object where this Event took place
      */
-    public MockWorld getWorld()
-    {
+    public MockWorld getWorld() {
         return world;
     }
-
 
     /**
      * Set the Location where the Event ocurred
      */
-    public void setLocation(MockLocation location)
-    {
+    public void setLocation(MockLocation location) {
         this.location = location;
         when(cse.getLocation()).thenReturn(location.get());
     }
 
-
     /**
      * Get the Location of the Event
      */
-    public MockLocation getLocation()
-    {
+    public MockLocation getLocation() {
         return location;
     }
-
 
     /**
      * Get the mocked Event
      */
-    public CreatureSpawnEvent get()
-    {
+    public CreatureSpawnEvent get() {
         return cse;
     }
 }

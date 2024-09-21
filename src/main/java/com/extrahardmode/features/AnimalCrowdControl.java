@@ -48,19 +48,19 @@ public class AnimalCrowdControl extends ListenerModule {
                 && a.getType() != EntityType.WOLF
                 && a.getType() != EntityType.OCELOT;
     }
-    
+
     private int getCurrentDensity(Entity e) {
-        
+
         List<Entity> cattle = e.getNearbyEntities(3, 3, 3);
         int density = 0;
 
-        //this will be used to check if animal is far from other animals
+        // this will be used to check if animal is far from other animals
         for (Entity a : cattle) {
             if (isEntityAnimal(a)) {
                 density++;
-            } 
+            }
         }
-        
+
         return density;
     }
 
@@ -73,21 +73,25 @@ public class AnimalCrowdControl extends ListenerModule {
     public void onAnimalOverCrowd(CreatureSpawnEvent event) {
         final Entity e = event.getEntity();
 
-        //If entity is not an animal, we don't care
-        if (!isEntityAnimal(e)) return;
+        // If entity is not an animal, we don't care
+        if (!isEntityAnimal(e))
+            return;
 
         final World world = e.getWorld();
 
         final boolean animalOverCrowdControl = CFG.getBoolean(RootNode.ANIMAL_OVERCROWD_CONTROL, world.getName());
         final int threshold = CFG.getInt(RootNode.ANIMAL_OVERCROWD_THRESHOLD, world.getName());
 
-        //First check if config allow this feature
-        if (!animalOverCrowdControl) return;
-        
-        //Just to check if animal is part of a Pet Plugin assuming spawned pet have nametags already given
-        if(e.getCustomName() != null) return;
+        // First check if config allow this feature
+        if (!animalOverCrowdControl)
+            return;
 
-        //Get nearby entities from newly spawned animals
+        // Just to check if animal is part of a Pet Plugin assuming spawned pet have
+        // nametags already given
+        if (e.getCustomName() != null)
+            return;
+
+        // Get nearby entities from newly spawned animals
         List<Entity> cattle = e.getNearbyEntities(3, 3, 3);
         int density = 0;
 
@@ -96,14 +100,16 @@ public class AnimalCrowdControl extends ListenerModule {
          * animals have spawned by incrementing density
          */
         for (Entity a : cattle) {
-            if (!isEntityAnimal(a)) continue;
+            if (!isEntityAnimal(a))
+                continue;
             density++;
-            
-            
-            //Check if the amount of animals is bigger than the threshold given
-            if (density < threshold) continue;
+
+            // Check if the amount of animals is bigger than the threshold given
+            if (density < threshold)
+                continue;
             final Animals animal = (Animals) a;
-            if(animal.hasMetadata("hasRunnable")) continue;
+            if (animal.hasMetadata("hasRunnable"))
+                continue;
             /**
              * This creates a runnable assign to each animals will close once if
              * animal is far enough from other animals or animal is dead
@@ -112,12 +118,11 @@ public class AnimalCrowdControl extends ListenerModule {
             new BukkitRunnable() {
 
                 int dizziness = 0;
-                int maxDizziness = 7; //basically max seconds before getting damaged
-                
+                int maxDizziness = 7; // basically max seconds before getting damaged
+
                 @Override
                 public void run() {
 
-                    
                     if (animal.isDead() || getCurrentDensity(e) <= threshold) {
                         animal.removeMetadata("hasRunnable", plugin);
                         animal.removeMetadata("isClaustrophobic", plugin);
@@ -127,17 +132,18 @@ public class AnimalCrowdControl extends ListenerModule {
                         double health = animal.getHealth();
                         animal.damage(0.5, animal);
                         if (animal.getHealth() == health)
-                            animal.damage(0.5); //Attempt to override protection plugins like Worldguard
-                        animal.setVelocity(new Vector()); //Triggers animal's "run away" AI
+                            animal.damage(0.5); // Attempt to override protection plugins like Worldguard
+                        animal.setVelocity(new Vector()); // Triggers animal's "run away" AI
                         dizziness = 0;
                     }
-                    
-                    if(!(animal.hasMetadata("isClaustrophobic"))) {
+
+                    if (!(animal.hasMetadata("isClaustrophobic"))) {
                         animal.setMetadata("isClaustrophobic", new FixedMetadataValue(plugin, true));
                     }
-                    
-                    if(dizziness < maxDizziness) {
-                       world.spawnParticle(Particle.ANGRY_VILLAGER, animal.getLocation(), 1); //TODO: confirm if this works
+
+                    if (dizziness < maxDizziness) {
+                        world.spawnParticle(Particle.ANGRY_VILLAGER, animal.getLocation(), 1); // TODO: confirm if this
+                                                                                               // works
                     }
                     dizziness++;
                 }
@@ -152,11 +158,12 @@ public class AnimalCrowdControl extends ListenerModule {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        //If the entity is not an animal, we don't care
-        if (!isEntityAnimal(event.getRightClicked())) return;
+        // If the entity is not an animal, we don't care
+        if (!isEntityAnimal(event.getRightClicked()))
+            return;
 
         Player player = event.getPlayer();
-        Animals animal = (Animals)event.getRightClicked();
+        Animals animal = (Animals) event.getRightClicked();
         World world = player.getWorld();
 
         final boolean animalOverCrowdControl = CFG.getBoolean(RootNode.ANIMAL_OVERCROWD_CONTROL, world.getName());
@@ -173,10 +180,11 @@ public class AnimalCrowdControl extends ListenerModule {
      */
     @EventHandler(ignoreCancelled = true)
     public void onAnimalDeath(EntityDeathEvent event) {
-        //If the entity is not an animal, we don't care
-        if (!isEntityAnimal(event.getEntity())) return;
+        // If the entity is not an animal, we don't care
+        if (!isEntityAnimal(event.getEntity()))
+            return;
 
-        Animals animal = (Animals)event.getEntity();
+        Animals animal = (Animals) event.getEntity();
         World world = animal.getWorld();
 
         final boolean animalOverCrowdControl = CFG.getBoolean(RootNode.ANIMAL_OVERCROWD_CONTROL, world.getName());

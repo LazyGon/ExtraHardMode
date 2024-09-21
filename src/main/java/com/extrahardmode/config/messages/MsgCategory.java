@@ -1,13 +1,12 @@
 package com.extrahardmode.config.messages;
 
-
 /**
  * @author Diemex
  */
-public enum MsgCategory
-{
+public enum MsgCategory {
     /**
-     * A message which will only be shown a few times and then won't show anymore at all
+     * A message which will only be shown a few times and then won't show anymore at
+     * all
      */
     TUTORIAL,
     /**
@@ -27,48 +26,36 @@ public enum MsgCategory
      */
     DISABLED,
     /**
-     * Message will be displayed when the inventory has been opened and shows the weight of the inventory
+     * Message will be displayed when the inventory has been opened and shows the
+     * weight of the inventory
      */
     WEIGHT_MSG("extrahardmode.player.weight", NOTIFICATION);
 
-
-    private MsgCategory()
-    {
+    private MsgCategory() {
         this(null, null);
     }
 
-
-    private MsgCategory(String identifier, MsgCategory owning)
-    {
+    private MsgCategory(String identifier, MsgCategory owning) {
         this.identifier = identifier;
         this.cat = owning;
     }
 
-
     private final String identifier;
     private final MsgCategory cat;
 
-
-    public boolean hasSubcategory()
-    {
+    public boolean hasSubcategory() {
         return cat != null;
     }
 
-
-    public MsgCategory getSubcategory()
-    {
+    public MsgCategory getSubcategory() {
         return cat;
     }
 
-
-    public boolean hasUniqueIdentifier()
-    {
+    public boolean hasUniqueIdentifier() {
         return identifier != null;
     }
 
-
-    public String getUniqueIdentifier()
-    {
+    public String getUniqueIdentifier() {
         return identifier;
     }
 }

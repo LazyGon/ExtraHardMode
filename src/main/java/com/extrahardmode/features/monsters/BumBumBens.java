@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.ExplosionType;
 import com.extrahardmode.config.RootConfig;
@@ -47,27 +46,21 @@ import org.bukkit.potion.PotionEffectType;
  * <p/>
  * Naturally spawning Charged Creepers , Charged Creepers exloding on hit ,
  */
-public class BumBumBens extends ListenerModule
-{
+public class BumBumBens extends ListenerModule {
     private RootConfig CFG = null;
 
     private PlayerModule playerModule;
 
-
-    public BumBumBens(ExtraHardMode plugin)
-    {
+    public BumBumBens(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         playerModule = plugin.getModuleForClass(PlayerModule.class);
     }
-
 
     /**
      * When an Entity spawns
@@ -75,8 +68,7 @@ public class BumBumBens extends ListenerModule
      * naturally spawning Charged Creepers
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (EntityHelper.isMarkedAsOurs(entity))
             return;
@@ -86,15 +78,12 @@ public class BumBumBens extends ListenerModule
         final int chargedSpawnPercent = CFG.getInt(RootNode.CHARGED_CREEPER_SPAWN_PERCENT, world.getName());
 
         // FEATURE: charged creeper spawns
-        if (entityType == EntityType.CREEPER)
-        {
-            if (plugin.random(chargedSpawnPercent))
-            {
+        if (entityType == EntityType.CREEPER) {
+            if (plugin.random(chargedSpawnPercent)) {
                 ((Creeper) entity).setPowered(true);
             }
         }
     }
-
 
     /**
      * When an Entity dies
@@ -102,8 +91,7 @@ public class BumBumBens extends ListenerModule
      * Creepers may drop tnt
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
@@ -112,16 +100,14 @@ public class BumBumBens extends ListenerModule
         final boolean creeperSound = CFG.getBoolean(RootNode.SOUND_CREEPER_TNT, world.getName());
 
         // FEATURE: creepers may drop activated TNT when they die
-        if (creeperDropTNTPercent > 0)
-        {
+        if (creeperDropTNTPercent > 0) {
             if (entity.getType() == EntityType.CREEPER && plugin.random(creeperDropTNTPercent)
-                    && creeperDropTntMaxY > entity.getLocation().getBlockY())
-            {
+                    && creeperDropTntMaxY > entity.getLocation().getBlockY()) {
                 final Player player = entity.getKiller();
-                EhmCreeperDropTntEvent dropTntEvent = new EhmCreeperDropTntEvent(player, (Creeper) entity, entity.getLocation());
+                EhmCreeperDropTntEvent dropTntEvent = new EhmCreeperDropTntEvent(player, (Creeper) entity,
+                        entity.getLocation());
                 plugin.getServer().getPluginManager().callEvent(dropTntEvent);
-                if (!dropTntEvent.isCancelled())
-                {
+                if (!dropTntEvent.isCancelled()) {
                     world.spawnEntity(entity.getLocation(), EntityType.TNT);
                     if (creeperSound)
                         world.playEffect(entity.getLocation(), Effect.GHAST_SHRIEK, 1, 35);
@@ -130,23 +116,20 @@ public class BumBumBens extends ListenerModule
         }
     }
 
-
     /**
      * When an Entity takes damage
      * <p/>
      * Charged creepers explode on hit , burning creepers will cause a big explosion
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageEvent event)
-    {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
         World world = entity.getWorld();
 
         // is this an entity damaged by entity event?
         EntityDamageByEntityEvent damageByEntityEvent = null;
-        if (event instanceof EntityDamageByEntityEvent)
-        {
+        if (event instanceof EntityDamageByEntityEvent) {
             damageByEntityEvent = (EntityDamageByEntityEvent) event;
         }
 
@@ -154,62 +137,55 @@ public class BumBumBens extends ListenerModule
         final boolean flamingCreepersExplode = CFG.getBoolean(RootNode.FLAMING_CREEPERS_EXPLODE, world.getName());
         final boolean customCharged = CFG.getBoolean(RootNode.EXPLOSIONS_CHARGED_CREEPERS_ENABLE, world.getName());
 
-
         // FEATURE: charged creepers explode on hit
-        if (chargedExplodeOnHit)
-        {
-            if ((entityType == EntityType.CREEPER) && !entity.isDead())
-            {
+        if (chargedExplodeOnHit) {
+            if ((entityType == EntityType.CREEPER) && !entity.isDead()) {
                 Creeper creeper = (Creeper) entity;
-                if (creeper.isPowered())
-                {
+                if (creeper.isPowered()) {
                     Player damager = null;
-                    //Always explode when damaged by a player
-                    if (damageByEntityEvent != null)
-                    {
-                        if (damageByEntityEvent.getDamager() instanceof Player)
-                        {   //Normal Damage from a player
+                    // Always explode when damaged by a player
+                    if (damageByEntityEvent != null) {
+                        if (damageByEntityEvent.getDamager() instanceof Player) { // Normal Damage from a player
                             damager = (Player) damageByEntityEvent.getDamager();
                             if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS))
                                 return;
-                        } else if (damageByEntityEvent.getDamager() instanceof Projectile)
-                        {   //Damaged by an arrow shot by a player
+                        } else if (damageByEntityEvent.getDamager() instanceof Projectile) { // Damaged by an arrow shot
+                                                                                             // by a player
                             Projectile bullet = (Projectile) damageByEntityEvent.getDamager();
-                            if (bullet.getShooter() instanceof Player)//otherwise skeli/dispenser etc.
+                            if (bullet.getShooter() instanceof Player)// otherwise skeli/dispenser etc.
                                 damager = (Player) bullet.getShooter();
                             if (damager != null && playerModule.playerBypasses(damager, Feature.MONSTER_BUMBUMBENS))
                                 return;
                         }
                     }
-                    if (creeper.getTarget() == null && damager == null)
-                    {   //If not targetting a player this is an explosion we don't need. Trying to prevent unecessary world damage
+                    if (creeper.getTarget() == null && damager == null) { // If not targetting a player this is an
+                                                                          // explosion we don't need. Trying to prevent
+                                                                          // unecessary world damage
                         return;
                     }
                     EntityHelper.markLootLess(plugin, (LivingEntity) entity);
                     entity.remove();
                     if (customCharged)
-                        new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER_CHARGED, entity).run(); // equal to a TNT blast
+                        new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER_CHARGED, entity)
+                                .run(); // equal to a TNT blast
                     return;
                 }
             }
         }
 
-
-        //FEATURE: a burning creeper will create a nice explosion + fireworks and will fly in the air
-        //Will only trigger if creeper died from fire not from a sword with fireaspect or bow
-        if (flamingCreepersExplode)
-        {
-            if (entityType.equals(EntityType.CREEPER))
-            {
+        // FEATURE: a burning creeper will create a nice explosion + fireworks and will
+        // fly in the air
+        // Will only trigger if creeper died from fire not from a sword with fireaspect
+        // or bow
+        if (flamingCreepersExplode) {
+            if (entityType.equals(EntityType.CREEPER)) {
                 Creeper creeper = (Creeper) entity;
 
                 if ((event.getCause().equals(EntityDamageEvent.DamageCause.FIRE)
                         || event.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK)
                         || event.getCause().equals(EntityDamageEvent.DamageCause.LAVA))
-                        && !creeper.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE))
-                {
-                    if (!EntityHelper.hasFlagIgnore(entity))
-                    {
+                        && !creeper.hasPotionEffect(PotionEffectType.FIRE_RESISTANCE)) {
+                    if (!EntityHelper.hasFlagIgnore(entity)) {
                         EntityHelper.flagIgnore(plugin, entity);
                         CoolCreeperExplosion bigBoom = new CoolCreeperExplosion(creeper, plugin);
                         bigBoom.run();
@@ -219,16 +195,14 @@ public class BumBumBens extends ListenerModule
         }
     }
 
-
     /**
      * When something explodes
      * <p/>
      * Increase size of Creeper explosions
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    //give some time for other plugins to block the event
-    public void onExplosion(EntityExplodeEvent event)
-    {
+    // give some time for other plugins to block the event
+    public void onExplosion(EntityExplodeEvent event) {
         if (event instanceof FakeEntityExplodeEvent)
             return;
         Entity entity = event.getEntity();
@@ -238,13 +212,12 @@ public class BumBumBens extends ListenerModule
 
         // FEATURE: bigger creeper explosions (for more-frequent cave-ins)
         // Charged creeper explosion is handled in onEntityDamage
-        if (customCreeper && entity instanceof Creeper)
-        {
+        if (customCreeper && entity instanceof Creeper) {
             event.setCancelled(true);
-            EntityHelper.flagIgnore(plugin, entity);//Ignore this creeper in further calls to this method
+            EntityHelper.flagIgnore(plugin, entity);// Ignore this creeper in further calls to this method
             if (((Creeper) entity).isPowered())
                 new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER_CHARGED, entity).run();
-            else //normal creeper
+            else // normal creeper
                 new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.CREEPER, entity).run();
         }
     }

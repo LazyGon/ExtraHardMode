@@ -19,15 +19,12 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.service;
-
 
 /**
  * All known permission nodes.
  */
-public enum PermissionNode
-{
+public enum PermissionNode {
     /**
      * Bypass. TODO individual bypass nodes.
      */
@@ -63,25 +60,21 @@ public enum PermissionNode
      */
     private final String node;
 
-
     /**
      * Constructor.
      *
      * @param subperm - specific permission path.
      */
-    private PermissionNode(String subperm)
-    {
+    private PermissionNode(String subperm) {
         this.node = PREFIX + subperm;
     }
-
 
     /**
      * Get the full permission node path.
      *
      * @return Permission node path.
      */
-    public String getNode()
-    {
+    public String getNode() {
         return node;
     }
 }

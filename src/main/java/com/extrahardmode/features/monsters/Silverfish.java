@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -42,62 +41,59 @@ import org.bukkit.inventory.ItemStack;
  * <p/>
  * Block entering of blocks Drop cobble when slain
  */
-public class Silverfish extends ListenerModule
-{
+public class Silverfish extends ListenerModule {
     private RootConfig CFG = null;
 
-
-    public Silverfish(ExtraHardMode plugin)
-    {
+    public Silverfish(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
 
-
     /**
-     * when an entity tries to change a block (does not include player block changes) don't allow silverfish to change blocks
+     * when an entity tries to change a block (does not include player block
+     * changes) don't allow silverfish to change blocks
      *
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntityChangeBlock(EntityChangeBlockEvent event)
-    {
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
         Block block = event.getBlock();
         World world = block.getWorld();
 
         final boolean silverFishCantEnter = CFG.getBoolean(RootNode.SILVERFISH_CANT_ENTER_BLOCKS, world.getName());
 
-        //Prevent Silverfish from entering blocks?
-        if (silverFishCantEnter)
-        {
-            if (event.getEntity().getType() == EntityType.SILVERFISH && event.getTo() == Material.INFESTED_STONE) //TODO: check for other infested variants? (1.13 change)
+        // Prevent Silverfish from entering blocks?
+        if (silverFishCantEnter) {
+            if (event.getEntity().getType() == EntityType.SILVERFISH && event.getTo() == Material.INFESTED_STONE) // TODO:
+                                                                                                                  // check
+                                                                                                                  // for
+                                                                                                                  // other
+                                                                                                                  // infested
+                                                                                                                  // variants?
+                                                                                                                  // (1.13
+                                                                                                                  // change)
             {
                 event.setCancelled(true);
             }
         }
     }
 
-
     /** When an entity dies, drop cobble for SilverFish */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
-        //TODO Silverfish drop random loot
+        // TODO Silverfish drop random loot
         final boolean dropCobble = CFG.getBoolean(RootNode.SILVERFISH_DROP_COBBLE, world.getName());
 
         // FEATURE: silverfish drop cobblestone
-        if (dropCobble && entity.getType() == EntityType.SILVERFISH)
-        {
+        if (dropCobble && entity.getType() == EntityType.SILVERFISH) {
             event.getDrops().add(new ItemStack(Material.COBBLESTONE));
         }
     }

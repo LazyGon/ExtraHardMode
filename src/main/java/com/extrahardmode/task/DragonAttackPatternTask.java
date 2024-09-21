@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
@@ -34,8 +32,7 @@ import java.util.List;
 /**
  * Task to handle the dragon's attack pattern.
  */
-public class DragonAttackPatternTask implements Runnable
-{
+public class DragonAttackPatternTask implements Runnable {
     /**
      * Plugin instance.
      */
@@ -56,8 +53,6 @@ public class DragonAttackPatternTask implements Runnable
      */
     private final LivingEntity dragon;
 
-
-
     /**
      * Constructor.
      *
@@ -66,43 +61,38 @@ public class DragonAttackPatternTask implements Runnable
      * @param player                - Target player.
      * @param playersFightingDragon - All fighting players.
      */
-    public DragonAttackPatternTask(ExtraHardMode plugin, LivingEntity dragon, Player player, List<String> playersFightingDragon)
-    {
+    public DragonAttackPatternTask(ExtraHardMode plugin, LivingEntity dragon, Player player,
+            List<String> playersFightingDragon) {
         this.plugin = plugin;
         CFG = plugin.getModuleForClass(RootConfig.class);
         this.dragon = dragon;
         this.player = player;
     }
 
-
     @Override
-    public void run()
-    {
+    public void run() {
         if (this.dragon.isDead())
             return;
 
         World world = this.dragon.getWorld();
 
         // if the player has been defeated
-        if (!this.player.isOnline() || world != this.player.getWorld() || this.player.isDead())
-        {
+        if (!this.player.isOnline() || world != this.player.getWorld() || this.player.isDead()) {
             // restore some of the dragon's health
             int newHealth = (int) (this.dragon.getHealth() + this.dragon.getMaxHealth() * 0.25);
-            if (newHealth > this.dragon.getMaxHealth())
-            {
+            if (newHealth > this.dragon.getMaxHealth()) {
                 this.dragon.setHealth(this.dragon.getMaxHealth());
-            } else
-            {
+            } else {
                 this.dragon.setHealth(newHealth);
             }
 
             return;
         }
 
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             DragonAttackTask task = new DragonAttackTask(plugin, this.dragon, this.player);
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 20L * (long) i + (long) (plugin.getRandom().nextInt(20)));
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task,
+                    20L * (long) i + (long) (plugin.getRandom().nextInt(20)));
         }
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this, 20L * 30L);

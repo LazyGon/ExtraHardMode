@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.module.BlockModule;
@@ -31,10 +29,10 @@ import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.Waterlogged;
 
 /**
- * Changes a water source block to a non-source block, allowing it to spread and evaporate away.
+ * Changes a water source block to a non-source block, allowing it to spread and
+ * evaporate away.
  */
-public class EvaporateWaterTask implements Runnable
-{
+public class EvaporateWaterTask implements Runnable {
 
     /**
      * Target block. Water source or waterlogging blocks.
@@ -46,36 +44,29 @@ public class EvaporateWaterTask implements Runnable
      */
     private final BlockModule blockModule;
 
-
     /**
      * Constructor.
      *
      * @param block - Target block.
      */
-    public EvaporateWaterTask(Block block, ExtraHardMode plugin)
-    {
+    public EvaporateWaterTask(Block block, ExtraHardMode plugin) {
         this.block = block;
         blockModule = plugin.getModuleForClass(BlockModule.class);
     }
 
-
     @Override
-    public void run()
-    {
-        if (block.getType() == Material.WATER)
-        {
-            Levelled waterLevel = (Levelled)block.getBlockData();
+    public void run() {
+        if (block.getType() == Material.WATER) {
+            Levelled waterLevel = (Levelled) block.getBlockData();
             waterLevel.setLevel(1);
             block.setBlockData(waterLevel, true);
-        }
-        else if (block.getBlockData() instanceof Waterlogged)
-        {
-            Waterlogged wowWater = (Waterlogged)block.getBlockData();
+        } else if (block.getBlockData() instanceof Waterlogged) {
+            Waterlogged wowWater = (Waterlogged) block.getBlockData();
             wowWater.setWaterlogged(false);
             block.setBlockData(wowWater, true);
         }
 
-        //Finished processing
+        // Finished processing
         blockModule.removeMark(block);
     }
 }

@@ -21,7 +21,6 @@
 
 package com.extrahardmode.config;
 
-
 import com.extrahardmode.ExtraHardMode;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
@@ -35,24 +34,21 @@ import java.util.HashSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
 /**
  * Test the MultiWorldConfig
  */
 
 @ExtendWith(MockitoExtension.class)
-//@PrepareForTest({RootConfig.class, ExtraHardMode.class}) //Breaks in JDK 11 apparently
-public class TestRootConfig
-{
+// @PrepareForTest({RootConfig.class, ExtraHardMode.class}) //Breaks in JDK 11
+// apparently
+public class TestRootConfig {
     @Mock
     private ExtraHardMode plugin;
 
     private final RootConfig cfg = new RootConfig(plugin);
 
-
-    public TestRootConfig()
-    {
-        //TODO remove dependeny on RootNode
+    public TestRootConfig() {
+        // TODO remove dependeny on RootNode
         cfg.set("world", RootNode.WEAK_FOOD_CROPS, true);
         cfg.set("pvp", RootNode.WEAK_FOOD_CROPS, false);
         cfg.set("world_the_end", RootNode.WEAK_FOOD_CROPS, false);
@@ -62,167 +58,154 @@ public class TestRootConfig
         cfg.set("world_nether", RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, true);
         cfg.set("worlds", RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, true);
 
-
         cfg.set("world_nether", RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, false);
         cfg.set("worlds", RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, false);
         cfg.set("pvp", RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, false);
         cfg.set("world_the_end", RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, false);
 
-        /*cfg.set("world", RootNode.IRON_DURABILITY_PENALTY, 24);
-        cfg.set("world_nether", RootNode.IRON_DURABILITY_PENALTY, 22);
-        cfg.set("worlds", RootNode.IRON_DURABILITY_PENALTY, 22);
-        cfg.set("pvp", RootNode.IRON_DURABILITY_PENALTY, 80);
-        cfg.set("world_the_end", RootNode.IRON_DURABILITY_PENALTY, 80);*/
+        /*
+         * cfg.set("world", RootNode.IRON_DURABILITY_PENALTY, 24);
+         * cfg.set("world_nether", RootNode.IRON_DURABILITY_PENALTY, 22);
+         * cfg.set("worlds", RootNode.IRON_DURABILITY_PENALTY, 22);
+         * cfg.set("pvp", RootNode.IRON_DURABILITY_PENALTY, 80);
+         * cfg.set("world_the_end", RootNode.IRON_DURABILITY_PENALTY, 80);
+         */
     }
-
 
     /**
      * Do we retrieve the same values we put in the config earlier?
      */
     @Test
-    public void testGetBoolean()
-    {
+    public void testGetBoolean() {
         assertEquals(false, cfg.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, "pvp"));
         assertEquals(false, cfg.getBoolean(RootNode.WEAK_FOOD_CROPS, "world_the_end"));
         assertEquals(false, cfg.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, "world"));
         assertEquals(true, cfg.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, "worlds"));
     }
 
-
-    /*@Test
-    public void testGetInt()
-    {
-        assertEquals(24, cfg.getInt(RootNode.IRON_DURABILITY_PENALTY, "world"));
-        assertEquals(22, cfg.getInt(RootNode.IRON_DURABILITY_PENALTY, "worlds"));
-        assertEquals(80, cfg.getInt(RootNode.IRON_DURABILITY_PENALTY, "pvp"));
-    }*/
-
+    /*
+     * @Test
+     * public void testGetInt()
+     * {
+     * assertEquals(24, cfg.getInt(RootNode.IRON_DURABILITY_PENALTY, "world"));
+     * assertEquals(22, cfg.getInt(RootNode.IRON_DURABILITY_PENALTY, "worlds"));
+     * assertEquals(80, cfg.getInt(RootNode.IRON_DURABILITY_PENALTY, "pvp"));
+     * }
+     */
 
     /**
      * Test what happens if we query a value that doesn't exist in the config
      */
     @Test
-    public void testNotExisting()
-    {
-        //Integer
+    public void testNotExisting() {
+        // Integer
         assertEquals(0, cfg.getInt(RootNode.BONUS_NETHER_BLAZE_SPAWN_PERCENT, "test123"));
-        //Integer with disable value
+        // Integer with disable value
         assertEquals(100, cfg.getInt(RootNode.GHASTS_DEFLECT_ARROWS, "test123"));
-        //Boolean
+        // Boolean
         assertEquals(false, cfg.getBoolean(RootNode.DONT_MOVE_WATER_SOURCE_BLOCKS, "test123"));
-        //String
+        // String
         assertEquals("", cfg.getString(RootNode.MODE, "test123"));
-        //Double
+        // Double
         assertEquals(0.0, cfg.getDouble(RootNode.NO_SWIMMING_IN_ARMOR_ARMOR_POINTS, "test123"), 0.0);
-        //StringList
-        //assertEquals(Collections.<String>emptyList(), cfg.getStringList(RootNode.MORE_FALLING_BLOCKS, "test123"));
+        // StringList
+        // assertEquals(Collections.<String>emptyList(),
+        // cfg.getStringList(RootNode.MORE_FALLING_BLOCKS, "test123"));
     }
-
 
     /**
      * Getting a boolean with an illegal argument
      */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentBoolean()
-    {
+    public void illegalArgumentBoolean() {
         cfg.getBoolean(RootNode.WORLDS, "");
     }
-
 
     /**
      * Getting an int with an illegal argument
      */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentInt()
-    {
+    public void illegalArgumentInt() {
         cfg.getInt(RootNode.MORE_FALLING_BLOCKS, "");
     }
-
 
     /**
      * Getting a double with an illegal argument
      */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentDouble()
-    {
+    public void illegalArgumentDouble() {
         cfg.getDouble(RootNode.ARID_DESSERTS, "");
     }
-
 
     /**
      * Getting a string with an illegal argument
      */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentString()
-    {
+    public void illegalArgumentString() {
         cfg.getString(RootNode.BONUS_NETHER_BLAZE_SPAWN_PERCENT, "");
     }
-
 
     /**
      * Getting a list with an illegal argument
      */
     @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentStringList()
-    {
+    public void illegalArgumentStringList() {
         cfg.getStringList(RootNode.ANIMAL_EXP_NERF, "");
     }
 
-
     @Test
-    public void testGetEnabledWorlds()
-    {
-        //HashSet because the order doesn't matter
-        HashSet<String> expectedWorlds = new HashSet<String>(Arrays.asList(new String[]{"world", "pvp", "world_the_end", "miningWorld", "world_nether", "worlds"}));
+    public void testGetEnabledWorlds() {
+        // HashSet because the order doesn't matter
+        HashSet<String> expectedWorlds = new HashSet<String>(Arrays
+                .asList(new String[] { "world", "pvp", "world_the_end", "miningWorld", "world_nether", "worlds" }));
         HashSet<String> inputWorlds = new HashSet<String>(Arrays.asList(cfg.getEnabledWorlds()));
         assertTrue(expectedWorlds.equals(inputWorlds));
     }
 
-
-//    @Test
-//    public void testMetricsEnabledAll()
-//    {
-//        cfg.clearCache();
-//        cfg.set("w1", MockConfigNode.BOOL_TRUE, true);
-//        cfg.set("w2", MockConfigNode.BOOL_TRUE, true);
-//        cfg.set("w3", MockConfigNode.BOOL_TRUE, true);
-//
-//        assertEquals(1, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
-//    }
-//
-//
-//    @Test
-//    public void testMetricsEnabledSome1()
-//    {
-//        cfg.clearCache();
-//        cfg.set("w1", MockConfigNode.BOOL_TRUE, true);
-//        cfg.set("w2", MockConfigNode.BOOL_TRUE, false);
-//        cfg.set("w3", MockConfigNode.BOOL_TRUE, true);
-//
-//        assertEquals(2, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
-//    }
-//
-//
-//    @Test
-//    public void testMetricsEnabledSome2()
-//    {
-//        cfg.clearCache();
-//        cfg.set("w1", MockConfigNode.BOOL_TRUE, false);
-//        cfg.set("w2", MockConfigNode.BOOL_TRUE, false);
-//        cfg.set("w3", MockConfigNode.BOOL_TRUE, true);
-//
-//        assertEquals(2, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
-//    }
-//
-//
-//    @Test
-//    public void testMetricsDisabled()
-//    {
-//        cfg.clearCache();
-//        cfg.set("w1", MockConfigNode.BOOL_TRUE, false);
-//        cfg.set("w2", MockConfigNode.BOOL_TRUE, false);
-//        cfg.set("w3", MockConfigNode.BOOL_TRUE, false);
-//
-//        assertEquals(0, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
-//    }
+    // @Test
+    // public void testMetricsEnabledAll()
+    // {
+    // cfg.clearCache();
+    // cfg.set("w1", MockConfigNode.BOOL_TRUE, true);
+    // cfg.set("w2", MockConfigNode.BOOL_TRUE, true);
+    // cfg.set("w3", MockConfigNode.BOOL_TRUE, true);
+    //
+    // assertEquals(1, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
+    // }
+    //
+    //
+    // @Test
+    // public void testMetricsEnabledSome1()
+    // {
+    // cfg.clearCache();
+    // cfg.set("w1", MockConfigNode.BOOL_TRUE, true);
+    // cfg.set("w2", MockConfigNode.BOOL_TRUE, false);
+    // cfg.set("w3", MockConfigNode.BOOL_TRUE, true);
+    //
+    // assertEquals(2, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
+    // }
+    //
+    //
+    // @Test
+    // public void testMetricsEnabledSome2()
+    // {
+    // cfg.clearCache();
+    // cfg.set("w1", MockConfigNode.BOOL_TRUE, false);
+    // cfg.set("w2", MockConfigNode.BOOL_TRUE, false);
+    // cfg.set("w3", MockConfigNode.BOOL_TRUE, true);
+    //
+    // assertEquals(2, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
+    // }
+    //
+    //
+    // @Test
+    // public void testMetricsDisabled()
+    // {
+    // cfg.clearCache();
+    // cfg.set("w1", MockConfigNode.BOOL_TRUE, false);
+    // cfg.set("w2", MockConfigNode.BOOL_TRUE, false);
+    // cfg.set("w3", MockConfigNode.BOOL_TRUE, false);
+    //
+    // assertEquals(0, cfg.getMetricsValue(MockConfigNode.BOOL_TRUE));
+    // }
 }

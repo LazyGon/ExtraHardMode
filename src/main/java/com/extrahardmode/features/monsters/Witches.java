@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.ExplosionType;
 import com.extrahardmode.config.RootConfig;
@@ -46,33 +45,27 @@ import org.bukkit.event.entity.PotionSplashEvent;
  * <p/>
  * New Attacks like Explosion potions, spawning of zombies
  */
-public class Witches extends ListenerModule
-{
+public class Witches extends ListenerModule {
     private RootConfig CFG;
 
-
-    public Witches(ExtraHardMode plugin)
-    {
+    public Witches(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
 
-
     /**
-     * When an Entity spawns: Spawn a Witch above ground sometimes instead of a Zombie
+     * When an Entity spawns: Spawn a Witch above ground sometimes instead of a
+     * Zombie
      *
      * @param event which occurred
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (EntityHelper.isMarkedAsOurs(entity))
             return;
@@ -85,34 +78,31 @@ public class Witches extends ListenerModule
         // FEATURE: more witches above ground (on grass)
         if (entityType == EntityType.ZOMBIE && world.getEnvironment() == World.Environment.NORMAL
                 && entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS_BLOCK
-                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-        {
-            if (plugin.random(witchSpawnPercent))
-            {
+                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
+            if (plugin.random(witchSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.WITCH);
             }
         }
     }
 
-
     /**
-     * When a potion breaks When Witches throw a potion we sometimes spawn explosions or monsters
+     * When a potion breaks When Witches throw a potion we sometimes spawn
+     * explosions or monsters
      *
      * @param event - Event that occurred.
      */
     @EventHandler(priority = EventPriority.LOW)
-    public void onPotionSplash(PotionSplashEvent event)
-    {
+    public void onPotionSplash(PotionSplashEvent event) {
         ThrownPotion potion = event.getPotion();
         Location location = potion.getLocation();
         World world = location.getWorld();
 
         final boolean additionalAttacks = CFG.getBoolean(RootNode.WITCHES_ADDITIONAL_ATTACKS, world.getName());
 
-        // FEATURE: enhanced witches. they throw wolf spawner and teleport potions as well as poison potions
-        if (additionalAttacks && EntityHelper.shooterType(potion) == EntityType.WITCH)
-        {
+        // FEATURE: enhanced witches. they throw wolf spawner and teleport potions as
+        // well as poison potions
+        if (additionalAttacks && EntityHelper.shooterType(potion) == EntityType.WITCH) {
             Witch witch = (Witch) potion.getShooter();
 
             int random = plugin.getRandom().nextInt(100);
@@ -120,70 +110,55 @@ public class Witches extends ListenerModule
             boolean makeExplosion = false;
 
             // 30% summon zombie
-            if (random < 30)
-            {
+            if (random < 30) {
                 event.setCancelled(true);
 
                 boolean zombieNearby = false;
-                for (Entity entity : location.getChunk().getEntities())
-                {
-                    if (entity.getType() == EntityType.ZOMBIE_VILLAGER)
-                    {
+                for (Entity entity : location.getChunk().getEntities()) {
+                    if (entity.getType() == EntityType.ZOMBIE_VILLAGER) {
                         ZombieVillager zombie = (ZombieVillager) entity;
-                        if (zombie.isBaby())
-                        {
+                        if (zombie.isBaby()) {
                             zombieNearby = true;
                             break;
                         }
                     }
                 }
 
-                if (!zombieNearby)
-                {
+                if (!zombieNearby) {
                     ZombieVillager zombie = (ZombieVillager) EntityHelper.spawn(location, EntityType.ZOMBIE_VILLAGER);
                     zombie.setBaby(true);
-                    if (zombie.getTarget() != null)
-                    {
+                    if (zombie.getTarget() != null) {
                         zombie.setTarget(witch.getTarget());
                     }
 
                     EntityHelper.markLootLess(plugin, zombie);
-                } else
-                {
+                } else {
                     makeExplosion = true;
                 }
-            } else if (random < 60)
-            {
+            } else if (random < 60) {
                 // 30% teleport
                 event.setCancelled(true);
                 witch.teleport(location);
-            } else if (random < 90)
-            {
+            } else if (random < 90) {
                 // 30% explosion
                 event.setCancelled(true);
                 makeExplosion = true;
-            } else
-            {
+            } else {
                 // otherwise poison potion (selective target)
-                for (LivingEntity target : event.getAffectedEntities())
-                {
-                    if (target.getType() != EntityType.PLAYER)
-                    {
+                for (LivingEntity target : event.getAffectedEntities()) {
+                    if (target.getType() != EntityType.PLAYER) {
                         event.setIntensity(target, 0.0);
                     }
                 }
             }
 
             // if explosive potion, direct damage to players in the area
-            if (makeExplosion)
-            {
+            if (makeExplosion) {
                 // explosion just for show, no damage
                 new CreateExplosionTask(plugin, location, ExplosionType.EFFECT, null).run();
 
-                for (LivingEntity target : event.getAffectedEntities())
-                {
-                    if (target.getType() == EntityType.PLAYER)
-                    {
+                for (LivingEntity target : event.getAffectedEntities()) {
+                    if (target.getType() == EntityType.PLAYER) {
                         target.damage(3);
                     }
                 }

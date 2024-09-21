@@ -21,7 +21,6 @@
 
 package com.extrahardmode.module;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -38,28 +37,22 @@ import org.bukkit.inventory.PlayerInventory;
  *
  * @author Max
  */
-public class PlayerModule extends EHMModule
-{
+public class PlayerModule extends EHMModule {
     private RootConfig CFG;
 
-
     /** Constructor */
-    public PlayerModule(ExtraHardMode plugin)
-    {
+    public PlayerModule(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
 
-
-    public boolean playerBypasses(Player player, Feature feature)
-    {
-        //Validate.notNull(player, "We can't check if a Player bypasses if there is no Player!");
+    public boolean playerBypasses(Player player, Feature feature) {
+        // Validate.notNull(player, "We can't check if a Player bypasses if there is no
+        // Player!");
         if (player == null)
             return false;
 
@@ -79,47 +72,38 @@ public class PlayerModule extends EHMModule
         return bypasses;
     }
 
-
     /** Is the player currently on a ladder? */
-    public boolean isPlayerOnLadder(Player player)
-    {
+    public boolean isPlayerOnLadder(Player player) {
         return player.getLocation().getBlock().getType().equals(Material.LADDER);
     }
 
-
     /**
-     * Calculates the weight of the players inventory with the given amount of weight per item
+     * Calculates the weight of the players inventory with the given amount of
+     * weight per item
      *
      * @param armorPoints     Points per piece of worn armor
      * @param inventoryPoints Points per full stack of one item
      * @param toolPoints      Points per tool (which doesn't stack)
      */
-    public static float inventoryWeight(Player player, float armorPoints, float inventoryPoints, float toolPoints)
-    {
+    public static float inventoryWeight(Player player, float armorPoints, float inventoryPoints, float toolPoints) {
         // count worn clothing
         PlayerInventory inventory = player.getInventory();
         float weight = 0.0F;
         ItemStack[] armor = inventory.getArmorContents();
-        for (ItemStack armorPiece : armor)
-        {
-            if (armorPiece != null && armorPiece.getType() != Material.AIR)
-            {
+        for (ItemStack armorPiece : armor) {
+            if (armorPiece != null && armorPiece.getType() != Material.AIR) {
                 weight += armorPoints;
             }
         }
 
         // count contents
-        for (ItemStack itemStack : inventory.getContents())
-        {
-            if (itemStack != null && itemStack.getType() != Material.AIR)
-            {
+        for (ItemStack itemStack : inventory.getContents()) {
+            if (itemStack != null && itemStack.getType() != Material.AIR) {
                 float addWeight = 0.0F;
-                if (BlockModule.isTool(itemStack.getType()))
-                {
+                if (BlockModule.isTool(itemStack.getType())) {
                     addWeight += toolPoints;
-                } else
-                {
-                    //take stackSize into consideration
+                } else {
+                    // take stackSize into consideration
                     addWeight = inventoryPoints * itemStack.getAmount() / itemStack.getMaxStackSize();
                 }
                 weight += addWeight;
@@ -127,7 +111,6 @@ public class PlayerModule extends EHMModule
         }
         return weight;
     }
-
 
     /**
      * Counts the number of items of a specific type
@@ -137,19 +120,15 @@ public class PlayerModule extends EHMModule
      *
      * @return the number of items as Integer
      */
-    public static int countInvItem(PlayerInventory inv, Material toCount)
-    {
+    public static int countInvItem(PlayerInventory inv, Material toCount) {
         int counter = 0;
-        for (ItemStack stack : inv.getContents())
-        {
-            if (stack != null && stack.getType().equals(toCount))
-            {
+        for (ItemStack stack : inv.getContents()) {
+            if (stack != null && stack.getType().equals(toCount)) {
                 counter += stack.getAmount();
             }
         }
         return counter;
     }
-
 
     /**
      * Get the percentage of how much less damage a player will take.
@@ -158,23 +137,19 @@ public class PlayerModule extends EHMModule
      *
      * @return the percentage as double. Example 0.8 when full armor is worn
      */
-    public static float getArmorPoints(final Player player)
-    {
+    public static float getArmorPoints(final Player player) {
         float points = 0.0F;
         int i = 0;
-        for (ItemStack armor : player.getInventory().getArmorContents())
-        {
-            if (armor == null) //itemstacks now return null in 1.9 instead of air (CB change)
+        for (ItemStack armor : player.getInventory().getArmorContents()) {
+            if (armor == null) // itemstacks now return null in 1.9 instead of air (CB change)
             {
                 i++;
                 continue;
             }
-            switch (i)
-            {
-                //HEAD
+            switch (i) {
+                // HEAD
                 case 3:
-                    switch (armor.getType())
-                    {
+                    switch (armor.getType()) {
                         case LEATHER_HELMET:
                             points += 0.04;
                             break;
@@ -188,10 +163,9 @@ public class PlayerModule extends EHMModule
                             break;
                     }
                     break;
-                //CHEST
+                // CHEST
                 case 2:
-                    switch (armor.getType())
-                    {
+                    switch (armor.getType()) {
                         case LEATHER_CHESTPLATE:
                             points += 0.12;
                             break;
@@ -207,10 +181,9 @@ public class PlayerModule extends EHMModule
                             break;
                     }
                     break;
-                //LEGGINGS
+                // LEGGINGS
                 case 1:
-                    switch (armor.getType())
-                    {
+                    switch (armor.getType()) {
                         case LEATHER_LEGGINGS:
                             points += 0.08;
                             break;
@@ -228,10 +201,9 @@ public class PlayerModule extends EHMModule
                             break;
                     }
                     break;
-                //BOOTS
+                // BOOTS
                 case 0:
-                    switch (armor.getType())
-                    {
+                    switch (armor.getType()) {
                         case LEATHER_BOOTS:
                         case GOLDEN_BOOTS:
                         case CHAINMAIL_BOOTS:
@@ -251,9 +223,7 @@ public class PlayerModule extends EHMModule
         return points;
     }
 
-
     @Override
-    public void closing()
-    {
+    public void closing() {
     }
 }

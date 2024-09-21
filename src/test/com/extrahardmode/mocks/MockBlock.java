@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks;
 
-
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -33,47 +32,37 @@ import static org.mockito.Mockito.when;
 
 /**
  * Mock a Block
+ * 
  * <pre>
- *     getWorld
+ * getWorld
  * </pre>
  */
-public class MockBlock
-{
+public class MockBlock {
     private final Block block = mock(Block.class);
 
-
-    public MockBlock setWorld(World world)
-    {
+    public MockBlock setWorld(World world) {
         when(block.getWorld()).thenReturn(world);
         return this;
     }
 
-
-    public MockBlock setLocation(int x, int y, int z)
-    {
+    public MockBlock setLocation(int x, int y, int z) {
         when(this.block.getX()).thenReturn(x);
         when(this.block.getY()).thenReturn(y);
         when(this.block.getZ()).thenReturn(z);
         return this;
     }
 
-
-    public MockBlock setRelative(BlockFace face, Block block)
-    {
+    public MockBlock setRelative(BlockFace face, Block block) {
         when(this.block.getRelative(any(BlockFace.class))).thenReturn(block);
         return this;
     }
 
-
-    public MockBlock setMaterial(Material material)
-    {
+    public MockBlock setMaterial(Material material) {
         when(block.getType()).thenReturn(material);
         return this;
     }
 
-
-    public Block get()
-    {
+    public Block get() {
         return block;
     }
 }

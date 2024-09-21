@@ -1,7 +1,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 
 import com.extrahardmode.config.RootConfig;
@@ -18,24 +17,18 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 /**
  * Vex
  */
-public class Vex extends ListenerModule
-{
+public class Vex extends ListenerModule {
     private RootConfig CFG;
 
-
-    public Vex(ExtraHardMode plugin)
-    {
+    public Vex(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
-
 
     /**
      * When an Entity spawns: Spawn a Vex sometimes instead of a bat
@@ -43,8 +36,7 @@ public class Vex extends ListenerModule
      * @param event which occurred
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (EntityHelper.isMarkedAsOurs(entity))
             return;
@@ -54,12 +46,10 @@ public class Vex extends ListenerModule
 
         final int vexSpawnPercent = CFG.getInt(RootNode.BONUS_VEX_SPAWN_PERCENT, world.getName());
 
-        // FEATURE: vex spawns naturally 
+        // FEATURE: vex spawns naturally
         if (entityType == EntityType.BAT && world.getEnvironment() == World.Environment.NORMAL
-                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-        {
-            if (plugin.random(vexSpawnPercent))
-            {
+                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
+            if (plugin.random(vexSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.VEX);
             }

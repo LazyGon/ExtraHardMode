@@ -21,14 +21,13 @@
 
 package com.extrahardmode.service;
 
-
 /**
- * Holds some information about a given feature like the permission which will bypass it
+ * Holds some information about a given feature like the permission which will
+ * bypass it
  *
  * @author Max
  */
-public enum Feature
-{
+public enum Feature {
     /**
      * MONSTER CLASSES
      */
@@ -66,17 +65,14 @@ public enum Feature
 
     private final PermissionNode node;
 
-
     /**
      * Constructor
      * <p/>
      * for Features with no dedicated bypass permission
      */
-    private Feature()
-    {
+    private Feature() {
         node = PermissionNode.BYPASS;
     }
-
 
     /**
      * Constructor
@@ -85,19 +81,16 @@ public enum Feature
      *
      * @param node which will bypass
      */
-    private Feature(PermissionNode node)
-    {
+    private Feature(PermissionNode node) {
         this.node = node;
     }
-
 
     /**
      * Get the node which will bypass this feature
      *
      * @return bypass node
      */
-    public PermissionNode getBypassNode()
-    {
+    public PermissionNode getBypassNode() {
         return node;
     }
 }

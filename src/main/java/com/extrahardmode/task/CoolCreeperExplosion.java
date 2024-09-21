@@ -21,7 +21,6 @@
 
 package com.extrahardmode.task;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.ExplosionType;
 import com.extrahardmode.config.RootConfig;
@@ -36,8 +35,7 @@ import org.bukkit.util.Vector;
 /**
  * Launches a creeper into the air with fireworks and lets him explode midair
  */
-public class CoolCreeperExplosion implements Runnable
-{
+public class CoolCreeperExplosion implements Runnable {
     private final Creeper creeper;
 
     private final Location loc;
@@ -62,9 +60,7 @@ public class CoolCreeperExplosion implements Runnable
 
     private double creeperAscendSpeed = 0.5;
 
-
-    public CoolCreeperExplosion(Creeper entity, ExtraHardMode plugin)
-    {
+    public CoolCreeperExplosion(Creeper entity, ExtraHardMode plugin) {
         this.plugin = plugin;
         CFG = plugin.getModuleForClass(RootConfig.class);
         creeper = entity;
@@ -75,51 +71,39 @@ public class CoolCreeperExplosion implements Runnable
         creeperAscendSpeed = CFG.getDouble(RootNode.FLAMING_CREEPERS_ROCKET, loc.getWorld().getName());
     }
 
-
     /**
      * Contains the mainLogic for creating a cool explosion
      */
     @Override
-    public void run()
-    {
-        //Everyone loves fireworks
-        for (int i = 0; i < numOfFireworks; i++)
-        {
+    public void run() {
+        // Everyone loves fireworks
+        for (int i = 0; i < numOfFireworks; i++) {
             mainDelay += ticksBetweenFireworks;
             scheduler.runTaskLater(plugin, new Firework(), mainDelay);
         }
-        //Catapult into air and explode midair
+        // Catapult into air and explode midair
         mainDelay += ticksBeforeCatapult;
         scheduler.runTaskLater(plugin, new AscendToHeaven(), mainDelay);
     }
 
-
-    private class Firework implements Runnable
-    {
+    private class Firework implements Runnable {
         @Override
-        public void run()
-        {
+        public void run() {
             utils.fireWorkRandomColors(FireworkEffect.Type.CREEPER, loc);
         }
     }
 
-
     /**
      * Schedules multiple tasks to slowly let a creeper float upwards
      */
-    private class AscendToHeaven implements Runnable
-    {//Catapult Creeper into sky, afterwards explode in midair
-
+    private class AscendToHeaven implements Runnable {// Catapult Creeper into sky, afterwards explode in midair
 
         @Override
-        public void run()
-        {
-            if (creeper != null)
-            {
+        public void run() {
+            if (creeper != null) {
                 int ticksInbetween = 1;
                 creeper.setTarget(null);
-                for (int i = 0; i < 10; i++)
-                {
+                for (int i = 0; i < 10; i++) {
                     scheduler.runTaskLater(plugin, new RiseToGlory(), (long) ticksInbetween);
                     ticksInbetween += i;
                 }
@@ -128,35 +112,29 @@ public class CoolCreeperExplosion implements Runnable
         }
     }
 
-
     /**
-     * This task slowly lets a creeper float upwards, it has to be called multiple times
+     * This task slowly lets a creeper float upwards, it has to be called multiple
+     * times
      */
-    private class RiseToGlory implements Runnable
-    {
+    private class RiseToGlory implements Runnable {
         @Override
-        public void run()
-        {
-            if (creeper != null)
-            {
+        public void run() {
+            if (creeper != null) {
                 Vector holyGrail = creeper.getVelocity().setY(creeperAscendSpeed);
                 creeper.setVelocity(holyGrail);
             }
         }
     }
 
-
     /**
      * Creeper explodes in midair
      */
-    private class Suicide implements Runnable
-    {
+    private class Suicide implements Runnable {
         @Override
-        public void run()
-        {
-            if (creeper != null && !creeper.isDead())
-            {
-                final boolean creeperExplosion = CFG.getBoolean(RootNode.EXPLOSIONS_CREEPERS_ENABLE, creeper.getWorld().getName());
+        public void run() {
+            if (creeper != null && !creeper.isDead()) {
+                final boolean creeperExplosion = CFG.getBoolean(RootNode.EXPLOSIONS_CREEPERS_ENABLE,
+                        creeper.getWorld().getName());
                 if (creeperExplosion)
                     new CreateExplosionTask(plugin, creeper.getLocation(), ExplosionType.CREEPER, creeper).run();
             }

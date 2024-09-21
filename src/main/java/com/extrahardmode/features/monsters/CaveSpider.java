@@ -1,7 +1,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 
 import com.extrahardmode.config.RootConfig;
@@ -21,33 +20,27 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 /**
  * Cave Spider
  */
-public class CaveSpider extends ListenerModule
-{
+public class CaveSpider extends ListenerModule {
     private RootConfig CFG;
 
-
-    public CaveSpider(ExtraHardMode plugin)
-    {
+    public CaveSpider(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
 
-
     /**
-     * When an Entity spawns: Spawn a Cave Spider sometimes instead of a spider in Swamps
+     * When an Entity spawns: Spawn a Cave Spider sometimes instead of a spider in
+     * Swamps
      *
      * @param event which occurred
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (EntityHelper.isMarkedAsOurs(entity))
             return;
@@ -59,12 +52,10 @@ public class CaveSpider extends ListenerModule
 
         // FEATURE: CAVE SPIDERs spawns naturally in swamps.
         if (entityType == EntityType.SPIDER && world.getEnvironment() == World.Environment.NORMAL
-        		&& entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS_BLOCK
+                && entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS_BLOCK
                 && entity.getLocation().getBlock().getBiome() == Biome.SWAMP
-                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-        {
-            if (plugin.random(cavespiderSpawnPercent))
-            {
+                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
+            if (plugin.random(cavespiderSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.CAVE_SPIDER);
             }

@@ -1,14 +1,12 @@
 package com.extrahardmode.compatibility;
 
-
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
 /**
  * Interface for block loggers aka CoreProtect, Prism
  */
-public interface IBlockLogger
-{
+public interface IBlockLogger {
     /**
      * Tag (player's name) to use whenever a FallingBlock starts to fall
      */

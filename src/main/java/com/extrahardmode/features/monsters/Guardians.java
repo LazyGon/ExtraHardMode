@@ -1,7 +1,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 
 import com.extrahardmode.config.RootConfig;
@@ -19,20 +18,15 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 /**
  * Guardians
  */
-public class Guardians extends ListenerModule
-{
+public class Guardians extends ListenerModule {
     private RootConfig CFG;
 
-
-    public Guardians(ExtraHardMode plugin)
-    {
+    public Guardians(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
@@ -43,8 +37,7 @@ public class Guardians extends ListenerModule
      * @param event which occurred
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (EntityHelper.isMarkedAsOurs(entity))
             return;
@@ -57,14 +50,12 @@ public class Guardians extends ListenerModule
         if (guardiansSpawnPercent == 0)
             return;
 
-        // FEATURE: Guardians spawns naturally 
+        // FEATURE: Guardians spawns naturally
         if (entityType == EntityType.SQUID && world.getEnvironment() == World.Environment.NORMAL
-                && entity.getLocation().getBlock().getBiome() == Biome.DEEP_OCEAN 
+                && entity.getLocation().getBlock().getBiome() == Biome.DEEP_OCEAN
                 || entity.getLocation().getBlock().getBiome() == Biome.OCEAN
-                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL)
-        {
-            if (plugin.random(guardiansSpawnPercent))
-            {
+                        && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
+            if (plugin.random(guardiansSpawnPercent)) {
                 event.setCancelled(true);
                 EntityHelper.spawn(location, EntityType.GUARDIAN);
             }

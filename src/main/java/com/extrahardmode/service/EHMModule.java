@@ -19,30 +19,25 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.service;
-
 
 import com.extrahardmode.ExtraHardMode;
 
 /**
  * ExtraHardMode module.
  */
-public abstract class EHMModule implements IModule
-{
+public abstract class EHMModule implements IModule {
     /**
      * Plugin reference.
      */
     protected final ExtraHardMode plugin;
-
 
     /**
      * Constructor.
      *
      * @param plugin - Plugin instance.
      */
-    protected EHMModule(ExtraHardMode plugin)
-    {
+    protected EHMModule(ExtraHardMode plugin) {
         this.plugin = plugin;
     }
 }

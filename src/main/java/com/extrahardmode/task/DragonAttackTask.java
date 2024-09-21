@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import com.extrahardmode.ExtraHardMode;
 import org.bukkit.Location;
@@ -32,8 +30,7 @@ import org.bukkit.util.Vector;
 /**
  * Task to allow a dragon to do additional attacks.
  */
-public class DragonAttackTask implements Runnable
-{
+public class DragonAttackTask implements Runnable {
 
     /**
      * Plugin instance.
@@ -50,7 +47,6 @@ public class DragonAttackTask implements Runnable
      */
     private final Entity dragon;
 
-
     /**
      * Constructor.
      *
@@ -58,23 +54,18 @@ public class DragonAttackTask implements Runnable
      * @param dragon - Dragon.
      * @param player - Target player.
      */
-    public DragonAttackTask(ExtraHardMode plugin, Entity dragon, Player player)
-    {
+    public DragonAttackTask(ExtraHardMode plugin, Entity dragon, Player player) {
         this.plugin = plugin;
         this.dragon = dragon;
         this.player = player;
     }
 
-
     @Override
-    public void run()
-    {
-        if (this.dragon.isDead())
-        {
+    public void run() {
+        if (this.dragon.isDead()) {
             return;
         }
-        if (!this.player.isOnline())
-        {
+        if (!this.player.isOnline()) {
             return;
         }
 
@@ -85,19 +76,19 @@ public class DragonAttackTask implements Runnable
         Location dragonLocation = this.dragon.getLocation();
 
         Location targetLocation;
-        if (plugin.random(20))
-        {
+        if (plugin.random(20)) {
             targetLocation = world.getHighestBlockAt(dragonLocation).getLocation();
-        } else
-        {
+        } else {
             targetLocation = player.getLocation();
         }
 
-        Location offsetLocation = targetLocation.add(plugin.getRandom().nextInt(10) - 5, plugin.getRandom().nextInt(3) - 1,
+        Location offsetLocation = targetLocation.add(plugin.getRandom().nextInt(10) - 5,
+                plugin.getRandom().nextInt(3) - 1,
                 plugin.getRandom().nextInt(10) - 5);
 
-        Vector vector = new Vector(offsetLocation.getX() - dragonLocation.getX(), offsetLocation.getY() - dragonLocation.getY(), offsetLocation.getZ()
-                - dragonLocation.getZ());
+        Vector vector = new Vector(offsetLocation.getX() - dragonLocation.getX(),
+                offsetLocation.getY() - dragonLocation.getY(), offsetLocation.getZ()
+                        - dragonLocation.getZ());
 
         Fireball fireball = (Fireball) world.spawnEntity(dragonLocation, EntityType.FIREBALL);
         fireball.setShooter((EnderDragon) this.dragon);

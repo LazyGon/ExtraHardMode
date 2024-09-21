@@ -21,7 +21,6 @@
 
 package com.extrahardmode.modules;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.mocks.MockBlock;
 import com.extrahardmode.module.BlockModule;
@@ -39,48 +38,41 @@ import static org.junit.Assert.assertTrue;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class TestBlockModule
-{
+public class TestBlockModule {
     @Mock
     private ExtraHardMode plugin;
 
     private BlockModule module;
 
-
-    public TestBlockModule()
-    {
+    public TestBlockModule() {
         module = new BlockModule(plugin);
     }
 
-
     @Test
-    public void testBreaksFallingBlocks()
-    {
-//        assertTrue(module.breaksFallingBlock(Material.STEP));
-//        assertTrue(module.breaksFallingBlock(Material.REDSTONE_TORCH_ON));
-//        assertTrue(module.breaksFallingBlock(Material.REDSTONE_TORCH_OFF));
-//        assertTrue(module.breaksFallingBlock(Material.TORCH));
-//        assertTrue(module.breaksFallingBlock(Material.RAILS));
-//        assertTrue(module.breaksFallingBlock(Material.ACTIVATOR_RAIL));
-//        assertTrue(module.breaksFallingBlock(Material.RED_ROSE));
-//        assertTrue(module.breaksFallingBlock(Material.BROWN_MUSHROOM));
-//        assertTrue(module.breaksFallingBlock(Material.WEB));
-//        //assertTrue(module.breaksFallingBlock(Material.CARPET));
-//        assertTrue(module.breaksFallingBlock(Material.SNOW));
-//        assertTrue(module.breaksFallingBlock(Material.SIGN_POST));
-//        assertTrue(module.breaksFallingBlock(Material.DAYLIGHT_DETECTOR));
-//        //assertTrue(module.breaksFallingBlock(Material.GOLD_PLATE));
-//        assertTrue(module.breaksFallingBlock(Material.TRAP_DOOR));
-//        assertTrue(module.breaksFallingBlock(Material.TRIPWIRE));
-//
-//        assertFalse(module.breaksFallingBlock(Material.DOUBLE_STEP));
-//        assertFalse(module.breaksFallingBlock(Material.LOG));
+    public void testBreaksFallingBlocks() {
+        // assertTrue(module.breaksFallingBlock(Material.STEP));
+        // assertTrue(module.breaksFallingBlock(Material.REDSTONE_TORCH_ON));
+        // assertTrue(module.breaksFallingBlock(Material.REDSTONE_TORCH_OFF));
+        // assertTrue(module.breaksFallingBlock(Material.TORCH));
+        // assertTrue(module.breaksFallingBlock(Material.RAILS));
+        // assertTrue(module.breaksFallingBlock(Material.ACTIVATOR_RAIL));
+        // assertTrue(module.breaksFallingBlock(Material.RED_ROSE));
+        // assertTrue(module.breaksFallingBlock(Material.BROWN_MUSHROOM));
+        // assertTrue(module.breaksFallingBlock(Material.WEB));
+        // //assertTrue(module.breaksFallingBlock(Material.CARPET));
+        // assertTrue(module.breaksFallingBlock(Material.SNOW));
+        // assertTrue(module.breaksFallingBlock(Material.SIGN_POST));
+        // assertTrue(module.breaksFallingBlock(Material.DAYLIGHT_DETECTOR));
+        // //assertTrue(module.breaksFallingBlock(Material.GOLD_PLATE));
+        // assertTrue(module.breaksFallingBlock(Material.TRAP_DOOR));
+        // assertTrue(module.breaksFallingBlock(Material.TRIPWIRE));
+        //
+        // assertFalse(module.breaksFallingBlock(Material.DOUBLE_STEP));
+        // assertFalse(module.breaksFallingBlock(Material.LOG));
     }
 
-
     @Test
-    public void testIsOffAxis()
-    {
+    public void testIsOffAxis() {
         MockBlock player = new MockBlock();
         player.setLocation(0, 64, 0);
 
@@ -94,10 +86,8 @@ public class TestBlockModule
         assertTrue(BlockModule.isOffAxis(player.get(), placedBlock.get(), againstBlock.get()));
     }
 
-
     @Test
-    public void testIsOffAxisBut()
-    {
+    public void testIsOffAxisBut() {
         MockBlock player = new MockBlock();
         player.setLocation(0, 64, 0);
 

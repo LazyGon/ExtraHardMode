@@ -21,7 +21,6 @@
 
 package com.extrahardmode.modules;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.mocks.MockPlayer;
 import com.extrahardmode.mocks.MockPlayerInventory;
@@ -38,8 +37,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Max
  */
-public class TestInventoryWeight
-{
+public class TestInventoryWeight {
 
     @Mock
     private ExtraHardMode plugin;
@@ -56,30 +54,26 @@ public class TestInventoryWeight
 
     private final ItemStack ironHelmet = new ItemStack(Material.IRON_HELMET);
 
-    private final ItemStack[] oneArmor = {ironboots, null, null, null};
+    private final ItemStack[] oneArmor = { ironboots, null, null, null };
 
-    private final ItemStack[] twoArmor = {null, ironLeggings, null, ironHelmet};
+    private final ItemStack[] twoArmor = { null, ironLeggings, null, ironHelmet };
 
-    private final ItemStack[] fullArmor = {ironboots, ironLeggings, ironChest, ironHelmet};
+    private final ItemStack[] fullArmor = { ironboots, ironLeggings, ironChest, ironHelmet };
 
     private final ItemStack[] emptyArmor = new ItemStack[4];
 
     private final ItemStack[] emptyInv = new ItemStack[4 * 9];
 
-
     @Before
-    public void prepare()
-    {
+    public void prepare() {
         module = new PlayerModule(plugin);
     }
-
 
     /**
      * Test if armor gets calculated correctly
      */
     @Test
-    public void armorTest()
-    {
+    public void armorTest() {
         new MockPlayerInventory(myPlayer, emptyArmor, emptyInv);
         assertEquals("Empty inventory = no weight ", 0, module.inventoryWeight(myPlayer, 15, 5, 5), 0);
 
@@ -93,13 +87,11 @@ public class TestInventoryWeight
         assertEquals("Full armor ", 8, module.inventoryWeight(myPlayer, 2, 5, 5), 0);
     }
 
-
     /**
      * loaded inventory
      */
     @Test
-    public void fullInvtest()
-    {
+    public void fullInvtest() {
         ItemStack[] inv = new ItemStack[4 * 9];
 
         inv[0] = new ItemStack(Material.DIAMOND_SWORD);
@@ -115,10 +107,11 @@ public class TestInventoryWeight
          * Armor: 4 * 5 = 20 (full)
          * Tools: 3 * 1 = 3
          * Other: StackWeight (64) / MaxStackSize * Count
-         * Book:  32 (64 / 64 * 32)
+         * Book: 32 (64 / 64 * 32)
          * Arrow: 24
          * Bread: 64
-         * Total: 143 */
+         * Total: 143
+         */
 
         new MockPlayerInventory(myPlayer, fullArmor, inv);
 

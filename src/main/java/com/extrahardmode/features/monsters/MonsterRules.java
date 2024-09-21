@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -42,24 +41,18 @@ import org.bukkit.event.entity.EntityTargetEvent;
 /**
  * Changes to how Monsters spawn including:
  */
-public class MonsterRules extends ListenerModule
-{
+public class MonsterRules extends ListenerModule {
     private RootConfig CFG = null;
 
-
-    public MonsterRules(ExtraHardMode plugin)
-    {
+    public MonsterRules(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
-
 
     /**
      * When an Entity spawns
@@ -67,8 +60,7 @@ public class MonsterRules extends ListenerModule
      * more Monsters in caves
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         Location location = event.getLocation();
         World world = location.getWorld();
 
@@ -80,24 +72,21 @@ public class MonsterRules extends ListenerModule
 
         CreatureSpawnEvent.SpawnReason reason = event.getSpawnReason();
 
-        //We don't know how to handle ghosts. (Mo Creatures)
-        if (!entityType.equals(EntityType.UNKNOWN) && reason == CreatureSpawnEvent.SpawnReason.NATURAL)
-        {
+        // We don't know how to handle ghosts. (Mo Creatures)
+        if (!entityType.equals(EntityType.UNKNOWN) && reason == CreatureSpawnEvent.SpawnReason.NATURAL) {
             // FEATURE: extra monster spawns underground
-            if (maxY > 0)
-            {
-                if (world.getEnvironment() == World.Environment.NORMAL && event.getLocation().getBlockY() < maxY && entity instanceof Monster)
-                {
-                    if (!entityType.equals(EntityType.SILVERFISH)) //no multiple silverfish per block
+            if (maxY > 0) {
+                if (world.getEnvironment() == World.Environment.NORMAL && event.getLocation().getBlockY() < maxY
+                        && entity instanceof Monster) {
+                    if (!entityType.equals(EntityType.SILVERFISH)) // no multiple silverfish per block
                     {
-                        //Mc 1.6: "Social" Zombies can spawn very close when calling for help. Do not spawn more monsters if that is the case
-                        if (entityType == EntityType.ZOMBIE ? !EntityHelper.arePlayersNearby(event.getLocation(), 16.0) : !EntityHelper.arePlayersNearby(event.getLocation(), 12.0))
-                        {
-                            for (int i = 1; i < multiplier; i++)
-                            {
+                        // Mc 1.6: "Social" Zombies can spawn very close when calling for help. Do not
+                        // spawn more monsters if that is the case
+                        if (entityType == EntityType.ZOMBIE ? !EntityHelper.arePlayersNearby(event.getLocation(), 16.0)
+                                : !EntityHelper.arePlayersNearby(event.getLocation(), 12.0)) {
+                            for (int i = 1; i < multiplier; i++) {
                                 Entity newEntity = EntityHelper.spawnRandomMob(event.getLocation());
-                                if (EntityHelper.isLootLess(entity))
-                                {
+                                if (EntityHelper.isLootLess(entity)) {
                                     EntityHelper.markLootLess(plugin, (LivingEntity) newEntity);
                                 }
                             }
@@ -108,27 +97,24 @@ public class MonsterRules extends ListenerModule
         }
     }
 
-
     /**
      * when an entity targets something (as in to attack it)...
      *
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true)
-    public void onEntityTarget(EntityTargetEvent event)
-    {
+    public void onEntityTarget(EntityTargetEvent event) {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
 
         final boolean websEnabled = CFG.getBoolean(RootNode.SPIDERS_DROP_WEB_ON_DEATH, world.getName());
 
-        // FEATURE: a monster which gains a target breaks out of any webbing it might have been trapped within
-        if (entity instanceof Monster && websEnabled)
-        {
+        // FEATURE: a monster which gains a target breaks out of any webbing it might
+        // have been trapped within
+        if (entity instanceof Monster && websEnabled) {
             EntityHelper.clearWebbing(entity);
         }
     }
-
 
     /**
      * when an entity is damaged handles
@@ -136,23 +122,21 @@ public class MonsterRules extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageEvent event)
-    {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
 
-        //TODO Remove
+        // TODO Remove
 
         // FEATURE: don't allow explosions to destroy items on the ground
         // REASONS: enhanced TNT explodes 5 times
-        if (entityType == EntityType.ITEM && (event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION))
-        {
+        if (entityType == EntityType.ITEM && (event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION
+                || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
             event.setCancelled(true);
         }
 
         // FEATURE: monsters trapped in webbing break out of the webbing when hit
-        if (entity instanceof Monster)
-        {
+        if (entity instanceof Monster) {
             EntityHelper.clearWebbing(entity);
         }
     }

@@ -1,11 +1,9 @@
 package com.extrahardmode.compatibility;
 
-
 /**
  * @author Diemex
  */
-public interface ICompat
-{
+public interface ICompat {
     /**
      * Is the plugin we are providing compatibility for enabled
      *

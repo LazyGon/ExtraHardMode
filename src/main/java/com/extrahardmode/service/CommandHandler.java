@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.service;
-
 
 import com.extrahardmode.ExtraHardMode;
 import org.bukkit.ChatColor;
@@ -32,11 +30,11 @@ import org.bukkit.command.CommandSender;
 import java.util.*;
 
 /**
- * Abstract class to handle the majority of the logic dealing with commands. Allows for a nested structure of commands.
+ * Abstract class to handle the majority of the logic dealing with commands.
+ * Allows for a nested structure of commands.
  */
 @SuppressWarnings("SameParameterValue")
-public abstract class CommandHandler implements CommandExecutor
-{
+public abstract class CommandHandler implements CommandExecutor {
     /**
      * Registered commands for this handler.
      */
@@ -57,113 +55,95 @@ public abstract class CommandHandler implements CommandExecutor
      */
     private final String cmd;
 
-
     /**
      * Constructor.
      *
      * @param plugin - Root plugin.
      */
-    protected CommandHandler(ExtraHardMode plugin, String cmd)
-    {
+    protected CommandHandler(ExtraHardMode plugin, String cmd) {
         this.plugin = plugin;
         this.cmd = cmd;
     }
-
 
     /**
      * Register a command with an execution handler.
      *
      * @param label   - Command to listen for.
-     * @param command - Execution handler that will handle the logic behind the command.
+     * @param command - Execution handler that will handle the logic behind the
+     *                command.
      */
-    protected void registerCommand(String label, ICommand command)
-    {
-        if (registeredCommands.containsKey(label))
-        {
+    protected void registerCommand(String label, ICommand command) {
+        if (registeredCommands.containsKey(label)) {
             plugin.getLogger().warning("Replacing existing command for: " + label);
         }
         registeredCommands.put(label, command);
     }
-
 
     /**
      * Unregister a command for this handler.
      *
      * @param label - Command to stop handling.
      */
-    public void unregisterCommand(String label)
-    {
+    public void unregisterCommand(String label) {
         registeredCommands.remove(label);
     }
-
 
     /**
      * Register a subcommand with a command handler.
      *
      * @param handler - Command handler.
      */
-    public void registerHandler(CommandHandler handler)
-    {
-        if (registeredHandlers.containsKey(handler.getCommand()))
-        {
+    public void registerHandler(CommandHandler handler) {
+        if (registeredHandlers.containsKey(handler.getCommand())) {
             plugin.getLogger().warning("Replacing existing handler for: " + handler.getCommand());
         }
         registeredHandlers.put(handler.getCommand(), handler);
     }
-
 
     /**
      * Unregister a subcommand.
      *
      * @param label - Subcommand to remove.
      */
-    public void unregisterHandler(String label)
-    {
+    public void unregisterHandler(String label) {
         registeredHandlers.remove(label);
     }
 
-
     /**
-     * Command loop that will go through the linked handlers until it finds the appropriate handler or command execution
+     * Command loop that will go through the linked handlers until it finds the
+     * appropriate handler or command execution
      * handler to do the logic for.
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (args.length == 0)
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
             return noArgs(sender, command, label);
-        } else
-        {
+        } else {
             final String subcmd = args[0].toLowerCase();
             // Check known handlers first and pass to them
             final CommandHandler handler = registeredHandlers.get(subcmd);
-            if (handler != null)
-            {
+            if (handler != null) {
                 return handler.onCommand(sender, command, label, shortenArgs(args));
             }
             // Its our command, so handle it if its registered.
             final ICommand subCommand = registeredCommands.get(subcmd);
-            if (subCommand == null)
-            {
+            if (subCommand == null) {
                 return unknownCommand(sender, command, label, args);
             }
             // Execute command
             boolean value = true;
-            try
-            {
+            try {
                 value = subCommand.execute(plugin, sender, command, label, shortenArgs(args));
-            } catch (ArrayIndexOutOfBoundsException e)
-            {
+            } catch (ArrayIndexOutOfBoundsException e) {
                 sender.sendMessage(ChatColor.GRAY + ExtraHardMode.TAG + ChatColor.RED + " Missing parameters.");
             }
             return value;
         }
     }
 
-
     /**
-     * Method that is called on a CommandHandler if there is no additional arguments given that specify a specific
+     * Method that is called on a CommandHandler if there is no additional arguments
+     * given that specify a specific
      * command.
      *
      * @param sender  - Sender of the command.
@@ -175,7 +155,8 @@ public abstract class CommandHandler implements CommandExecutor
     protected abstract boolean noArgs(CommandSender sender, Command command, String label);
 
     /**
-     * Allow for the command handler to have special logic for unknown commands. Useful for when expecting a player name
+     * Allow for the command handler to have special logic for unknown commands.
+     * Useful for when expecting a player name
      * parameter on a root command handler command.
      *
      * @param sender  - Sender of the command.
@@ -187,7 +168,6 @@ public abstract class CommandHandler implements CommandExecutor
      */
     protected abstract boolean unknownCommand(CommandSender sender, Command command, String label, String[] args);
 
-
     /**
      * Shortens the given string array by removing the first entry.
      *
@@ -195,8 +175,7 @@ public abstract class CommandHandler implements CommandExecutor
      *
      * @return Shortened array.
      */
-    String[] shortenArgs(String[] args)
-    {
+    String[] shortenArgs(String[] args) {
         if (args.length == 0)
             return args;
         final List<String> argList = new LinkedList<String>(Arrays.asList(args));
@@ -204,14 +183,12 @@ public abstract class CommandHandler implements CommandExecutor
         return argList.toArray(new String[argList.size()]);
     }
 
-
     /**
      * Get the command for this handler.
      *
      * @return Command
      */
-    String getCommand()
-    {
+    String getCommand() {
         return cmd;
     }
 }

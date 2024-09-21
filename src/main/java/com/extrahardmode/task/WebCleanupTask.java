@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,37 +30,29 @@ import java.util.List;
 /**
  * Called to cleanup webs near an entity.
  */
-public class WebCleanupTask implements Runnable
-{
+public class WebCleanupTask implements Runnable {
 
     /**
      * List of blocks to check.
      */
     private final List<Block> webs = new ArrayList<Block>();
 
-
     /**
      * Constructor.
      *
      * @param changedBlocks - Block to check.
      */
-    public WebCleanupTask(List<Block> changedBlocks)
-    {
+    public WebCleanupTask(List<Block> changedBlocks) {
         this.webs.addAll(changedBlocks);
     }
 
-
     @Override
-    public void run()
-    {
-        for (Block block : webs)
-        {
+    public void run() {
+        for (Block block : webs) {
             // don't load a chunk just to clean up webs
-            if (!block.getChunk().isLoaded())
-            {
+            if (!block.getChunk().isLoaded()) {
                 continue;
-            } else if (block.getType() == Material.COBWEB)
-            {
+            } else if (block.getType() == Material.COBWEB) {
                 // only turn webs to air. there's a chance the web may have been
                 // replaced since it was placed.
                 block.setType(Material.AIR);

@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.service;
-
 
 import com.extrahardmode.ExtraHardMode;
 import org.bukkit.command.Command;
@@ -30,8 +28,7 @@ import org.bukkit.command.CommandSender;
 /**
  * Represents a command.
  */
-public interface ICommand
-{
+public interface ICommand {
 
     /**
      * Execution method for the command.
@@ -43,6 +40,7 @@ public interface ICommand
      *
      * @return True if valid command and executed. Else false.
      */
-    boolean execute(final ExtraHardMode plugin, final CommandSender sender, final Command command, final String label, String[] args);
+    boolean execute(final ExtraHardMode plugin, final CommandSender sender, final Command command, final String label,
+            String[] args);
 
 }

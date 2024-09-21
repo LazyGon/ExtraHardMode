@@ -10,23 +10,19 @@ import java.util.Set;
  *
  * @author RoboMWM
  */
-public enum LooseTags
-{
+public enum LooseTags {
     TORCH;
 
     private Set<Material> materials = new HashSet<>();
 
-    LooseTags()
-    {
-        for (Material material : Material.values())
-        {
+    LooseTags() {
+        for (Material material : Material.values()) {
             if (material.name().contains(this.name()) && !material.name().contains("LEGACY"))
                 materials.add(material);
         }
     }
 
-    public boolean isTagged(Material material)
-    {
+    public boolean isTagged(Material material) {
         return materials.contains(material);
     }
 }

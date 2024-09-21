@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.events.EhmZombieRespawnEvent;
@@ -37,8 +35,7 @@ import org.bukkit.entity.Zombie;
 /**
  * Respawn a zombie for a given location with a target player.
  */
-public class RespawnZombieTask implements Runnable
-{
+public class RespawnZombieTask implements Runnable {
 
     /**
      * Plugin instance.
@@ -60,7 +57,6 @@ public class RespawnZombieTask implements Runnable
      */
     private final TemporaryBlock block;
 
-
     /**
      * Constructor.
      *
@@ -68,11 +64,9 @@ public class RespawnZombieTask implements Runnable
      * @param location - Respawn location.
      * @param target   - Target player.
      */
-    public RespawnZombieTask(ExtraHardMode plugin, Location location, Player target)
-    {
+    public RespawnZombieTask(ExtraHardMode plugin, Location location, Player target) {
         this(plugin, location, target, null);
     }
-
 
     /**
      * Constructor.
@@ -82,23 +76,18 @@ public class RespawnZombieTask implements Runnable
      * @param target         - Target player.
      * @param temporaryBlock block where the skull is placed
      */
-    public RespawnZombieTask(ExtraHardMode plugin, Location location, Player target, TemporaryBlock temporaryBlock)
-    {
+    public RespawnZombieTask(ExtraHardMode plugin, Location location, Player target, TemporaryBlock temporaryBlock) {
         this.plugin = plugin;
         this.location = location;
         this.player = target;
         this.block = temporaryBlock;
     }
 
-
     @Override
-    public void run()
-    {
-        if (block == null || !block.isBroken())
-        {
+    public void run() {
+        if (block == null || !block.isBroken()) {
             Chunk chunk = location.getChunk();
-            if (!chunk.isLoaded())
-            {
+            if (!chunk.isLoaded()) {
                 return;
             }
             Zombie zombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
@@ -108,8 +97,7 @@ public class RespawnZombieTask implements Runnable
             EntityHelper.markLootLess(plugin, zombie);
             EntityHelper.markAsOurs(plugin, zombie);
             // zombie is still madat the same player
-            if (this.player != null && this.player.isOnline())
-            {
+            if (this.player != null && this.player.isOnline()) {
                 zombie.setTarget(this.player);
             }
             EhmZombieRespawnEvent zombieEvent = new EhmZombieRespawnEvent(player, zombie, false);

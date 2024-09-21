@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -57,11 +56,11 @@ import java.util.List;
 /**
  * Glydia is the Enderdragon changes to her include:
  * <p/>
- * additional attacks , more loot including villager eggs and dragon egg , messages when challenging the dragon and
+ * additional attacks , more loot including villager eggs and dragon egg ,
+ * messages when challenging the dragon and
  * dying , Limited Building in the End , Blazes, Zombies, aggro Enderman
  */
-public class Glydia extends ListenerModule
-{
+public class Glydia extends ListenerModule {
     private RootConfig CFG = null;
 
     private DataStoreModule data;
@@ -70,16 +69,12 @@ public class Glydia extends ListenerModule
 
     private PlayerModule playerModule;
 
-
-    public Glydia(ExtraHardMode plugin)
-    {
+    public Glydia(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         data = plugin.getModuleForClass(DataStoreModule.class);
@@ -87,15 +82,13 @@ public class Glydia extends ListenerModule
         playerModule = plugin.getModuleForClass(PlayerModule.class);
     }
 
-
     /**
      * When a Block is broken in the End
      * <p/>
      * Limited building in the end
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockBreak(BlockBreakEvent breakEvent)
-    {
+    public void onBlockBreak(BlockBreakEvent breakEvent) {
         Block block = breakEvent.getBlock();
         World world = block.getWorld();
         Player player = breakEvent.getPlayer();
@@ -103,32 +96,27 @@ public class Glydia extends ListenerModule
         final boolean endNoBuilding = CFG.getBoolean(RootNode.ENDER_DRAGON_NO_BUILDING, world.getName());
         final boolean playerBypass = playerModule.playerBypasses(player, Feature.MONSTER_GLYDIA);
 
-        // FEATURE: very limited building in the end, players are allowed to break only end stone, and only to create a stair up to ground level
-        if (endNoBuilding && world.getEnvironment() == World.Environment.THE_END && !playerBypass)
-        {
-            if (block.getType() != Material.END_STONE)
-            {
+        // FEATURE: very limited building in the end, players are allowed to break only
+        // end stone, and only to create a stair up to ground level
+        if (endNoBuilding && world.getEnvironment() == World.Environment.THE_END && !playerBypass) {
+            if (block.getType() != Material.END_STONE) {
                 breakEvent.setCancelled(true);
                 messenger.send(player, MessageNode.LIMITED_END_BUILDING);
-            } else
-            {
+            } else {
                 int absoluteDistanceFromBlock = Math.abs(block.getX() - player.getLocation().getBlockX());
                 int zdistance = Math.abs(block.getZ() - player.getLocation().getBlockZ());
-                if (zdistance > absoluteDistanceFromBlock)
-                {
+                if (zdistance > absoluteDistanceFromBlock) {
                     absoluteDistanceFromBlock = zdistance;
                 }
 
-                if (block.getY() < player.getLocation().getBlockY() + absoluteDistanceFromBlock)
-                {
+                if (block.getY() < player.getLocation().getBlockY() + absoluteDistanceFromBlock) {
                     breakEvent.setCancelled(true);
-                    //TODO EhmLimitedBuildingEvent End
+                    // TODO EhmLimitedBuildingEvent End
                     messenger.send(player, MessageNode.LIMITED_END_BUILDING);
                 }
             }
         }
     }
-
 
     /**
      * When a Block is placed
@@ -136,8 +124,7 @@ public class Glydia extends ListenerModule
      * Limited building in the end
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onBlockPlace(BlockPlaceEvent placeEvent)
-    {
+    public void onBlockPlace(BlockPlaceEvent placeEvent) {
         Player player = placeEvent.getPlayer();
         Block block = placeEvent.getBlock();
         World world = block.getWorld();
@@ -145,16 +132,15 @@ public class Glydia extends ListenerModule
         final boolean enderDragonNoBuilding = CFG.getBoolean(RootNode.ENDER_DRAGON_NO_BUILDING, world.getName());
         final boolean playerBypass = playerModule.playerBypasses(player, Feature.MONSTER_GLYDIA);
 
-        // FEATURE: very limited building in the end players are allowed to break only end stone, and only to create a stair up to ground level
-        if (enderDragonNoBuilding && world.getEnvironment() == World.Environment.THE_END && !playerBypass)
-        {
+        // FEATURE: very limited building in the end players are allowed to break only
+        // end stone, and only to create a stair up to ground level
+        if (enderDragonNoBuilding && world.getEnvironment() == World.Environment.THE_END && !playerBypass) {
             placeEvent.setCancelled(true);
-            //TODO EhmLimitedBuildingEvent End
+            // TODO EhmLimitedBuildingEvent End
             messenger.send(player, MessageNode.LIMITED_END_BUILDING);
             return;
         }
     }
-
 
     /**
      * When an Entity dies (Glydia)
@@ -162,8 +148,7 @@ public class Glydia extends ListenerModule
      * drop villager eggs , drop a dragon egg , announce the killers
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
@@ -172,36 +157,29 @@ public class Glydia extends ListenerModule
         final boolean announcements = CFG.getBoolean(RootNode.ENDER_DRAGON_COMBAT_ANNOUNCEMENTS, world.getName());
 
         // FEATURE: ender dragon drops prizes on death
-        if (entity instanceof EnderDragon)
-        {
-            if (glydiaDropsEggs)
-            {
+        if (entity instanceof EnderDragon) {
+            if (glydiaDropsEggs) {
                 ItemStack itemStack = new ItemStack(Material.VILLAGER_SPAWN_EGG, 2, (short) 120);
                 world.dropItemNaturally(entity.getLocation().add(10, 0, 0), itemStack);
             }
 
-            if (enderDragonDropsEggs)
-            {
+            if (enderDragonDropsEggs) {
                 world.dropItemNaturally(entity.getLocation().add(10, 0, 0), new ItemStack(Material.DRAGON_EGG));
             }
 
-            if (announcements)
-            {
+            if (announcements) {
                 StringBuilder builder = new StringBuilder();
-                for (String player : data.getPlayers())
-                {
+                for (String player : data.getPlayers()) {
                     builder.append(player).append(", ");
                 }
 
-                messenger.broadcast(MessageNode.END_DRAGON_KILLED, new FindAndReplace(builder.toString(), MessageNode.Variables.PLAYERS.getVarNames()));
+                messenger.broadcast(MessageNode.END_DRAGON_KILLED,
+                        new FindAndReplace(builder.toString(), MessageNode.Variables.PLAYERS.getVarNames()));
             }
 
-            if (glydiaDropsEggs)
-            {
-                for (String player : data.getPlayers())
-                {
-                    if (plugin.getServer().getPlayer(player) != null)
-                    {
+            if (glydiaDropsEggs) {
+                for (String player : data.getPlayers()) {
+                    if (plugin.getServer().getPlayer(player) != null) {
                         Player player1 = plugin.getServer().getPlayer(player);
                         messenger.send(player1, MessageNode.DRAGON_FOUNTAIN_TIP);
                     }
@@ -212,28 +190,26 @@ public class Glydia extends ListenerModule
         }
     }
 
-
     /**
      * When the Player dies while fighting the dragon
      * <p/>
      * announce his death
      */
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event)
-    {
+    public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        final boolean dragonAnnouncements = CFG.getBoolean(RootNode.ENDER_DRAGON_COMBAT_ANNOUNCEMENTS, event.getEntity().getWorld().getName());
+        final boolean dragonAnnouncements = CFG.getBoolean(RootNode.ENDER_DRAGON_COMBAT_ANNOUNCEMENTS,
+                event.getEntity().getWorld().getName());
 
         // announce the combat result
         List<String> playersFightingDragon = data.getPlayers();
-        if (dragonAnnouncements && playersFightingDragon.contains(player.getName()))
-        {
-            messenger.broadcast(MessageNode.END_DRAGON_PLAYER_KILLED, new FindAndReplace(player.getName(), MessageNode.Variables.PLAYER.getVarNames()));
+        if (dragonAnnouncements && playersFightingDragon.contains(player.getName())) {
+            messenger.broadcast(MessageNode.END_DRAGON_PLAYER_KILLED,
+                    new FindAndReplace(player.getName(), MessageNode.Variables.PLAYER.getVarNames()));
             data.getPlayers().remove(player.getName());
         }
     }
-
 
     /**
      * When the Player changes World while fighting the Dragon,
@@ -241,13 +217,11 @@ public class Glydia extends ListenerModule
      * remove him from the Players fighting the Dragon
      */
     @EventHandler
-    public void onPlayerTpOut(PlayerChangedWorldEvent event)
-    {
+    public void onPlayerTpOut(PlayerChangedWorldEvent event) {
         String playerName = event.getPlayer().getName();
         if (event.getFrom().getEnvironment() == World.Environment.THE_END && data.getPlayers().contains(playerName))
             data.getPlayers().remove(playerName);
     }
-
 
     /**
      * When the Dragon is damaged
@@ -255,64 +229,56 @@ public class Glydia extends ListenerModule
      * initiate the additional attacks
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageEvent event)
-    {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
 
         // is this an entity damaged by entity event?
         EntityDamageByEntityEvent damageByEntityEvent = null;
-        if (event instanceof EntityDamageByEntityEvent)
-        {
+        if (event instanceof EntityDamageByEntityEvent) {
             damageByEntityEvent = (EntityDamageByEntityEvent) event;
         }
 
-        final boolean dragonAdditionalAttacks = CFG.getBoolean(RootNode.ENDER_DRAGON_ADDITIONAL_ATTACKS, world.getName());
+        final boolean dragonAdditionalAttacks = CFG.getBoolean(RootNode.ENDER_DRAGON_ADDITIONAL_ATTACKS,
+                world.getName());
         final boolean dragonAnnouncements = CFG.getBoolean(RootNode.ENDER_DRAGON_COMBAT_ANNOUNCEMENTS, world.getName());
 
         // FEATURE: the dragon has new attacks
-        if (dragonAdditionalAttacks && damageByEntityEvent != null && entity.getType() == EntityType.ENDER_DRAGON)
-        {
+        if (dragonAdditionalAttacks && damageByEntityEvent != null && entity.getType() == EntityType.ENDER_DRAGON) {
             Player damager = null;
-            if (damageByEntityEvent.getDamager() instanceof Player)
-            {
+            if (damageByEntityEvent.getDamager() instanceof Player) {
                 damager = (Player) damageByEntityEvent.getDamager();
-            } else if (damageByEntityEvent.getDamager() instanceof Projectile)
-            {
+            } else if (damageByEntityEvent.getDamager() instanceof Projectile) {
                 Projectile projectile = (Projectile) damageByEntityEvent.getDamager();
-                if (projectile.getShooter() != null && projectile.getShooter() instanceof Player)
-                {
+                if (projectile.getShooter() != null && projectile.getShooter() instanceof Player) {
                     damager = (Player) projectile.getShooter();
                 }
             }
 
-            if (damager != null)
-            {
-                if (!data.getPlayers().contains(damager.getName()))
-                {
+            if (damager != null) {
+                if (!data.getPlayers().contains(damager.getName())) {
                     data.getPlayers().add(damager.getName());
 
-                    DragonAttackPatternTask task = new DragonAttackPatternTask(plugin, (LivingEntity) entity, damager, data.getPlayers());
+                    DragonAttackPatternTask task = new DragonAttackPatternTask(plugin, (LivingEntity) entity, damager,
+                            data.getPlayers());
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 1L);
 
-                    if (dragonAnnouncements)
-                    {
-                        messenger.broadcast(MessageNode.END_DRAGON_PLAYER_CHALLENGING, new FindAndReplace(damager.getName(), MessageNode.Variables.PLAYER.getVarNames()));
+                    if (dragonAnnouncements) {
+                        messenger.broadcast(MessageNode.END_DRAGON_PLAYER_CHALLENGING,
+                                new FindAndReplace(damager.getName(), MessageNode.Variables.PLAYER.getVarNames()));
                     }
                 }
 
-                for (int i = 0; i < 5; i++)
-                {
+                for (int i = 0; i < 5; i++) {
                     DragonAttackTask task = new DragonAttackTask(plugin, entity, damager);
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 20L * (plugin.getRandom().nextInt(15)));
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task,
+                            20L * (plugin.getRandom().nextInt(15)));
                 }
 
                 Chunk chunk = damager.getLocation().getChunk();
                 Entity[] entities = chunk.getEntities();
-                for (Entity entity1 : entities)
-                {
-                    if (entity1.getType() == EntityType.ENDERMAN)
-                    {
+                for (Entity entity1 : entities) {
+                    if (entity1.getType() == EntityType.ENDERMAN) {
                         Enderman enderman = (Enderman) entity1;
                         enderman.setTarget(damager);
                     }
@@ -321,56 +287,50 @@ public class Glydia extends ListenerModule
         }
     }
 
-
     /**
      * when a player changes from the End to another world, clean up if End empty
      *
      * @param event - Event that occurred.
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    void onPlayerChangeWorld(PlayerChangedWorldEvent event)
-    {
+    void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
         World world = event.getFrom();
 
-        //Ignore if world is not EHM-enabled
+        // Ignore if world is not EHM-enabled
         if (!CFG.isEnabledIn(world.getName()))
             return;
 
         final boolean respawnDragon = CFG.getBoolean(RootNode.RESPAWN_ENDER_DRAGON, world.getName());
 
         // FEATURE: respawn the ender dragon when the last player leaves the end
-        if (world.getEnvironment() == World.Environment.THE_END && world.getPlayers().size() == 0) //Once everyone has left
+        if (world.getEnvironment() == World.Environment.THE_END && world.getPlayers().size() == 0) // Once everyone has
+                                                                                                   // left
         {
             // look for an ender dragon
             EnderDragon enderDragon = null;
-            for (Entity entity : world.getEntities())
-            {
-                if (enderDragon != null && entity instanceof EnderDragon)
-                {  //If there is already a dragon for whatever reason, remove it
+            for (Entity entity : world.getEntities()) {
+                if (enderDragon != null && entity instanceof EnderDragon) { // If there is already a dragon for whatever
+                                                                            // reason, remove it
                     entity.remove();
                 }
-                if (entity instanceof EnderDragon)
-                {
+                if (entity instanceof EnderDragon) {
                     enderDragon = (EnderDragon) entity;
                 }
                 // clean up any summoned minions
-                if (entity.getType().equals(EntityType.ZOMBIE) || entity.getType().equals(EntityType.BLAZE))
-                {
+                if (entity.getType().equals(EntityType.ZOMBIE) || entity.getType().equals(EntityType.BLAZE)) {
                     entity.remove();
                 }
             }
 
             // if he's there, full health
-            if (enderDragon != null)
-            {
-            	final int enderDragonHealth = CFG.getInt(RootNode.ENDER_DRAGON_HEALTH, world.getName());
-            	enderDragon.setMaxHealth(enderDragonHealth);
-            	enderDragon.setHealth(enderDragon.getMaxHealth());
+            if (enderDragon != null) {
+                final int enderDragonHealth = CFG.getInt(RootNode.ENDER_DRAGON_HEALTH, world.getName());
+                enderDragon.setMaxHealth(enderDragonHealth);
+                enderDragon.setHealth(enderDragon.getMaxHealth());
             }
 
             // otherwise, spawn one
-            else if (respawnDragon)
-            {
+            else if (respawnDragon) {
                 EntityHelper.spawn(new Location(world, 0, world.getMaxHeight() - 1, 0), EntityType.ENDER_DRAGON);
             }
         }
@@ -384,11 +344,11 @@ public class Glydia extends ListenerModule
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEnderDragonSpawn(final CreatureSpawnEvent event) {
         if (event.getEntityType() == EntityType.ENDER_DRAGON) {
-        	Location location = event.getLocation();
-        	World world = location.getWorld();
-        	final int enderDragonHealth = CFG.getInt(RootNode.ENDER_DRAGON_HEALTH, world.getName());
-        	if (enderDragonHealth <= 0)
-        	    return;
+            Location location = event.getLocation();
+            World world = location.getWorld();
+            final int enderDragonHealth = CFG.getInt(RootNode.ENDER_DRAGON_HEALTH, world.getName());
+            if (enderDragonHealth <= 0)
+                return;
             event.getEntity().setMaxHealth(enderDragonHealth);
             event.getEntity().setHealth(event.getEntity().getMaxHealth());
         }
@@ -400,18 +360,16 @@ public class Glydia extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onItemSpawn(ItemSpawnEvent event)
-    {
-        // FEATURE: fountain effect from dragon fireball explosions sometimes causes fire to drop as an item. this is the fix for that.
-        //Note: eeeeeeh Feature?!
+    public void onItemSpawn(ItemSpawnEvent event) {
+        // FEATURE: fountain effect from dragon fireball explosions sometimes causes
+        // fire to drop as an item. this is the fix for that.
+        // Note: eeeeeeh Feature?!
         Item item = event.getEntity();
 
-        if (item.getItemStack().getType() == Material.FIRE)
-        {
+        if (item.getItemStack().getType() == Material.FIRE) {
             event.setCancelled(true);
         }
     }
-
 
     /**
      * when an entity targets something (as in to attack it)...
@@ -419,11 +377,9 @@ public class Glydia extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true)
-    public void onEntityTarget(EntityTargetEvent event)
-    {
+    public void onEntityTarget(EntityTargetEvent event) {
         // FEATURE: monsters don't target the ender dragon
-        if (event.getTarget() != null && event.getTarget() instanceof EnderDragon)
-        {
+        if (event.getTarget() != null && event.getTarget() instanceof EnderDragon) {
             event.setCancelled(true);
         }
     }
@@ -434,152 +390,126 @@ public class Glydia extends ListenerModule
      * Spawn monsters when the dragon shoots fireballs ,
      */
     @EventHandler
-    public void onExplosion(EntityExplodeEvent event)
-    {
+    public void onExplosion(EntityExplodeEvent event) {
         if (event instanceof FakeEntityExplodeEvent)
             return;
         World world = event.getLocation().getWorld();
         Entity entity = event.getEntity();
 
-        final boolean dragonAdditionalAttacks = CFG.getBoolean(RootNode.ENDER_DRAGON_ADDITIONAL_ATTACKS, world.getName());
+        final boolean dragonAdditionalAttacks = CFG.getBoolean(RootNode.ENDER_DRAGON_ADDITIONAL_ATTACKS,
+                world.getName());
 
         // FEATURE: ender dragon fireballs may summon minions and/or set fires
-        if (dragonAdditionalAttacks && entity != null && entity.getType() == EntityType.FIREBALL)
-        {
+        if (dragonAdditionalAttacks && entity != null && entity.getType() == EntityType.FIREBALL) {
             Fireball fireball = (Fireball) entity;
             Entity spawnedMonster = null;
-            if (fireball.getShooter() != null && EntityHelper.shooterType(fireball) == EntityType.ENDER_DRAGON)
-            {
-            	final boolean alternativeFireball = CFG.getBoolean(RootNode.ALTERNATIVE_FIREBALL, world.getName());
+            if (fireball.getShooter() != null && EntityHelper.shooterType(fireball) == EntityType.ENDER_DRAGON) {
+                final boolean alternativeFireball = CFG.getBoolean(RootNode.ALTERNATIVE_FIREBALL, world.getName());
 
-            	//Start of "ALTERNATIVE_FIREBALL" spawning method
-            	if(alternativeFireball) {
-                	
-                	int random = plugin.getRandom().nextInt(150);
-                	if (random < 100)
-                	{
-    	                if (random < 10)
-    	                {
-    	                    spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.BLAZE);
-    	                    for (int x1 = -2; x1 <= 2; x1++)
-    	                    {
-    	                        for (int z1 = -2; z1 <= 2; z1++)
-    	                        {
-    	                            for (int y1 = 2; y1 >= -2; y1--)
-    	                            {
-    	                                Block block = fireball.getLocation().add(x1, y1, z1).getBlock();
-    	                                Material underType = block.getRelative(BlockFace.DOWN).getType();
-    	                                if (block.getType() == Material.AIR && underType != Material.AIR && underType != Material.FIRE)
-    	                                {
-    	                                    block.setType(Material.FIRE);
-    	                                }
-    	                            }
-    	                        }
-    	                    }
+                // Start of "ALTERNATIVE_FIREBALL" spawning method
+                if (alternativeFireball) {
 
-    	                    Location location = fireball.getLocation().add(0, 1, 0);
-    	                    for (int i = 0; i < 10; i++)
-    	                    {
-    	                        FallingBlock fire = world.spawnFallingBlock(location, Material.FIRE, (byte) 0);
-    	                        Vector velocity = Vector.getRandom();
-    	                        if (velocity.getY() < 0)
-    	                        {
-    	                            velocity.setY(velocity.getY() * -1);
-    	                        }
+                    int random = plugin.getRandom().nextInt(150);
+                    if (random < 100) {
+                        if (random < 10) {
+                            spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.BLAZE);
+                            for (int x1 = -2; x1 <= 2; x1++) {
+                                for (int z1 = -2; z1 <= 2; z1++) {
+                                    for (int y1 = 2; y1 >= -2; y1--) {
+                                        Block block = fireball.getLocation().add(x1, y1, z1).getBlock();
+                                        Material underType = block.getRelative(BlockFace.DOWN).getType();
+                                        if (block.getType() == Material.AIR && underType != Material.AIR
+                                                && underType != Material.FIRE) {
+                                            block.setType(Material.FIRE);
+                                        }
+                                    }
+                                }
+                            }
 
-    	                        if (plugin.getRandom().nextBoolean())
-    	                        {
-    	                            velocity.setZ(velocity.getZ() * -1);
-    	                        }
+                            Location location = fireball.getLocation().add(0, 1, 0);
+                            for (int i = 0; i < 10; i++) {
+                                FallingBlock fire = world.spawnFallingBlock(location, Material.FIRE, (byte) 0);
+                                Vector velocity = Vector.getRandom();
+                                if (velocity.getY() < 0) {
+                                    velocity.setY(velocity.getY() * -1);
+                                }
 
-    	                        if (plugin.getRandom().nextBoolean())
-    	                        {
-    	                            velocity.setX(velocity.getX() * -1);
-    	                        }
+                                if (plugin.getRandom().nextBoolean()) {
+                                    velocity.setZ(velocity.getZ() * -1);
+                                }
 
-    	                        fire.setVelocity(velocity);
-    	                    }
+                                if (plugin.getRandom().nextBoolean()) {
+                                    velocity.setX(velocity.getX() * -1);
+                                }
 
-    	                } else if (random < 50)
-    	                {
+                                fire.setVelocity(velocity);
+                            }
 
-    	                    for (int i = 0; i < 2; i++)
-    	                    {
-    	                        spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ZOMBIE_VILLAGER);
-    	                        EntityHelper.markLootLess(plugin, (LivingEntity) spawnedMonster);
-    	                    }
-    	                } else if (random < 80)
-    	                {	             
-    	                	for (int i = 0; i < 2; i++)
-    		                {                   
-    		                	spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.SKELETON);
-    		                }
-    	                }
-    	                else 
-    	                {
-    	                    spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ENDERMAN);
-    	                }
-                	}
-            	}
-            	//End of "ALTERNATIVE_FIREBALL" spawning method.
-                //Begin of the normal spawning method.
-            	else {
-            		 int random = plugin.getRandom().nextInt(100);
-                     if (random < 40)
-                     {
-                         spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.BLAZE);
+                        } else if (random < 50) {
 
-                         for (int x1 = -2; x1 <= 2; x1++)
-                         {
-                             for (int z1 = -2; z1 <= 2; z1++)
-                             {
-                                 for (int y1 = 2; y1 >= -2; y1--)
-                                 {
-                                     Block block = fireball.getLocation().add(x1, y1, z1).getBlock();
-                                     Material underType = block.getRelative(BlockFace.DOWN).getType();
-                                     if (block.getType() == Material.AIR && underType != Material.AIR && underType != Material.FIRE)
-                                     {
-                                         block.setType(Material.FIRE);
-                                     }
-                                 }
-                             }
-                         }
+                            for (int i = 0; i < 2; i++) {
+                                spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(),
+                                        EntityType.ZOMBIE_VILLAGER);
+                                EntityHelper.markLootLess(plugin, (LivingEntity) spawnedMonster);
+                            }
+                        } else if (random < 80) {
+                            for (int i = 0; i < 2; i++) {
+                                spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(),
+                                        EntityType.SKELETON);
+                            }
+                        } else {
+                            spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ENDERMAN);
+                        }
+                    }
+                }
+                // End of "ALTERNATIVE_FIREBALL" spawning method.
+                // Begin of the normal spawning method.
+                else {
+                    int random = plugin.getRandom().nextInt(100);
+                    if (random < 40) {
+                        spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.BLAZE);
 
-                         Location location = fireball.getLocation().add(0, 1, 0);
-                         for (int i = 0; i < 10; i++)
-                         {
-                             FallingBlock fire = world.spawnFallingBlock(location, Material.FIRE, (byte) 0);
-                             Vector velocity = Vector.getRandom();
-                             if (velocity.getY() < 0)
-                             {
-                                 velocity.setY(velocity.getY() * -1);
-                             }
-                             if (plugin.getRandom().nextBoolean())
-                             {
-                                 velocity.setZ(velocity.getZ() * -1);
-                             }
-                             if (plugin.getRandom().nextBoolean())
-                             {
-                                 velocity.setX(velocity.getX() * -1);
-                             }
-                             fire.setVelocity(velocity);
-                         }
-                     } else if (random < 70)
-                     {
-                         for (int i = 0; i < 2; i++)
-                         {
-                             spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ZOMBIE_VILLAGER);
-                             EntityHelper.markLootLess(plugin, (LivingEntity) spawnedMonster);
-                         }
-                     } else
-                     {
-                         spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ENDERMAN);
-                     }
-            	}
+                        for (int x1 = -2; x1 <= 2; x1++) {
+                            for (int z1 = -2; z1 <= 2; z1++) {
+                                for (int y1 = 2; y1 >= -2; y1--) {
+                                    Block block = fireball.getLocation().add(x1, y1, z1).getBlock();
+                                    Material underType = block.getRelative(BlockFace.DOWN).getType();
+                                    if (block.getType() == Material.AIR && underType != Material.AIR
+                                            && underType != Material.FIRE) {
+                                        block.setType(Material.FIRE);
+                                    }
+                                }
+                            }
+                        }
+
+                        Location location = fireball.getLocation().add(0, 1, 0);
+                        for (int i = 0; i < 10; i++) {
+                            FallingBlock fire = world.spawnFallingBlock(location, Material.FIRE, (byte) 0);
+                            Vector velocity = Vector.getRandom();
+                            if (velocity.getY() < 0) {
+                                velocity.setY(velocity.getY() * -1);
+                            }
+                            if (plugin.getRandom().nextBoolean()) {
+                                velocity.setZ(velocity.getZ() * -1);
+                            }
+                            if (plugin.getRandom().nextBoolean()) {
+                                velocity.setX(velocity.getX() * -1);
+                            }
+                            fire.setVelocity(velocity);
+                        }
+                    } else if (random < 70) {
+                        for (int i = 0; i < 2; i++) {
+                            spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(),
+                                    EntityType.ZOMBIE_VILLAGER);
+                            EntityHelper.markLootLess(plugin, (LivingEntity) spawnedMonster);
+                        }
+                    } else {
+                        spawnedMonster = entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ENDERMAN);
+                    }
+                }
             }
 
-            if (spawnedMonster != null)
-            {
+            if (spawnedMonster != null) {
                 EntityHelper.markLootLess(plugin, (LivingEntity) spawnedMonster);
             }
         }

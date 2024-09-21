@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -45,10 +44,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * When chopping down trees the logs fall down and loose logs fall down on the side and can injure you
+ * When chopping down trees the logs fall down and loose logs fall down on the
+ * side and can injure you
  */
-public class RealisticChopping extends ListenerModule
-{
+public class RealisticChopping extends ListenerModule {
     /**
      * Config Instance
      */
@@ -64,25 +63,20 @@ public class RealisticChopping extends ListenerModule
      */
     private PlayerModule playerModule;
 
-
     /**
      * Constructor
      */
-    public RealisticChopping(ExtraHardMode plugin)
-    {
+    public RealisticChopping(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         blockModule = plugin.getModuleForClass(BlockModule.class);
         playerModule = plugin.getModuleForClass(PlayerModule.class);
     }
-
 
     /**
      * When a player breaks a block...
@@ -90,60 +84,49 @@ public class RealisticChopping extends ListenerModule
      * @param breakEvent - Event that occurred.
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockBreak(BlockBreakEvent breakEvent)
-    {
+    public void onBlockBreak(BlockBreakEvent breakEvent) {
         Block block = breakEvent.getBlock();
         World world = block.getWorld();
         Player player = breakEvent.getPlayer();
 
-        final boolean betterTreeChoppingEnabled = false; //CFG.getBoolean(RootNode.BETTER_TREE_CHOPPING, world.getName());
+        final boolean betterTreeChoppingEnabled = false; // CFG.getBoolean(RootNode.BETTER_TREE_CHOPPING,
+                                                         // world.getName());
         final boolean playerHasBypass = playerModule.playerBypasses(player, Feature.REALISTIC_CHOPPING);
 
         // FEATURE: trees chop more naturally
-        if (Tag.LOGS.isTagged(block.getType()) && betterTreeChoppingEnabled && !playerHasBypass)
-        {
-            //Are there any leaves above the log? -> tree
+        if (Tag.LOGS.isTagged(block.getType()) && betterTreeChoppingEnabled && !playerHasBypass) {
+            // Are there any leaves above the log? -> tree
             boolean isTree = false;
-            for (int i = 1; i < 30; i++)
-            {
+            for (int i = 1; i < 30; i++) {
                 Material upType = block.getRelative(BlockFace.UP, i).getType();
-                //skip to next iteration
-                //if something other than log/air this is most likely part of a building
-                if (Tag.LEAVES.isTagged(upType))
-                {
+                // skip to next iteration
+                // if something other than log/air this is most likely part of a building
+                if (Tag.LEAVES.isTagged(upType)) {
                     isTree = true;
                     break;
-                }
-                else if (!Tag.LOGS.isTagged(upType))
-                {
+                } else if (!Tag.LOGS.isTagged(upType)) {
                     break;
                 }
             }
 
-            if (isTree)
-            {
+            if (isTree) {
                 Block aboveLog = block.getRelative(BlockFace.UP);
-                for (int limit = 0; limit < 30; limit++)
-                {
-                    Material aboveLogType = aboveLog.getType();//can air fall?
-                    //we reached something that is not part of a tree or leaves
-                    if (aboveLogType == Material.AIR)
-                    {
-                        List<Block> logs = new LinkedList<Block>(Arrays.asList(blockModule.getBlocksInArea(aboveLog.getLocation(), 3, 5, Tag.LOGS)));
-                        for (Block log : logs)
-                        {
-                            //TODO EhmRealisticChoppingLooseLogEvent
-                            //check 2 blocks down for logs to see if it it's a stem
+                for (int limit = 0; limit < 30; limit++) {
+                    Material aboveLogType = aboveLog.getType();// can air fall?
+                    // we reached something that is not part of a tree or leaves
+                    if (aboveLogType == Material.AIR) {
+                        List<Block> logs = new LinkedList<Block>(
+                                Arrays.asList(blockModule.getBlocksInArea(aboveLog.getLocation(), 3, 5, Tag.LOGS)));
+                        for (Block log : logs) {
+                            // TODO EhmRealisticChoppingLooseLogEvent
+                            // check 2 blocks down for logs to see if it it's a stem
                             if (!Tag.LOGS.isTagged(log.getRelative(BlockFace.DOWN).getType()))
-                                plugin.getServer().getScheduler().runTaskLater(plugin, new FallingLogsTask(plugin, log), plugin.getRandom().nextInt(50/*so they don't fall at once*/));
+                                plugin.getServer().getScheduler().runTaskLater(plugin, new FallingLogsTask(plugin, log),
+                                        plugin.getRandom().nextInt(50/* so they don't fall at once */));
                         }
-                    }
-                    else if (Tag.LOGS.isTagged(aboveLogType))
-                    {
+                    } else if (Tag.LOGS.isTagged(aboveLogType)) {
                         blockModule.applyPhysics(aboveLog, false);
-                    }
-                    else
-                    {
+                    } else {
                         break;
                     }
                     aboveLog = aboveLog.getRelative(BlockFace.UP);

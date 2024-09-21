@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks;
 
-
 import org.bukkit.entity.Player;
 
 import static org.mockito.Mockito.mock;
@@ -32,22 +31,17 @@ import static org.mockito.Mockito.when;
  *
  * @author Max
  */
-public class MockPlayer
-{
+public class MockPlayer {
     private final Player myPlayer = mock(Player.class);
-
 
     /**
      * Mock a Player with some basic methods
      */
-    public MockPlayer(String name)
-    {
+    public MockPlayer(String name) {
         when(myPlayer.getName()).thenReturn(name);
     }
 
-
-    public Player get()
-    {
+    public Player get() {
         return myPlayer;
     }
 }

@@ -1,33 +1,24 @@
 package com.extrahardmode.service;
 
-
 import java.util.Random;
 
 /**
  * @author Diemex
  */
-public class OurRandom
-{
+public class OurRandom {
     private static Random rdm = new Random();
 
-
-    public static double nextDouble()
-    {
+    public static double nextDouble() {
         return rdm.nextDouble();
     }
 
-
-    public static int nextInt(int range)
-    {
+    public static int nextInt(int range) {
         return rdm.nextInt(range);
     }
 
-
-    public static boolean percentChance(int percentage)
-    {
+    public static boolean percentChance(int percentage) {
         return nextInt(100) < percentage;
     }
-
 
     /**
      * Get a random index given the weights
@@ -36,8 +27,7 @@ public class OurRandom
      *
      * @return the index of the items chosen
      */
-    public static int weightedRandom(Integer[] itemWeights)
-    {
+    public static int weightedRandom(Integer[] itemWeights) {
         // Compute the total weight of all items together
         int totalWeight = 0;
         for (int i : itemWeights)
@@ -45,11 +35,9 @@ public class OurRandom
         // Now choose a random item
         int randomIndex = -1;
         double random = Math.random() * totalWeight;
-        for (int i = 0; i < itemWeights.length; ++i)
-        {
+        for (int i = 0; i < itemWeights.length; ++i) {
             random -= itemWeights[i];
-            if (random <= 0.0d)
-            {
+            if (random <= 0.0d) {
                 randomIndex = i;
                 break;
             }
@@ -57,12 +45,11 @@ public class OurRandom
         return randomIndex;
     }
 
-
     /**
-     * Create a new Random object, call when plugin is enabled to ensure it's fresh etc.
+     * Create a new Random object, call when plugin is enabled to ensure it's fresh
+     * etc.
      */
-    public static void reload()
-    {
+    public static void reload() {
         rdm = new Random();
     }
 }

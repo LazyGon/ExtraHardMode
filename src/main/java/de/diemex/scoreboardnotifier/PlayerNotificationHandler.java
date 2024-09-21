@@ -1,6 +1,5 @@
 package de.diemex.scoreboardnotifier;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,12 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Every player gets a handler that handles new messages, removal of messages and restoring of the previous scoreboard once there are no messages to display anymore
+ * Every player gets a handler that handles new messages, removal of messages
+ * and restoring of the previous scoreboard once there are no messages to
+ * display anymore
  *
  * @author Diemex
  */
-public class PlayerNotificationHandler
-{
+public class PlayerNotificationHandler {
     /**
      * Title of the Scoreboard
      */
@@ -67,9 +67,7 @@ public class PlayerNotificationHandler
      */
     private Map<String, Integer> idMap = new HashMap<String, Integer>();
 
-
-    public PlayerNotificationHandler(String scoreboardTitle, Plugin plugin, String playerName)
-    {
+    public PlayerNotificationHandler(String scoreboardTitle, Plugin plugin, String playerName) {
         this.scoreboardTitle = scoreboardTitle;
         this.plugin = plugin;
         this.playerName = playerName;
@@ -79,58 +77,49 @@ public class PlayerNotificationHandler
             previousBoard = player.getScoreboard();
     }
 
-
     /**
      * Display the next message
      *
      * @return id of the message to remove later, or -1 if not displayed
      */
-    public int displayMessage(NotificationHolder popup)
-    {
+    public int displayMessage(NotificationHolder popup) {
         Player player = Bukkit.getPlayer(playerName);
-        if (player != null && player.isOnline())
-        {
-            //Init if no scoreboard active
-            if (objective == null)
-            {
+        if (player != null && player.isOnline()) {
+            // Init if no scoreboard active
+            if (objective == null) {
                 objective = msgBoard.registerNewObjective(popup.getTitle(), "dummy");
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             }
             player.setScoreboard(msgBoard);
         }
 
-        //Remove messages with the same text
+        // Remove messages with the same text
         Iterator<Map.Entry<Integer, NotificationHolder>> iter = notifications.entrySet().iterator();
-        while (iter.hasNext())
-        {
+        while (iter.hasNext()) {
             Map.Entry<Integer, NotificationHolder> message = iter.next();
-            if (message.getValue().equals(popup))
-            {
+            if (message.getValue().equals(popup)) {
                 iter.remove();
                 popup.modifyCount(message.getValue().getMessageCount());
                 popup.redraw();
             }
         }
 
-        //Find next free index to put the message
+        // Find next free index to put the message
         int index = getFreeIndex();
 
-        //Remove messages with the same identifier
-        if (popup.getType().hasUniqueIdentifier())
-        {
+        // Remove messages with the same identifier
+        if (popup.getType().hasUniqueIdentifier()) {
             String id = popup.getType().getUniqueIdentifier();
             if (idMap.containsKey(id))
                 notifications.remove(idMap.get(id));
             idMap.put(id, index);
         }
 
-        //Set a line prefix if a message is similar
+        // Set a line prefix if a message is similar
         iter = notifications.entrySet().iterator();
-        while (iter.hasNext())
-        {
+        while (iter.hasNext()) {
             Map.Entry<Integer, NotificationHolder> message = iter.next();
-            if (message.getValue().hasOneEqualLine(popup))
-            {
+            if (message.getValue().hasOneEqualLine(popup)) {
                 popup.addLinePrefix('#');
                 popup.redraw();
             }
@@ -142,16 +131,13 @@ public class PlayerNotificationHandler
         return index;
     }
 
-
     /**
      * Remove the message with the unique identifier
      *
      * @param id id to remove the message
      */
-    public void removeMessage(String id)
-    {
-        if (idMap.containsKey(id))
-        {
+    public void removeMessage(String id) {
+        if (idMap.containsKey(id)) {
             int index = idMap.get(id);
             idMap.remove(id);
             removeMessage(index);
@@ -161,87 +147,74 @@ public class PlayerNotificationHandler
         }
     }
 
-
     /**
      * Remove the message by its id
      *
      * @param id id of the message
      */
-    public void removeMessage(int id)
-    {
-        //is this notification still valid?
-        if (notifications.containsKey(id))
-        {
+    public void removeMessage(int id) {
+        // is this notification still valid?
+        if (notifications.containsKey(id)) {
             msgCount--;
             for (String line : notifications.get(id).getMsg())
                 msgBoard.resetScores(line);
             notifications.remove(id);
-            //Update all the line numbers
+            // Update all the line numbers
             updateIndexes();
             if (!messagesScheduled())
                 restoreScoreboard();
         }
     }
 
+    private void updateIndexes() {
+        int lastLine = lineCount() + notifications.size() - 1; // separators, no separator on the last line
+        int separator = 0; // pos of =
 
-    private void updateIndexes()
-    {
-        int lastLine = lineCount() + notifications.size() - 1; //separators, no separator on the last line
-        int separator = 0; //pos of =
-
-        //Clear scoreboard
+        // Clear scoreboard
         for (String player : msgBoard.getEntries())
             msgBoard.resetScores(player);
 
-        //Update the scores and put separators in between the lines
+        // Update the scores and put separators in between the lines
         boolean updateTitle = true;
-        for (int i = getHighestIndex(); i > 0; i--)
-        {
-            if (notifications.containsKey(i))
-            {
+        for (int i = getHighestIndex(); i > 0; i--) {
+            if (notifications.containsKey(i)) {
                 NotificationHolder popup = notifications.get(i);
 
-                //Use the title and color of the newest message
-                if (updateTitle && objective.getScoreboard().getEntries().size() > 0)
-                {
+                // Use the title and color of the newest message
+                if (updateTitle && objective.getScoreboard().getEntries().size() > 0) {
                     objective.setDisplayName(notifications.get(i).getTitle());
                     updateTitle = false;
                 }
 
                 List<String> msg = popup.getMsg();
-                for (String msgLine : msg)
-                {
+                for (String msgLine : msg) {
                     Score score = objective.getScore(msgLine);
                     score.setScore(lastLine--);
                 }
 
                 StringBuilder sb = new StringBuilder(StringUtils.repeat("-", 16));
-                sb.setCharAt(separator < 16 ? separator++ : 0, '='); //Maximum of 16 messages at a time...
-                if (i != 1) //not last line
+                sb.setCharAt(separator < 16 ? separator++ : 0, '='); // Maximum of 16 messages at a time...
+                if (i != 1) // not last line
                     objective.getScore(sb.toString()).setScore(lastLine--);
             }
         }
     }
-
 
     /**
      * Super duper shit mart
      *
      * @return a free index for uniqueness
      */
-    private int getFreeIndex()
-    {
+    private int getFreeIndex() {
         return notifications.isEmpty() ? 1 : getHighestIndex() + 1;
     }
-
 
     /**
      * Get the highest index in the Map. Notes: Iterates over the whole Map.
      *
      * @return highest index
      */
-    private int getHighestIndex()
-    {
+    private int getHighestIndex() {
         int highestId = 0;
         for (Integer id : notifications.keySet())
             if (id > highestId)
@@ -249,12 +222,10 @@ public class PlayerNotificationHandler
         return highestId;
     }
 
-
     /**
      * The amount of lines currently displayed in the scoreboard
      */
-    private int lineCount()
-    {
+    private int lineCount() {
         int lineCount = 0;
         for (NotificationHolder popup : notifications.values())
             if (popup != null)
@@ -262,20 +233,16 @@ public class PlayerNotificationHandler
         return lineCount;
     }
 
-
     /**
      * Are there more messages to be displayed
      *
      * @return if messages are scheduled
      */
-    public boolean messagesScheduled()
-    {
+    public boolean messagesScheduled() {
         return !notifications.isEmpty();
     }
 
-
-    private void restoreScoreboard()
-    {
+    private void restoreScoreboard() {
         Player player = Bukkit.getPlayer(playerName);
         if (player != null && previousBoard != null)
             player.setScoreboard(previousBoard);

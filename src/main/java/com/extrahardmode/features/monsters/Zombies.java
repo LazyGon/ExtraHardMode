@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -53,9 +52,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 
-/** Zombies <p> can resurrect themselves , make players slow when hit </p> */
-public class Zombies extends ListenerModule
-{
+/**
+ * Zombies
+ * <p>
+ * can resurrect themselves , make players slow when hit
+ * </p>
+ */
+public class Zombies extends ListenerModule {
     private RootConfig CFG;
 
     private PlayerModule playerModule;
@@ -64,30 +67,23 @@ public class Zombies extends ListenerModule
 
     private boolean hasReinforcements = false;
 
-
-    public Zombies(ExtraHardMode plugin)
-    {
+    public Zombies(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         playerModule = plugin.getModuleForClass(PlayerModule.class);
         temporaryBlockHandler = plugin.getModuleForClass(TemporaryBlockHandler.class);
-        try
-        {
+        try {
             CreatureSpawnEvent.SpawnReason doesEnumExist = CreatureSpawnEvent.SpawnReason.REINFORCEMENTS;
             hasReinforcements = true;
-        } catch (NoSuchFieldError e)
-        {
+        } catch (NoSuchFieldError e) {
             hasReinforcements = false;
         }
     }
-
 
     /**
      * When a zombie dies
@@ -95,8 +91,7 @@ public class Zombies extends ListenerModule
      * sometimes reanimate the zombie
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
@@ -104,56 +99,58 @@ public class Zombies extends ListenerModule
         boolean placeSkulls = CFG.getBoolean(RootNode.ZOMBIES_REANIMATE_SKULLS, world.getName());
 
         // FEATURE: zombies may reanimate if not on fire when they die
-        if (zombiesReanimatePercent > 0 && !EntityHelper.hasFlagIgnore(entity))
-        {
-            if (entity.getType() == EntityType.ZOMBIE)
-            {
+        if (zombiesReanimatePercent > 0 && !EntityHelper.hasFlagIgnore(entity)) {
+            if (entity.getType() == EntityType.ZOMBIE) {
                 Zombie zombie = (Zombie) entity;
 
                 Player player = null;
                 if (zombie.getTarget() instanceof Player)
                     player = (Player) zombie.getTarget();
 
-                //Zombies which have respawned already are less likely to respawn
-                int respawnCount = entity.getMetadata("extrahardmode.zombie.respawncount").size() > 0 ? entity.getMetadata("extrahardmode.zombie.respawncount").get(0).asInt() : 0;
+                // Zombies which have respawned already are less likely to respawn
+                int respawnCount = entity.getMetadata("extrahardmode.zombie.respawncount").size() > 0
+                        ? entity.getMetadata("extrahardmode.zombie.respawncount").get(0).asInt()
+                        : 0;
                 respawnCount++;
                 zombiesReanimatePercent = (int) ((1.0D / respawnCount) * zombiesReanimatePercent);
 
-                if (!zombie.isVillager() && entity.getFireTicks() < 1 && OurRandom.percentChance(zombiesReanimatePercent))
-                {
-                    //Save the incremented respawncount
-                    entity.setMetadata("extrahardmode.zombie.respawncount", new FixedMetadataValue(plugin, respawnCount));
+                if (!zombie.isVillager() && entity.getFireTicks() < 1
+                        && OurRandom.percentChance(zombiesReanimatePercent)) {
+                    // Save the incremented respawncount
+                    entity.setMetadata("extrahardmode.zombie.respawncount",
+                            new FixedMetadataValue(plugin, respawnCount));
                     TemporaryBlock tempBlock = null;
-                    //Water washes skulls away which then drop to the ground, cancelling the BlockFromToEvent didn't prevent the skull from dropping
+                    // Water washes skulls away which then drop to the ground, cancelling the
+                    // BlockFromToEvent didn't prevent the skull from dropping
                     Material type = entity.getLocation().getBlock().getType();
-                    if (placeSkulls && type != Material.WATER)
-                    {
+                    if (placeSkulls && type != Material.WATER) {
                         Block block = entity.getLocation().getBlock();
-                        //Don't replace blocks that aren't air, but aren't solid either
-                        if (block.getType() != Material.AIR)
-                        {
+                        // Don't replace blocks that aren't air, but aren't solid either
+                        if (block.getType() != Material.AIR) {
                             Location location = block.getLocation();
-                            location.setY(location.getY()+1);
+                            location.setY(location.getY() + 1);
                             block = location.getBlock();
                             if (block.getType() != Material.AIR)
                                 return;
                         }
                         block.setType(Material.ZOMBIE_HEAD);
-                        //Random rotation
+                        // Random rotation
                         BlockFace[] faces = BlockModule.getHorizontalAdjacentFaces();
-                        Rotatable skull = (Rotatable)block.getBlockData();
+                        Rotatable skull = (Rotatable) block.getBlockData();
                         skull.setRotation(faces[OurRandom.nextInt(faces.length)]);
                         block.setBlockData(skull);
                         tempBlock = temporaryBlockHandler.addTemporaryBlock(block.getLocation(), "respawn_skull");
                     }
                     RespawnZombieTask task = new RespawnZombieTask(plugin, entity.getLocation(), player, tempBlock);
                     int respawnSeconds = plugin.getRandom().nextInt(6) + 3; // 3-8 seconds
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 20L * respawnSeconds); // /20L ~ 1 second
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 20L * respawnSeconds); // /20L
+                                                                                                                   // ~
+                                                                                                                   // 1
+                                                                                                                   // second
                 }
             }
         }
     }
-
 
     /**
      * When an Entity is damaged
@@ -161,16 +158,16 @@ public class Zombies extends ListenerModule
      * When a player is damaged by a zombie make him slow
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageEvent event)
-    {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
-        final PotionEffectHolder effect = CFG.getPotionEffect(RootNode.ZOMBIES_DEBILITATE_PLAYERS_EFFECT, world.getName());
+        final PotionEffectHolder effect = CFG.getPotionEffect(RootNode.ZOMBIES_DEBILITATE_PLAYERS_EFFECT,
+                world.getName());
         final boolean stackEffect = CFG.getBoolean(RootNode.ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK, world.getName());
-        final int maxEffectAmplifier = CFG.getInt(RootNode.ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK_MAX, world.getName());
+        final int maxEffectAmplifier = CFG.getInt(RootNode.ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK_MAX,
+                world.getName());
 
-        if (entity instanceof Player)
-        {
+        if (entity instanceof Player) {
             Player player = (Player) entity;
 
             final boolean zombiesSlowPlayers = CFG.getBoolean(RootNode.ZOMBIES_DEBILITATE_PLAYERS, world.getName());
@@ -178,30 +175,26 @@ public class Zombies extends ListenerModule
 
             // is this an entity damaged by entity event?
             EntityDamageByEntityEvent damageByEntityEvent = null;
-            if (event instanceof EntityDamageByEntityEvent)
-            {
+            if (event instanceof EntityDamageByEntityEvent) {
                 damageByEntityEvent = (EntityDamageByEntityEvent) event;
             }
 
             // FEATURE: zombies can apply a debilitating effect
-            if (zombiesSlowPlayers && !playerBypasses)
-            {
-                if (damageByEntityEvent != null && damageByEntityEvent.getDamager() instanceof Zombie)
-                {
-                    //TODO EhmZombieSlowEvent
-                    if (stackEffect && effect != null && player.hasPotionEffect(effect.getBukkitEffectType()))
-                    {
+            if (zombiesSlowPlayers && !playerBypasses) {
+                if (damageByEntityEvent != null && damageByEntityEvent.getDamager() instanceof Zombie) {
+                    // TODO EhmZombieSlowEvent
+                    if (stackEffect && effect != null && player.hasPotionEffect(effect.getBukkitEffectType())) {
                         int amplifier = 1;
                         for (PotionEffect potion : player.getActivePotionEffects())
-                            if (potion.getType().equals(effect.getBukkitEffectType()))
-                            {
+                            if (potion.getType().equals(effect.getBukkitEffectType())) {
                                 amplifier = potion.getAmplifier();
                                 break;
                             }
                         if (amplifier + 1 < maxEffectAmplifier)
                             amplifier++;
                         player.removePotionEffect(effect.getBukkitEffectType());
-                        player.addPotionEffect(new PotionEffect(effect.getBukkitEffectType(), effect.getDuration(), amplifier));
+                        player.addPotionEffect(
+                                new PotionEffect(effect.getBukkitEffectType(), effect.getDuration(), amplifier));
                     } else if (effect != null)
                         effect.applyEffect(player, false);
                 }
@@ -209,32 +202,27 @@ public class Zombies extends ListenerModule
         }
     }
 
-
     /** Flag Zombies that have been called in as reinforcements to not respawn */
     @EventHandler(ignoreCancelled = true)
-    public void onZombieReinforcements(CreatureSpawnEvent event)
-    {
-        if (hasReinforcements && event.getEntity() instanceof Zombie && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS)
-        {
+    public void onZombieReinforcements(CreatureSpawnEvent event) {
+        if (hasReinforcements && event.getEntity() instanceof Zombie
+                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.REINFORCEMENTS) {
             EntityHelper.flagIgnore(plugin, event.getEntity());
         }
     }
 
-
     @EventHandler
-    public void onSkullBroken(TemporaryBlockBreakEvent event)
-    {
-        final int dropPercentage = CFG.getInt(RootNode.ZOMBIE_REANIMATE_SKULLS_DROP_PERCENTAGE, event.getTemporaryBlock().getLoc().getWorld().getName());
+    public void onSkullBroken(TemporaryBlockBreakEvent event) {
+        final int dropPercentage = CFG.getInt(RootNode.ZOMBIE_REANIMATE_SKULLS_DROP_PERCENTAGE,
+                event.getTemporaryBlock().getLoc().getWorld().getName());
         TemporaryBlock temporaryBlock = event.getTemporaryBlock();
         Object[] data = temporaryBlock.getData();
-        if (data.length == 1 && data[0] instanceof String && data[0].equals("respawn_skull"))
-        {
-            //Clear item drops: this is the only way
-            if (dropPercentage == 0 || !OurRandom.percentChance(dropPercentage))
-            {
-//                event.getBlockBreakEvent().setCancelled(true);
-//                event.getBlockBreakEvent().getBlock().setType(Material.AIR);
-                event.setCancelled(true); //Let the handler take care of it
+        if (data.length == 1 && data[0] instanceof String && data[0].equals("respawn_skull")) {
+            // Clear item drops: this is the only way
+            if (dropPercentage == 0 || !OurRandom.percentChance(dropPercentage)) {
+                // event.getBlockBreakEvent().setCancelled(true);
+                // event.getBlockBreakEvent().getBlock().setType(Material.AIR);
+                event.setCancelled(true); // Let the handler take care of it
             }
         }
     }

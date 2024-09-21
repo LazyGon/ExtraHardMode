@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks;
 
-
 import org.bukkit.World;
 import org.bukkit.entity.*;
 
@@ -30,14 +29,13 @@ import static org.mockito.Mockito.when;
 
 /**
  * A very basic Mock only overrides
+ * 
  * <pre>
- *     getWorld
+ * getWorld
  * </pre>
  */
-public class MockLivingEntity
-{
+public class MockLivingEntity {
     private LivingEntity entity;
-
 
     /**
      * Basic constructor
@@ -45,27 +43,21 @@ public class MockLivingEntity
      * @param world the world where this Entity resides in
      * @param type  to stub
      */
-    public MockLivingEntity(World world, EntityType type)
-    {
+    public MockLivingEntity(World world, EntityType type) {
         mockForType(type);
         when(entity.getType()).thenReturn(type);
         when(entity.getWorld()).thenReturn(world);
     }
 
-
     /**
      * Get the mocked Object
      */
-    public LivingEntity get()
-    {
+    public LivingEntity get() {
         return entity;
     }
 
-
-    private void mockForType(EntityType type)
-    {
-        switch (type)
-        {
+    private void mockForType(EntityType type) {
+        switch (type) {
             case BLAZE:
                 entity = mock(Blaze.class);
                 break;

@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -52,24 +51,18 @@ import org.bukkit.inventory.ItemStack;
  * <p/>
  * Always angry , drop netherwart in the nether , spawn on lighting strikes
  */
-public class PigMen extends ListenerModule
-{
+public class PigMen extends ListenerModule {
     private RootConfig CFG;
 
-
-    public PigMen(ExtraHardMode plugin)
-    {
+    public PigMen(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
-
 
     /**
      * When an Entity dies (Piggie)
@@ -77,8 +70,7 @@ public class PigMen extends ListenerModule
      * Drop netherwart in fortresses and elsewhere in the nether
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
@@ -86,18 +78,16 @@ public class PigMen extends ListenerModule
         final int pigWartDropEveryWherePercent = CFG.getInt(RootNode.NETHER_PIGS_DROP_WART, world.getName());
 
         // FEATURE: pig zombies drop nether wart when slain in nether fortresses
-        if (world.getEnvironment().equals(World.Environment.NETHER) && entity instanceof PigZombie)
-        {
+        if (world.getEnvironment().equals(World.Environment.NETHER) && entity instanceof PigZombie) {
             Block underBlock = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
             if (pigWartFortress && underBlock.getType() == Material.NETHER_BRICK)
                 event.getDrops().add(new ItemStack(Material.NETHER_WART));
 
-                // FEATURE: pig zombies sometimes drop nether wart when slain elsewhere
+            // FEATURE: pig zombies sometimes drop nether wart when slain elsewhere
             else if (pigWartDropEveryWherePercent > 0 && plugin.random(pigWartDropEveryWherePercent))
                 event.getDrops().add(new ItemStack(Material.NETHER_WART));
         }
     }
-
 
     /**
      * When an Entity spawns
@@ -105,8 +95,7 @@ public class PigMen extends ListenerModule
      * Makes Pigmen always angry
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         Location location = event.getLocation();
         World world = location.getWorld();
         LivingEntity entity = event.getEntity();
@@ -114,16 +103,13 @@ public class PigMen extends ListenerModule
         final boolean pigsAlwaysAggro = CFG.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, world.getName());
 
         // FEATURE: always-angry pig zombies
-        if (pigsAlwaysAggro)
-        {
-            if (entity instanceof PigZombie)
-            {
+        if (pigsAlwaysAggro) {
+            if (entity instanceof PigZombie) {
                 PigZombie pigZombie = (PigZombie) entity;
                 pigZombie.setAnger(Integer.MAX_VALUE);
             }
         }
     }
-
 
     /**
      * when a chunk loads... Always angry pigzombies
@@ -131,20 +117,16 @@ public class PigMen extends ListenerModule
      * @param event - Event that occurred.
      */
     @EventHandler
-    public void onChunkLoad(ChunkLoadEvent event)
-    {
+    public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
         World world = chunk.getWorld();
 
         final boolean pigAlwaysAggro = CFG.getBoolean(RootNode.ALWAYS_ANGRY_PIG_ZOMBIES, world.getName());
 
         // FEATURE: always-angry pig zombies
-        if (pigAlwaysAggro)
-        {
-            for (Entity entity : chunk.getEntities())
-            {
-                if (entity instanceof PigZombie)
-                {
+        if (pigAlwaysAggro) {
+            for (Entity entity : chunk.getEntities()) {
+                if (entity instanceof PigZombie) {
                     PigZombie pigZombie = (PigZombie) entity;
                     pigZombie.setAnger(Integer.MAX_VALUE);
                 }
@@ -152,16 +134,14 @@ public class PigMen extends ListenerModule
         }
     }
 
-
     @EventHandler
-    public void onPlayerDamaged(EntityDamageByEntityEvent event)
-    {
-        double damagePercentage = CFG.getInt(RootNode.PIG_ZOMBIE_DMG_PERCENT, event.getEntity().getWorld().getName()) / 100.0;
+    public void onPlayerDamaged(EntityDamageByEntityEvent event) {
+        double damagePercentage = CFG.getInt(RootNode.PIG_ZOMBIE_DMG_PERCENT, event.getEntity().getWorld().getName())
+                / 100.0;
 
         if (damagePercentage > 0.0 && event.getEntity() instanceof Player && event.getDamager() instanceof PigZombie)
             event.setDamage(event.getDamage() * damagePercentage);
     }
-
 
     /**
      * When a lightning strikes
@@ -169,8 +149,7 @@ public class PigMen extends ListenerModule
      * spawn pigmen
      */
     @EventHandler
-    public void onLightingStrike(LightningStrikeEvent event)
-    {
+    public void onLightingStrike(LightningStrikeEvent event) {
         LightningStrike strike = event.getLightning();
 
         Location loc = strike.getLocation();
@@ -178,31 +157,28 @@ public class PigMen extends ListenerModule
 
         final boolean spawnPigsOnLightning = CFG.getBoolean(RootNode.LIGHTNING_SPAWNS_PIGMEN, world.getName());
 
-        if (spawnPigsOnLightning && EntityHelper.simpleIsLocSafeSpawn(loc))
-        {
+        if (spawnPigsOnLightning && EntityHelper.simpleIsLocSafeSpawn(loc)) {
             int rdm = plugin.getRandom().nextInt(10);
             int amount = 1;
-            switch (rdm)
-            {
+            switch (rdm) {
                 case 0:
-                case 1: //20%
+                case 1: // 20%
                 {
                     amount = 2;
                     break;
                 }
                 case 2:
-                case 3: //20%
+                case 3: // 20%
                 {
                     amount = 3;
                     break;
                 }
-                default:       //60%
+                default: // 60%
                 {
                     amount = 1;
                 }
             }
-            for (int i = 0; i < amount; i++)
-            {
+            for (int i = 0; i < amount; i++) {
                 PigZombie pigZombie = world.spawn(loc, PigZombie.class);
                 pigZombie.setAnger(Integer.MAX_VALUE);
             }

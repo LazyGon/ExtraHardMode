@@ -21,7 +21,6 @@
 
 package com.extrahardmode.modules;
 
-
 import com.extrahardmode.module.UtilityModule;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -32,48 +31,51 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Diemex
  */
-public class TestDamageTool
-{
+public class TestDamageTool {
     @Test
-    public void damage0Blocks()
-    {
-//        ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
-//        assertTrue("Using 0 doesn't break the tool", 0 == UtilityModule.damage(pick, (short) 0).getDurability());
-    }
-
-
-    @Test
-    public void damage1Block()
-    {
-        ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
-//        assertTrue("Using 0 doesn't break the tool", pick.getType().getMaxDurability() == UtilityModule.damage(pick, (short) 1).getDurability());
-    }
-
-    //TODO make testing with probabilities possible
-    /*@Test
-    public void damageToolTest()
-    {
-        ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
-        breakXBlocks(pick, (short) 35);
+    public void damage0Blocks() {
+        // ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
+        // assertTrue("Using 0 doesn't break the tool", 0 == UtilityModule.damage(pick,
+        // (short) 0).getDurability());
     }
 
     @Test
-    public void damageHighBlockCount()
-    {
+    public void damage1Block() {
         ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
-        breakXBlocks(pick, (short) 800);
+        // assertTrue("Using 0 doesn't break the tool",
+        // pick.getType().getMaxDurability() == UtilityModule.damage(pick, (short)
+        // 1).getDurability());
     }
 
-    private void breakXBlocks(ItemStack item, short blocks)
-    {
-        //Because we are working with randoms we need some kind of tolerance
-        //double tolerance = ;
-        for (int i = 0; i < blocks; i++)
-        {
-            assertTrue("Durability " + item.getDurability() + " after " + i + "/" + blocks + " runs", item.getDurability() < item.getType().getMaxDurability());
-            item = UtilityModule.damage(item, blocks);
-        }
-        assertTrue("Remaining durability " + (item.getType().getMaxDurability() - item.getDurability()),
-                item.getDurability() >= item.getType().getMaxDurability());
-    }*/
+    // TODO make testing with probabilities possible
+    /*
+     * @Test
+     * public void damageToolTest()
+     * {
+     * ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
+     * breakXBlocks(pick, (short) 35);
+     * }
+     * 
+     * @Test
+     * public void damageHighBlockCount()
+     * {
+     * ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
+     * breakXBlocks(pick, (short) 800);
+     * }
+     * 
+     * private void breakXBlocks(ItemStack item, short blocks)
+     * {
+     * //Because we are working with randoms we need some kind of tolerance
+     * //double tolerance = ;
+     * for (int i = 0; i < blocks; i++)
+     * {
+     * assertTrue("Durability " + item.getDurability() + " after " + i + "/" +
+     * blocks + " runs", item.getDurability() < item.getType().getMaxDurability());
+     * item = UtilityModule.damage(item, blocks);
+     * }
+     * assertTrue("Remaining durability " + (item.getType().getMaxDurability() -
+     * item.getDurability()),
+     * item.getDurability() >= item.getType().getMaxDurability());
+     * }
+     */
 }

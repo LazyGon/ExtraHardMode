@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks;
 
-
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -30,14 +29,14 @@ import static org.mockito.Mockito.when;
 
 /**
  * Basic Location
+ * 
  * <pre>
  *     mock getBlock(X/Y/Z)
  *     mock get(X/Y/Z)
  *     override mock getBlock()
  * </pre>
  */
-public class MockLocation
-{
+public class MockLocation {
     /**
      * Location Object
      */
@@ -48,37 +47,29 @@ public class MockLocation
      */
     private MockBlock block;
 
-
     /**
      * A basic Constructor
      */
-    public MockLocation(World world)
-    {
+    public MockLocation(World world) {
         when(loc.getWorld()).thenReturn(world);
     }
-
 
     /**
      * Block at this Location
      */
-    public MockBlock getBlock()
-    {
+    public MockBlock getBlock() {
         return block;
     }
-
 
     /**
      * Set the Block that is at this Location
      */
-    public void setBlock(MockBlock block)
-    {
+    public void setBlock(MockBlock block) {
         this.block = block;
         when(loc.getBlock()).thenReturn(block.get());
     }
 
-
-    public Location get()
-    {
+    public Location get() {
         return loc;
     }
 }

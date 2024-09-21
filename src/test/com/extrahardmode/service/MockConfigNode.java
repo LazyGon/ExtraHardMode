@@ -21,13 +21,11 @@
 
 package com.extrahardmode.service;
 
-
 import com.extrahardmode.service.config.ConfigNode;
 
 import java.util.Collections;
 
-public enum MockConfigNode implements ConfigNode
-{
+public enum MockConfigNode implements ConfigNode {
     BOOL_FALSE("test .test 01", VarType.BOOLEAN, false),
     BOOL_TRUE("test.hallo.test04", VarType.BOOLEAN, true),
     INT_0("test02", VarType.INTEGER, 0),
@@ -61,55 +59,42 @@ public enum MockConfigNode implements ConfigNode
 
     private final VarType type;
 
-    private SubType subType = null; //initialize because this is optional
+    private SubType subType = null; // initialize because this is optional
 
     private final Object defaultValue;
 
     private Disable disableValue;
 
-
-    private MockConfigNode(String path, VarType type, Object defaultValue)
-    {
+    private MockConfigNode(String path, VarType type, Object defaultValue) {
         this.path = path;
         this.type = type;
         this.defaultValue = defaultValue;
     }
 
-
-    private MockConfigNode(String path, VarType type, SubType subType, Object defaultValue)
-    {
+    private MockConfigNode(String path, VarType type, SubType subType, Object defaultValue) {
         this(path, type, defaultValue);
         this.subType = subType;
     }
 
-
     @Override
-    public String getPath()
-    {
+    public String getPath() {
         return path;
     }
 
-
     @Override
-    public VarType getVarType()
-    {
+    public VarType getVarType() {
         return type;
     }
 
-
     @Override
-    public SubType getSubType()
-    {
+    public SubType getSubType() {
         return subType;
     }
 
-
     @Override
-    public Object getDefaultValue()
-    {
+    public Object getDefaultValue() {
         return defaultValue;
     }
-
 
     /**
      * COPIED FROM ROOTNODE Get the Object that will disable this option
@@ -117,42 +102,32 @@ public enum MockConfigNode implements ConfigNode
      * @return Object that will disable this option in the plugin
      */
     @Override
-    public Object getValueToDisable()
-    {
+    public Object getValueToDisable() {
         Object obj;
-        switch (type)
-        {
-            case BOOLEAN:
-            {
+        switch (type) {
+            case BOOLEAN: {
                 obj = false;
                 break;
             }
-            case INTEGER:
-            {
+            case INTEGER: {
                 obj = 0;
-                if (subType != null)
-                {
-                    switch (subType)
-                    {
+                if (subType != null) {
+                    switch (subType) {
                         case NATURAL_NUMBER:
-                        case Y_VALUE:
-                        {
+                        case Y_VALUE: {
                             if (disableValue != null)
                                 obj = (Integer) disableValue.get();
                             break;
                         }
-                        case HEALTH:
-                        {
+                        case HEALTH: {
                             obj = 20;
                             break;
                         }
-                        case PERCENTAGE:
-                        {
+                        case PERCENTAGE: {
                             obj = 0;
                             break;
                         }
-                        default:
-                        {
+                        default: {
                             obj = defaultValue;
                             throw new UnsupportedOperationException("SubType hasn't been specified for " + path);
                         }
@@ -160,35 +135,31 @@ public enum MockConfigNode implements ConfigNode
                 }
                 break;
             }
-            case DOUBLE:
-            {
+            case DOUBLE: {
                 obj = 0.0;
                 break;
             }
-            case STRING:
-            {
+            case STRING: {
                 obj = "";
                 break;
             }
-            case LIST:
-            {
+            case LIST: {
                 obj = Collections.emptyList();
                 break;
             }
-            default:
-            {
-                throw new UnsupportedOperationException("Type of " + type + " doesn't have a default value to be disabled");
+            default: {
+                throw new UnsupportedOperationException(
+                        "Type of " + type + " doesn't have a default value to be disabled");
             }
         }
         return obj;
     }
 
-
     /**
-     * Contains values for some Nodes which require a special value, which differs from other Nodes with the same type
+     * Contains values for some Nodes which require a special value, which differs
+     * from other Nodes with the same type
      */
-    private enum Disable
-    {
+    private enum Disable {
         /**
          * A value of 0 will disable this feature in the plugin
          */
@@ -198,18 +169,13 @@ public enum MockConfigNode implements ConfigNode
          */
         ONE(1);
 
-
-        private Disable(Object obj)
-        {
+        private Disable(Object obj) {
             disable = obj;
         }
 
-
         final Object disable;
 
-
-        public Object get()
-        {
+        public Object get() {
             return disable;
         }
     }

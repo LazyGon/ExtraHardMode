@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -31,8 +29,7 @@ import java.util.List;
 /**
  * Task to drop items at a specified location.
  */
-class DropItemsTask implements Runnable
-{
+class DropItemsTask implements Runnable {
 
     /**
      * Items to drop.
@@ -44,25 +41,20 @@ class DropItemsTask implements Runnable
      */
     private final Location location;
 
-
     /**
      * Constructor.
      *
      * @param itemsToDrop - List of items to drop.
      * @param location    - Drop point location.
      */
-    public DropItemsTask(List<ItemStack> itemsToDrop, Location location)
-    {
+    public DropItemsTask(List<ItemStack> itemsToDrop, Location location) {
         this.itemsToDrop = itemsToDrop;
         this.location = location;
     }
 
-
     @Override
-    public void run()
-    {
-        for (ItemStack item : itemsToDrop)
-        {
+    public void run() {
+        for (ItemStack item : itemsToDrop) {
             location.getWorld().dropItemNaturally(location, item);
         }
     }

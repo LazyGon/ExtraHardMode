@@ -1,6 +1,5 @@
 package com.extrahardmode.service.config;
 
-
 import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
@@ -10,31 +9,27 @@ import java.util.Map;
 /**
  * Adds comments to yaml files
  */
-public class YamlCommentWriter
-{
+public class YamlCommentWriter {
     /**
      * Add comments to a configuration file (after writing it with snakeyaml)
      *
      * @param input    yml config file
      * @param comments path = key, comment lines = values
      */
-    public static void write(File input, Map<String, String[]> comments)
-    {
+    public static void write(File input, Map<String, String[]> comments) {
         BufferedReader br;
-        //output
+        // output
         ByteArrayOutputStream memStream = new ByteArrayOutputStream(1024);
         FileOutputStream outStream = null;
         OutputStreamWriter writer = null;
-        //nodes
+        // nodes
         String[] nodes = new String[20];
-        try
-        {
+        try {
             br = new BufferedReader(new FileReader(input));
             writer = new OutputStreamWriter(memStream, Charset.forName("UTF-8").newEncoder());
 
             String line;
-            while ((line = br.readLine()) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 boolean comment = isComment(line);
                 boolean listItem = isListItem(line);
 
@@ -42,70 +37,58 @@ public class YamlCommentWriter
 
                 String nodename = getNodeName(line);
                 nodes[level] = nodename;
-                nodes[level + 1] = null;  //bcs
-                //path
+                nodes[level + 1] = null; // bcs
+                // path
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i <= level; i++)
-                    if (nodes[i] != null)
-                    {
+                    if (nodes[i] != null) {
                         if (i > 0)
                             sb.append('.');
                         sb.append(nodes[i]);
                     }
                 String path = sb.toString();
 
-                //we have a comment?
-                if (comments.containsKey(path) && !(comment || listItem)) //TODO split long lines
+                // we have a comment?
+                if (comments.containsKey(path) && !(comment || listItem)) // TODO split long lines
                     for (String commentLine : comments.get(path))
                         writer.write(StringUtils.repeat(" ", level * 2) + "# " + commentLine + String.format("%n"));
                 line += String.format("%n");
                 writer.write(line);
 
-                line.length();  //useless breakpoint line
+                line.length(); // useless breakpoint line
             }
             br.close();
-            //Overwrite the original file
+            // Overwrite the original file
             outStream = new FileOutputStream(input);
             writer.close();
             memStream.writeTo(outStream);
             outStream.close();
         }
-        //BLABLABLA EXCEPTIONS BLABLA
-        catch (FileNotFoundException e)
-        {
+        // BLABLABLA EXCEPTIONS BLABLA
+        catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    private static boolean isComment(String line)
-    {
+    private static boolean isComment(String line) {
         return line.startsWith("#");
     }
 
-
-    private static boolean isListItem(String line)
-    {
+    private static boolean isListItem(String line) {
         return line.substring(getIndentation(line)).startsWith("-");
     }
 
-
-    private static String getNodeName(String line)
-    {
+    private static String getNodeName(String line) {
         if (isComment(line) || !line.contains(":"))
             return null;
         return line.substring(getIndentation(line)).split(":")[0];
     }
 
-
-    private static int getIndentation(String line)
-    {
+    private static int getIndentation(String line) {
         int level = 0;
-        for (char c : line.toCharArray())
-        {
+        for (char c : line.toCharArray()) {
             if (c == ' ')
                 level++;
             else

@@ -21,7 +21,6 @@
 
 package com.extrahardmode.module;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.messages.MessageConfig;
 import com.extrahardmode.config.messages.MessageNode;
@@ -36,8 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** @author Diemex */
-public class MsgPersistModule extends EHMModule
-{
+public class MsgPersistModule extends EHMModule {
     private final String dbFile;
 
     private final String msgTable = "messages";
@@ -52,22 +50,18 @@ public class MsgPersistModule extends EHMModule
     /** Cache data from the db (playerid, message, value) */
     private Table<Integer, MessageNode, Integer> cache;
 
-
     /**
      * Constructor.
      *
      * @param plugin - Plugin instance.
      */
-    public MsgPersistModule(ExtraHardMode plugin, String dbFile)
-    {
+    public MsgPersistModule(ExtraHardMode plugin, String dbFile) {
         super(plugin);
         this.dbFile = dbFile;
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         messages = plugin.getModuleForClass(MessageConfig.class);
         playerIdBuffer = new HashMap<String, Integer>();
         cache = HashBasedTable.create();
@@ -75,37 +69,30 @@ public class MsgPersistModule extends EHMModule
         initializeTables();
     }
 
-
     @Override
-    public void closing()
-    {
+    public void closing() {
         playerIdBuffer = null;
     }
 
-
     /** Make sure JDBC is enabled/loaded */
-    protected void testJDBC()
-    {
-        try
-        {
+    protected void testJDBC() {
+        try {
             Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             plugin.getLogger().severe("JDBC Driver not found : " + e);
             closing();
         }
     }
 
-
     /**
-     * Get the id of the Player. Buffers id in a Map. Creates new id if Player not in the db yet.
+     * Get the id of the Player. Buffers id in a Map. Creates new id if Player not
+     * in the db yet.
      *
      * @param playerName name of the Player
      *
      * @return id of Player
      */
-    private int getPlayerId(String playerName)
-    {
+    private int getPlayerId(String playerName) {
         if (playerIdBuffer.containsKey(playerName))
             return playerIdBuffer.get(playerName);
         int id = 0;
@@ -113,8 +100,7 @@ public class MsgPersistModule extends EHMModule
         Connection conn = null;
         Statement aStatement = null;
         ResultSet resultSet = null;
-        try
-        {
+        try {
             conn = retrieveConnection();
             aStatement = conn.createStatement();
             String playerIdQuery = String.format(
@@ -124,36 +110,36 @@ public class MsgPersistModule extends EHMModule
             if (resultSet.next())
                 id = resultSet.getInt("id");
 
-            if (id == 0) //Create a new Player
+            if (id == 0) // Create a new Player
             {
-                String newPlayerQuery = String.format( //new id
+                String newPlayerQuery = String.format( // new id
                         "INSERT INTO %s (%s) VALUES (%s)", playerTable, "name", '"' + playerName + '"');
                 aStatement.executeUpdate(newPlayerQuery);
 
-                //Get the id of the just inserted row, I tried getGeneratedKeys() but that wasn't supported by jdbc
+                // Get the id of the just inserted row, I tried getGeneratedKeys() but that
+                // wasn't supported by jdbc
                 resultSet = aStatement.executeQuery(playerIdQuery);
                 if (resultSet.next())
                     id = resultSet.getInt("id");
 
-                String newPlayerDataQuery = String.format( //empty row in messages
+                String newPlayerDataQuery = String.format( // empty row in messages
                         "INSERT INTO %s (%s) VALUES (%s)", msgTable, "id", id);
                 aStatement.executeUpdate(newPlayerDataQuery);
                 aStatement.close();
             }
 
             playerIdBuffer.put(playerName, id);
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally
-        {
-            try
-            {
-                if (aStatement != null && !aStatement.isClosed()) aStatement.close();
-                if (resultSet != null && !resultSet.isClosed()) resultSet.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e)
-            {
+        } finally {
+            try {
+                if (aStatement != null && !aStatement.isClosed())
+                    aStatement.close();
+                if (resultSet != null && !resultSet.isClosed())
+                    resultSet.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -161,41 +147,35 @@ public class MsgPersistModule extends EHMModule
         return id;
     }
 
-
     /**
      * Get a connection to our database
      *
      * @return a connection
      */
-    private Connection retrieveConnection() throws SQLException
-    {
+    private Connection retrieveConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:sqlite:" + dbFile);
     }
 
-
     /** Creates tables if they do not exist. */
-    private void initializeTables()
-    {
+    private void initializeTables() {
         Connection conn = null;
         Statement statement = null;
-        try
-        {
+        try {
             conn = retrieveConnection();
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            //One table holding the playername id relation
+            // One table holding the playername id relation
             String playerQuery = String.format(
-                    "CREATE TABLE IF NOT EXISTS %s (id INTEGER PRIMARY KEY AUTOINCREMENT, %s STRING)", playerTable, "name");
+                    "CREATE TABLE IF NOT EXISTS %s (id INTEGER PRIMARY KEY AUTOINCREMENT, %s STRING)", playerTable,
+                    "name");
             statement.executeUpdate(playerQuery);
 
-            //One column for every message
+            // One column for every message
             StringBuilder columns = new StringBuilder();
-            for (MessageNode node : MessageNode.getMessageNodes())
-            {
+            for (MessageNode node : MessageNode.getMessageNodes()) {
                 MsgCategory cat = messages.getCat(node);
-                if (node.getColumnName() != null && (cat == MsgCategory.TUTORIAL || cat == MsgCategory.ONE_TIME))
-                {
+                if (node.getColumnName() != null && (cat == MsgCategory.TUTORIAL || cat == MsgCategory.ONE_TIME)) {
                     columns.append(',');
                     columns.append(node.getColumnName());
                 }
@@ -205,39 +185,33 @@ public class MsgPersistModule extends EHMModule
                     "CREATE TABLE IF NOT EXISTS %s (id INTEGER PRIMARY KEY UNIQUE %s)", msgTable, columns);
             statement.executeUpdate(msgQuery);
 
-            //Check if all columns are present
+            // Check if all columns are present
             DatabaseMetaData dmd = conn.getMetaData();
-            //Add missing columns
-            for (MessageNode node : MessageNode.getMessageNodes())
-            {
+            // Add missing columns
+            for (MessageNode node : MessageNode.getMessageNodes()) {
                 MsgCategory cat = messages.getCat(node);
-                if (cat == MsgCategory.TUTORIAL || cat == MsgCategory.ONE_TIME)
-                {
+                if (cat == MsgCategory.TUTORIAL || cat == MsgCategory.ONE_TIME) {
                     ResultSet set = dmd.getColumns(null, null, msgTable, node.getColumnName());
-                    if (!set.next())
-                    {
+                    if (!set.next()) {
                         String updateQuery = String.format(
                                 "ALTER TABLE %s ADD COLUMN %s", msgTable, node.getColumnName());
                         statement.executeUpdate(updateQuery);
                     }
                 }
             }
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally
-        {
-            try
-            {
-                if (statement != null && !statement.isClosed()) statement.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e)
-            {
+        } finally {
+            try {
+                if (statement != null && !statement.isClosed())
+                    statement.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     /**
      * Increment the count of a certain message by one
@@ -245,14 +219,12 @@ public class MsgPersistModule extends EHMModule
      * @param node       to increment
      * @param playerName only for this player
      */
-    public void increment(MessageNode node, String playerName)
-    {
+    public void increment(MessageNode node, String playerName) {
         int playerId = getPlayerId(playerName);
         int value = getCountFor(node, playerId);
 
         set(node, playerId, ++value);
     }
-
 
     /**
      * Set the count of a certain message to a certain value
@@ -261,37 +233,32 @@ public class MsgPersistModule extends EHMModule
      * @param playerId player for whom we are tracking the count
      * @param value    value to set
      */
-    private void set(MessageNode node, int playerId, int value)
-    {
+    private void set(MessageNode node, int playerId, int value) {
         Validate.isTrue(value >= 0, "Count has to be positive");
         incrementCache(playerId, node, value);
         Connection conn = null;
         Statement statement = null;
-        try
-        {
+        try {
             conn = retrieveConnection();
             statement = conn.createStatement();
 
-            //Set the count to the provided value
+            // Set the count to the provided value
             String setQuery = String.format(
                     "UPDATE %s SET %s = %s WHERE id = %s", msgTable, node.getColumnName(), value, playerId);
             statement.execute(setQuery);
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally
-        {
-            try
-            {
-                if (statement != null && !statement.isClosed()) statement.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e)
-            {
+        } finally {
+            try {
+                if (statement != null && !statement.isClosed())
+                    statement.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     /**
      * Get the count of a message
@@ -301,11 +268,9 @@ public class MsgPersistModule extends EHMModule
      *
      * @return count >= 0
      */
-    public int getCountFor(MessageNode node, String playerName)
-    {
+    public int getCountFor(MessageNode node, String playerName) {
         return getCountFor(node, getPlayerId(playerName));
     }
-
 
     /**
      * Get how often a message has been displayed
@@ -315,9 +280,8 @@ public class MsgPersistModule extends EHMModule
      *
      * @return how often this message has been displayed
      */
-    private int getCountFor(MessageNode node, int playerId)
-    {
-        //Check cache first
+    private int getCountFor(MessageNode node, int playerId) {
+        // Check cache first
         if (cache.contains(playerId, node))
             return cache.get(playerId, node);
 
@@ -326,8 +290,7 @@ public class MsgPersistModule extends EHMModule
         ResultSet result = null;
         int value = 0;
 
-        try
-        {
+        try {
             conn = retrieveConnection();
             statement = conn.createStatement();
 
@@ -336,54 +299,48 @@ public class MsgPersistModule extends EHMModule
             result = statement.executeQuery(select);
             if (result.next())
                 value = result.getInt(node.getColumnName());
-            else //create the missing row
+            else // create the missing row
             {
-                String newPlayerDataQuery = String.format( //empty row in messages
+                String newPlayerDataQuery = String.format( // empty row in messages
                         "INSERT INTO %s (%s) VALUES (%s)", msgTable, "id", playerId);
                 conn.createStatement().executeUpdate(newPlayerDataQuery);
             }
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        } finally
-        {
-            try
-            {
-                if (result != null && !result.isClosed()) result.close();
-                if (statement != null && !statement.isClosed()) statement.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e)
-            {
+        } finally {
+            try {
+                if (result != null && !result.isClosed())
+                    result.close();
+                if (statement != null && !statement.isClosed())
+                    statement.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        //Save to cache
+        // Save to cache
         cache.put(playerId, node, value);
 
         return value;
     }
-
 
     /**
      * Resets all counts for a given player
      *
      * @param playerName player to reset the stats for
      */
-    public void resetAll(String playerName)
-    {
+    public void resetAll(String playerName) {
         int playerId = getPlayerId(playerName);
-        for (MessageNode node : MessageNode.values())
-        {
-            if (node.getColumnName() != null)
-            {
+        for (MessageNode node : MessageNode.values()) {
+            if (node.getColumnName() != null) {
                 set(node, playerId, 0);
             }
         }
     }
 
-    private void incrementCache(int id, MessageNode node, int count)
-    {
+    private void incrementCache(int id, MessageNode node, int count) {
         if (!cache.contains(id, node))
             return;
         count += cache.get(id, node);

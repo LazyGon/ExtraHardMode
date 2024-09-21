@@ -21,7 +21,6 @@
 
 package com.extrahardmode.command;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.ICommand;
 import com.extrahardmode.service.IModule;
@@ -33,22 +32,17 @@ import org.bukkit.command.CommandSender;
 /**
  * Reload command.
  */
-public class ReloadCommand implements ICommand
-{
+public class ReloadCommand implements ICommand {
 
     @Override
-    public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender.hasPermission(PermissionNode.ADMIN.getNode()))
-        {
-            for (IModule module : plugin.getModules().values())
-            {
+    public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label, String[] args) {
+        if (sender.hasPermission(PermissionNode.ADMIN.getNode())) {
+            for (IModule module : plugin.getModules().values()) {
                 module.closing();
                 module.starting();
             }
             sender.sendMessage(ChatColor.GREEN + plugin.getTag() + " Reloaded " + plugin.getName());
-        } else
-        {
+        } else {
             sender.sendMessage(ChatColor.RED + plugin.getTag() + " Lack permission: " + PermissionNode.ADMIN.getNode());
         }
         return true;

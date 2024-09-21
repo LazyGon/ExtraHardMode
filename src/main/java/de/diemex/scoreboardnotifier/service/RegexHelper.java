@@ -20,20 +20,16 @@
 
 package de.diemex.scoreboardnotifier.service;
 
-
 import java.util.regex.Pattern;
 
 /**
  * @author Diemex
  */
-public class RegexHelper
-{
+public class RegexHelper {
     private static Pattern onlyNums = Pattern.compile("[^0-9]");
     private static Pattern onlyEnum = Pattern.compile("[^A-Z_]");
 
-
-    public static int parseNumber(String input) throws NumberFormatException
-    {
+    public static int parseNumber(String input) throws NumberFormatException {
         int num;
         input = onlyNums.matcher(input).replaceAll("");
         if (input.length() > 0)
@@ -43,9 +39,7 @@ public class RegexHelper
         return num;
     }
 
-
-    public static String stripEnum(String input)
-    {
+    public static String stripEnum(String input) {
         input = input.toUpperCase();
         input = onlyEnum.matcher(input).replaceAll("");
         return input;

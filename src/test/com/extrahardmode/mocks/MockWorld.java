@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks;
 
-
 import org.bukkit.World;
 
 import static org.mockito.Mockito.mock;
@@ -29,12 +28,12 @@ import static org.mockito.Mockito.when;
 
 /**
  * Mocks commonly used methods like
+ * 
  * <pre>
- *     getName()
+ * getName()
  * </pre>
  */
-public class MockWorld
-{
+public class MockWorld {
     /**
      * Our mocked World Object
      */
@@ -45,40 +44,32 @@ public class MockWorld
      */
     private World.Environment environment;
 
-
     /**
      * Construct a new mocked World with a given name
      */
-    public MockWorld(String name)
-    {
+    public MockWorld(String name) {
         when(world.getName()).thenReturn(name);
     }
-
 
     /**
      * Set the Environment of this World
      */
-    public void setEnvironment(World.Environment environment)
-    {
+    public void setEnvironment(World.Environment environment) {
         this.environment = environment;
         when(this.get().getEnvironment()).thenReturn(environment);
     }
 
-
     /**
      * Get the Environment of this World
      */
-    public World.Environment getEnvironment()
-    {
+    public World.Environment getEnvironment() {
         return environment;
     }
-
 
     /**
      * Get the mocked Object
      */
-    public World get()
-    {
+    public World get() {
         return world;
     }
 }

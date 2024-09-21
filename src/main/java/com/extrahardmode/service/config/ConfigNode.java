@@ -21,12 +21,10 @@
 
 package com.extrahardmode.service.config;
 
-
 /**
  * Represents a configuration node.
  */
-public interface ConfigNode
-{
+public interface ConfigNode {
 
     /**
      * Get the config path.
@@ -64,8 +62,7 @@ public interface ConfigNode
     /**
      * Variable Types.
      */
-    public enum VarType
-    {
+    public enum VarType {
         STRING,
         INTEGER,
         DOUBLE,
@@ -74,21 +71,21 @@ public interface ConfigNode
         COLOR,
         POTION_EFFECT,
         MATERIAL,
-        @Deprecated MATERIAL_LIST,
-        @Deprecated BLOCK_RELATION_LIST,
+        @Deprecated
+        MATERIAL_LIST,
+        @Deprecated
+        BLOCK_RELATION_LIST,
         COMMENT
     }
-
 
     /**
      * SubTypes, like percentage, y-value, custom etc
      */
-    public enum SubType
-    {
+    public enum SubType {
         PERCENTAGE,
         Y_VALUE,
         HEALTH,
         NATURAL_NUMBER,
-        PLAYER_NAME //limited to 16 chars
+        PLAYER_NAME // limited to 16 chars
     }
 }

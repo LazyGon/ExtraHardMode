@@ -1,6 +1,5 @@
 package com.extrahardmode.command;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.service.ICommand;
@@ -45,8 +44,9 @@ public class EnabledCommand implements ICommand {
                 sender.sendMessage(ChatColor.GREEN + "ExtraHardMode is enabled for all worlds");
             else {
                 if (CFG.getEnabledWorlds().length > 0)
-                    sender.sendMessage(String.format("%sEHM enabled for: %s", ChatColor.GREEN, Arrays.toString(CFG.getEnabledWorlds())));
-                //All this is for disabled worlds
+                    sender.sendMessage(String.format("%sEHM enabled for: %s", ChatColor.GREEN,
+                            Arrays.toString(CFG.getEnabledWorlds())));
+                // All this is for disabled worlds
                 List<String> enabledWorlds = Arrays.asList(CFG.getEnabledWorlds());
                 List<String> disabledWorlds = new ArrayList<String>();
                 for (World aWorld : plugin.getServer().getWorlds())
@@ -54,7 +54,8 @@ public class EnabledCommand implements ICommand {
                 disabledWorlds.removeAll(enabledWorlds);
                 if (disabledWorlds.size() > 0)
                     sender.sendMessage(String.format("%sEHM disabled for: %s", ChatColor.RED, disabledWorlds));
-                sender.sendMessage(String.format("%sCurrent world: %s %s", enabled ? ChatColor.GREEN : ChatColor.RED, world.getName(), enabled ? "enabled" : "disabled"));
+                sender.sendMessage(String.format("%sCurrent world: %s %s", enabled ? ChatColor.GREEN : ChatColor.RED,
+                        world.getName(), enabled ? "enabled" : "disabled"));
             }
         } else
             sender.sendMessage(ChatColor.RED + plugin.getTag() + " Lack permission: " + PermissionNode.ADMIN.getNode());

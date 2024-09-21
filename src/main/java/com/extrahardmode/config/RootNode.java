@@ -21,7 +21,6 @@
 
 package com.extrahardmode.config;
 
-
 import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.MultiWorldConfig;
 import com.extrahardmode.service.config.customtypes.BlockRelationsList;
@@ -35,9 +34,9 @@ import java.util.Collections;
 /**
  * Configuration options of the root config.yml file.
  */
-//Please keep the codestyle, it makes it easier to grasp the structure of the config
-public enum RootNode implements ConfigNode
-{
+// Please keep the codestyle, it makes it easier to grasp the structure of the
+// config
+public enum RootNode implements ConfigNode {
     /**
      * How this ConfigFile is going to be handled by the plugin
      */
@@ -45,7 +44,8 @@ public enum RootNode implements ConfigNode
     /**
      * Print Header?
      */
-    PRINT_HEADER("Print Config Header", VarType.BOOLEAN, true, "If the big text on top of the config should be printed"),
+    PRINT_HEADER("Print Config Header", VarType.BOOLEAN, true,
+            "If the big text on top of the config should be printed"),
     /**
      * Print Node Comments?
      */
@@ -99,40 +99,50 @@ public enum RootNode implements ConfigNode
     /**
      * If ore placement next to stone blocks should be blocked to prevent tunneling
      */
-    SUPER_HARD_STONE_BLOCK_ORE_PLACEMENT("World Rules.Mining.Inhibit Tunneling.Block Placing Ore Next To Stone Exploit", VarType.BOOLEAN, true,
+    SUPER_HARD_STONE_BLOCK_ORE_PLACEMENT(
+            "World Rules.Mining.Inhibit Tunneling.Block Placing Ore Next To Stone Exploit", VarType.BOOLEAN,
+            true,
             "Block players from placing ore next to stone to soften the stone when mining the ore."),
     /**
      * If movement of stone blocks with pistons should be blocked
      */
-    SUPER_HARD_STONE_BLOCK_PISTONS("World Rules.Mining.Inhibit Tunneling.Block Moving Of Stone Blocks With Piston Exploit", VarType.BOOLEAN, true,
+    SUPER_HARD_STONE_BLOCK_PISTONS(
+            "World Rules.Mining.Inhibit Tunneling.Block Moving Of Stone Blocks With Piston Exploit",
+            VarType.BOOLEAN, true,
             "Block sneaky players from trying to tunnel using pistons. This will block movement of stone and ore blocks with pistons."),
     /**
      * whether stone is hardened to encourage cave exploration over tunneling
      */
-    SUPER_HARD_STONE_TOOLS("World Rules.Mining.Inhibit Tunneling.Amount of Stone Tool Can Mine", VarType.LIST, new DefaultToolDurabilities(),
+    SUPER_HARD_STONE_TOOLS("World Rules.Mining.Inhibit Tunneling.Amount of Stone Tool Can Mine", VarType.LIST,
+            new DefaultToolDurabilities(),
             "List of tools that can mine stone. If a tool isn't in the list it can't mine stone.",
             "E.g. DIAMOND_PICKAXE@100 = Mine 100 stone blocks -> pick broken",
             "Vanilla reference: Iron: 250, Diamond: 1561, Netherite: 2031"),
     /**
      * Breaking an ore will cause surrounding stone to turn to cobble and fall
      */
-    SUPER_HARD_STONE_PHYSICS("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Enable", VarType.BOOLEAN, true,
+    SUPER_HARD_STONE_PHYSICS("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Enable", VarType.BOOLEAN,
+            true,
             "Cave-ins are a persistent threat. Mining ore softens the stone around it, which can then fall and injure the careless player.",
             "Dirt and grass, which is often compacted into a solid mass in cavern ceilings and floors, will also come crashing down when disturbed."),
     /**
      * Apply physics to blocks surrounding stone
      */
-    SUPER_HARD_STONE_PHYSICS_APPLY("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Apply Physics To Weakened Stone", VarType.BOOLEAN, true,
+    SUPER_HARD_STONE_PHYSICS_APPLY(
+            "World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Apply Physics To Weakened Stone",
+            VarType.BOOLEAN, true,
             "If the softened stone blocks should fall. They do not have to be in additional falling blocks section for this."),
     /**
      * These Blocks will turn surrounding stone into cobblestone
      */
-    SUPER_HARD_STONE_ORE_BLOCKS("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Blocks", VarType.LIST, new DefaultPhysicsBlocks(),
+    SUPER_HARD_STONE_ORE_BLOCKS("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Blocks", VarType.LIST,
+            new DefaultPhysicsBlocks(),
             "Ore blocks that will soften surrounding stone blocks."),
     /**
      * Stone Blocks and their counter respective cobblestone blocks
      */
-    SUPER_HARD_STONE_STONE_BLOCKS("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Stone Blocks", VarType.BLOCK_RELATION_LIST, new DefaultStoneBlocks(),
+    SUPER_HARD_STONE_STONE_BLOCKS("World Rules.Mining.Breaking Blocks Softens Surrounding Stone.Stone Blocks",
+            VarType.BLOCK_RELATION_LIST, new DefaultStoneBlocks(),
             "Here you can specify custom stone blocks or change what stone softens into. (STONE-COBBLESTONE)"),
     /**
      * ###########
@@ -142,7 +152,8 @@ public enum RootNode implements ConfigNode
     /**
      * maximum y for placing standard torches
      */
-    STANDARD_TORCH_MIN_Y("World Rules.Torches.No Placement Under Y", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO, 30,
+    STANDARD_TORCH_MIN_Y("World Rules.Torches.No Placement Under Y", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO,
+            30,
             "No placement of torches below Defined Value. Makes for scarier caves on the lower levels. Y: 0 to disable"),
     /**
      * whether players are limited to placing torches against specific materials
@@ -191,7 +202,8 @@ public enum RootNode implements ConfigNode
     /**
      * percent chance for broken netherrack to start a fire
      */
-    BROKEN_NETHERRACK_CATCHES_FIRE_PERCENT("World Rules.Breaking Netherrack Starts Fire Percent", VarType.INTEGER, SubType.PERCENTAGE, 20,
+    BROKEN_NETHERRACK_CATCHES_FIRE_PERCENT("World Rules.Breaking Netherrack Starts Fire Percent", VarType.INTEGER,
+            SubType.PERCENTAGE, 20,
             "Tunneling in the nether will randomly set a fire. Players have to be careful",
             "to not set themselves on fire."),
     /**
@@ -199,23 +211,28 @@ public enum RootNode implements ConfigNode
      */
     LIMITED_BLOCK_PLACEMENT("World Rules.Limited Block Placement", VarType.BOOLEAN, true,
             "Blocks jumping and placing a block directly beneath you and branching out with no blocks to support"),
-    //Feaure replaced with GraviTree (another Big_Scary-created plugin) https://dev.bukkit.org/projects/gravitree
-//    /**
-//     * whether tree logs respect gravity
-//     */
-//    BETTER_TREE_CHOPPING("World Rules.Better Tree Felling", VarType.BOOLEAN, true,
-//            "The trunk and branches of a tree will fall and potentially injure you.",
-//            "It makes it easier to chop trees, but you have to watch out a little for the falling logs.",
-//            "Also by making logs of branches fall down most treetops should decay naturally."),
+    // Feaure replaced with GraviTree (another Big_Scary-created plugin)
+    // https://dev.bukkit.org/projects/gravitree
+    // /**
+    // * whether tree logs respect gravity
+    // */
+    // BETTER_TREE_CHOPPING("World Rules.Better Tree Felling", VarType.BOOLEAN,
+    // true,
+    // "The trunk and branches of a tree will fall and potentially injure you.",
+    // "It makes it easier to chop trees, but you have to watch out a little for the
+    // falling logs.",
+    // "Also by making logs of branches fall down most treetops should decay
+    // naturally."),
     /**
      * #################################
      * # ENHANCED ENVIRONMENTAL DAMAGE #
      * #################################
      */
     /**
-     * whether players take additional damage and/or debuffs from environmental injuries
+     * whether players take additional damage and/or debuffs from environmental
+     * injuries
      */
-    //dmg before potion effect -> first value in list
+    // dmg before potion effect -> first value in list
     _COMMENT_ENVIRONMENTAL_DMG("Player.Enhanced Environmental Injuries",
             "Apply effects and damage multipliers to players",
             "Bukkit effect names: http://jd.bukkit.org/rb/apidocs/org/bukkit/potion/PotionEffectType.html",
@@ -224,31 +241,42 @@ public enum RootNode implements ConfigNode
 
     ENHANCED_DMG_FALL_MULT("Player.Enhanced Environmental Injuries.Fall.Dmg Multiplier", VarType.DOUBLE, 2.0),
 
-    ENHANCED_DMG_FALL("Player.Enhanced Environmental Injuries.Fall", VarType.POTION_EFFECT, new PotionEffectHolder(PotionEffectType.SLOWNESS, 4 * 20, 2)),
+    ENHANCED_DMG_FALL("Player.Enhanced Environmental Injuries.Fall", VarType.POTION_EFFECT,
+            new PotionEffectHolder(PotionEffectType.SLOWNESS, 4 * 20, 2)),
 
-    ENHANCED_DMG_EXPLOSION_MULT("Player.Enhanced Environmental Injuries.Explosion.Dmg Multiplier", VarType.DOUBLE, 1.0),
+    ENHANCED_DMG_EXPLOSION_MULT("Player.Enhanced Environmental Injuries.Explosion.Dmg Multiplier", VarType.DOUBLE,
+            1.0),
 
-    ENHANCED_DMG_EXPLOSION("Player.Enhanced Environmental Injuries.Explosion", VarType.POTION_EFFECT, new PotionEffectHolder(PotionEffectType.NAUSEA, 15 * 20, 3)),
+    ENHANCED_DMG_EXPLOSION("Player.Enhanced Environmental Injuries.Explosion", VarType.POTION_EFFECT,
+            new PotionEffectHolder(PotionEffectType.NAUSEA, 15 * 20, 3)),
 
-    ENHANCED_DMG_SUFFOCATION_MULT("Player.Enhanced Environmental Injuries.Suffocation.Dmg Multiplier", VarType.DOUBLE, 5.0),
+    ENHANCED_DMG_SUFFOCATION_MULT("Player.Enhanced Environmental Injuries.Suffocation.Dmg Multiplier",
+            VarType.DOUBLE, 5.0),
 
-    ENHANCED_DMG_SUFFOCATION("Player.Enhanced Environmental Injuries.Suffocation", VarType.POTION_EFFECT, new PotionEffectHolder(null, 0, 0)),
+    ENHANCED_DMG_SUFFOCATION("Player.Enhanced Environmental Injuries.Suffocation", VarType.POTION_EFFECT,
+            new PotionEffectHolder(null, 0, 0)),
 
     ENHANCED_DMG_LAVA_MULT("Player.Enhanced Environmental Injuries.Lava.Dmg Multiplier", VarType.DOUBLE, 2.0),
 
-    ENHANCED_DMG_LAVA("Player.Enhanced Environmental Injuries.Lava", VarType.POTION_EFFECT, new PotionEffectHolder(null, 0, 0)),
+    ENHANCED_DMG_LAVA("Player.Enhanced Environmental Injuries.Lava", VarType.POTION_EFFECT,
+            new PotionEffectHolder(null, 0, 0)),
 
     ENHANCED_DMG_BURN_MULT("Player.Enhanced Environmental Injuries.Burning.Dmg Multiplier", VarType.DOUBLE, 1.0),
 
-    ENHANCED_DMG_BURN("Player.Enhanced Environmental Injuries.Burning", VarType.POTION_EFFECT, new PotionEffectHolder(PotionEffectType.BLINDNESS, 20, 1)),
+    ENHANCED_DMG_BURN("Player.Enhanced Environmental Injuries.Burning", VarType.POTION_EFFECT,
+            new PotionEffectHolder(PotionEffectType.BLINDNESS, 20, 1)),
 
-    ENHANCED_DMG_STARVATION_MULT("Player.Enhanced Environmental Injuries.Starvation.Dmg Multiplier", VarType.DOUBLE, 2.0),
+    ENHANCED_DMG_STARVATION_MULT("Player.Enhanced Environmental Injuries.Starvation.Dmg Multiplier", VarType.DOUBLE,
+            2.0),
 
-    ENHANCED_DMG_STARVATION("Player.Enhanced Environmental Injuries.Starvation", VarType.POTION_EFFECT, new PotionEffectHolder(null, 0, 0)),
+    ENHANCED_DMG_STARVATION("Player.Enhanced Environmental Injuries.Starvation", VarType.POTION_EFFECT,
+            new PotionEffectHolder(null, 0, 0)),
 
-    ENHANCED_DMG_DROWNING_MULT("Player.Enhanced Environmental Injuries.Drowning.Dmg Multiplier", VarType.DOUBLE, 2.0),
+    ENHANCED_DMG_DROWNING_MULT("Player.Enhanced Environmental Injuries.Drowning.Dmg Multiplier", VarType.DOUBLE,
+            2.0),
 
-    ENHANCED_DMG_DROWNING("Player.Enhanced Environmental Injuries.Drowning", VarType.POTION_EFFECT, new PotionEffectHolder(null, 0, 0)),
+    ENHANCED_DMG_DROWNING("Player.Enhanced Environmental Injuries.Drowning", VarType.POTION_EFFECT,
+            new PotionEffectHolder(null, 0, 0)),
 
     /**
      * whether players catch fire when extinguishing a fire up close
@@ -271,25 +299,30 @@ public enum RootNode implements ConfigNode
     /**
      * percentage of item stacks lost on death
      */
-    PLAYER_DEATH_ITEM_STACKS_FORFEIT_PERCENT("Player.Death.Loose Items On Death.Percentage", VarType.INTEGER, SubType.PERCENTAGE, 10,
+    PLAYER_DEATH_ITEM_STACKS_FORFEIT_PERCENT("Player.Death.Loose Items On Death.Percentage", VarType.INTEGER,
+            SubType.PERCENTAGE, 10,
             "Percentage of all of the players items that will get lost on death."),
     /**
-     * Damage Tools instead by a percentage of their max durability instead of completely deleting the items
+     * Damage Tools instead by a percentage of their max durability instead of
+     * completely deleting the items
      */
-    PLAYER_DEATH_TOOLS_DMG_PERCENTAGE("Player.Death.Loose Items On Death.Damage Tools By Percentage", VarType.INTEGER, SubType.PERCENTAGE, 30,
+    PLAYER_DEATH_TOOLS_DMG_PERCENTAGE("Player.Death.Loose Items On Death.Damage Tools By Percentage",
+            VarType.INTEGER, SubType.PERCENTAGE, 30,
             "Damage some tools from the list instead of completely removing them.",
             "Encourages players to use more valuable tools as they won't completely loose them on death."),
     /**
      * If a tool would be completely destroyed if we should keep it
      */
-    PLAYER_DEATH_TOOLS_KEEP_DAMAGED("Player.Death.Loose Items On Death.Keep Heavily Damaged Tools", VarType.BOOLEAN, true,
+    PLAYER_DEATH_TOOLS_KEEP_DAMAGED("Player.Death.Loose Items On Death.Keep Heavily Damaged Tools", VarType.BOOLEAN,
+            true,
             "If an already heavily damaged tool should be kept or completely destroyed."),
     /**
      * List of items that count as tools
      */
     PLAYER_DEATH_TOOLS_LIST("Player.Death.Loose Items On Death.Tools", VarType.LIST, new DefaultValuableTools(),
             "Tool settings apply only to these tools"),
-    PLAYER_DEATH_ITEMS_BLACKLIST("Player.Death.Loose Items On Death.Blacklisted Items", VarType.LIST, new ArrayList<Material>(),
+    PLAYER_DEATH_ITEMS_BLACKLIST("Player.Death.Loose Items On Death.Blacklisted Items", VarType.LIST,
+            new ArrayList<Material>(),
             "These items will never be removed on death."),
     /**
      * Enable custom Health
@@ -298,7 +331,8 @@ public enum RootNode implements ConfigNode
     /**
      * how much health after respawn
      */
-    PLAYER_RESPAWN_HEALTH_PERCENTAGE("Player.Death.Override Respawn Health.Percentage", VarType.INTEGER, SubType.PERCENTAGE, Disable.HUNDRED, 75,
+    PLAYER_RESPAWN_HEALTH_PERCENTAGE("Player.Death.Override Respawn Health.Percentage", VarType.INTEGER,
+            SubType.PERCENTAGE, Disable.HUNDRED, 75,
             "Percentage of total health that the player will spawn with. Works with custom max health."),
     /**
      * how much food bar after respawn
@@ -320,7 +354,8 @@ public enum RootNode implements ConfigNode
     /**
      * Block Swimming Up WaterFalls/WaterElevators
      */
-    NO_SWIMMING_IN_ARMOR_BLOCK_ELEVATORS("Player.No Swimming When Too Heavy.Block Elevators/Waterfalls", VarType.BOOLEAN, true,
+    NO_SWIMMING_IN_ARMOR_BLOCK_ELEVATORS("Player.No Swimming When Too Heavy.Block Elevators/Waterfalls",
+            VarType.BOOLEAN, true,
             "Set to false if you want to exempt players from drowning when swimming up 1x1 water streams."),
     /**
      * The maximum amount of points you can have before being too heavy
@@ -330,7 +365,8 @@ public enum RootNode implements ConfigNode
     /**
      * The amount of points a piece of armor adds to the max
      */
-    NO_SWIMMING_IN_ARMOR_ARMOR_POINTS("Player.No Swimming When Too Heavy.One Piece Of Worn Armor Adds", VarType.DOUBLE, 2.0,
+    NO_SWIMMING_IN_ARMOR_ARMOR_POINTS("Player.No Swimming When Too Heavy.One Piece Of Worn Armor Adds",
+            VarType.DOUBLE, 2.0,
             "One piece of worn armor would add 2.0 weight. So full set of armor adds 8.0"),
     /**
      * The amount of points that stuff in your inventory adds to the max
@@ -343,14 +379,17 @@ public enum RootNode implements ConfigNode
     NO_SWIMMING_IN_ARMOR_TOOL_POINTS("Player.No Swimming When Too Heavy.One Tool Adds", VarType.DOUBLE, 0.5,
             "A tool is any item that doesn't stack, swords, axes, not worn armor, shears etc"),
     /**
-     * How fast do you drown, 100 (percent) = you drown no chance, 25 there is a chance you'll drown
+     * How fast do you drown, 100 (percent) = you drown no chance, 25 there is a
+     * chance you'll drown
      */
-    NO_SWIMMING_IN_ARMOR_DROWN_RATE("Player.No Swimming When Too Heavy.Drown Rate", VarType.INTEGER, SubType.NATURAL_NUMBER, 35,
+    NO_SWIMMING_IN_ARMOR_DROWN_RATE("Player.No Swimming When Too Heavy.Drown Rate", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 35,
             "Basically an esoteric percentage of how fast you drown. 35 actually doesnt really make you drown. 50 would make you drown"),
     /**
      * How much do you drown faster per weight over the max
      */
-    NO_SWIMMING_IN_ARMOR_ENCUMBRANCE_EXTRA("Player.No Swimming When Too Heavy.Overencumbrance Adds To Drown Rate", VarType.INTEGER, SubType.NATURAL_NUMBER, 2,
+    NO_SWIMMING_IN_ARMOR_ENCUMBRANCE_EXTRA("Player.No Swimming When Too Heavy.Overencumbrance Adds To Drown Rate",
+            VarType.INTEGER, SubType.NATURAL_NUMBER, 2,
             "If your inventory weight exceeds the max weight every weightpoint will add 2 to the drownrate.",
             "Weight = 25 => (base) + (exceeding) * (modifier) = 35 + 7 * 2 = 49 (new drown rate)"),
 
@@ -377,11 +416,12 @@ public enum RootNode implements ConfigNode
     ARMOR_SLOWDOWN_PERCENT("Player.Armor Changes.Slowdown Percentage", VarType.INTEGER, SubType.PERCENTAGE, 40,
             "How much percent players wearing a full diamond armor will be slowed down.",
             "This is the maximum slow down, the amount of armor points determines how much a player will be slowed down."),
-//    /**
-//     * Maximum percentage
-//     */
-//    ARMOR_JUMP_SLOWDOWN_PERCENT("Player.Armor Changes.Jump Slowdown Percentage", VarType.INTEGER, SubType.PERCENTAGE, 30,
-//            "By how much players jumping (esp. sprint jumping) will be slowed down."),
+    // /**
+    // * Maximum percentage
+    // */
+    // ARMOR_JUMP_SLOWDOWN_PERCENT("Player.Armor Changes.Jump Slowdown Percentage",
+    // VarType.INTEGER, SubType.PERCENTAGE, 30,
+    // "By how much players jumping (esp. sprint jumping) will be slowed down."),
 
     /**
      * #########################
@@ -398,32 +438,37 @@ public enum RootNode implements ConfigNode
     /**
      * max y value for extra monster spawns
      */
-    MORE_MONSTERS_MAX_Y("General Monster Rules.More Monsters.Max Y", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO, 55),
+    MORE_MONSTERS_MAX_Y("General Monster Rules.More Monsters.Max Y", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO,
+            55),
     /**
      * what to multiply monster spawns by
      */
-    MORE_MONSTERS_MULTIPLIER("General Monster Rules.More Monsters.Multiplier", VarType.INTEGER, SubType.NATURAL_NUMBER, Disable.ONE, 2,
+    MORE_MONSTERS_MULTIPLIER("General Monster Rules.More Monsters.Multiplier", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, Disable.ONE, 2,
             "A simple multiplier to increase spawns under ground by increasing the packspawning size."),
 
     /**
      * max y value for monsters to spawn in the light
      */
-    MONSTER_SPAWNS_IN_LIGHT_MAX_Y("General Monster Rules.Monsters Spawn In Light.Max Y", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO, 50),
+    MONSTER_SPAWNS_IN_LIGHT_MAX_Y("General Monster Rules.Monsters Spawn In Light.Max Y", VarType.INTEGER,
+            SubType.Y_VALUE, Disable.ZERO, 50),
 
     /**
      * max light value for monsters to spawn in the light
-     * 0-3  = bats spawn at depth
-     * 0-7  = mobs spawn in overworld normally
+     * 0-3 = bats spawn at depth
+     * 0-7 = mobs spawn in overworld normally
      * 8-11 = mobs are hostile but do not burn
-     * 12+  = mobs except spiders, creepers, and witches burn (blazes hostile)
+     * 12+ = mobs except spiders, creepers, and witches burn (blazes hostile)
      */
-    MONSTER_SPAWNS_IN_LIGHT_MAX_LIGHT("General Monster Rules.Monsters Spawn In Light.Max Light", VarType.INTEGER, SubType.NATURAL_NUMBER, Disable.ZERO, 10,
+    MONSTER_SPAWNS_IN_LIGHT_MAX_LIGHT("General Monster Rules.Monsters Spawn In Light.Max Light", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, Disable.ZERO, 10,
             "0-3: bats spawning, 0-7 normal mob spawning, 8-11 mobs are hostile but don't burn, 12+ mobs burn"),
 
     /**
      * percentage of time to spawn monsters in light
      */
-    MONSTER_SPAWNS_IN_LIGHT_PERCENTAGE("General Monster Rules.Monsters Spawn In Light.Percentage", VarType.INTEGER, SubType.PERCENTAGE, Disable.ZERO, 100,
+    MONSTER_SPAWNS_IN_LIGHT_PERCENTAGE("General Monster Rules.Monsters Spawn In Light.Percentage", VarType.INTEGER,
+            SubType.PERCENTAGE, Disable.ZERO, 100,
             "Spawns monsters at locations where player has been previously."),
 
     /**
@@ -431,27 +476,31 @@ public enum RootNode implements ConfigNode
      * # HORSES #
      * ##########
      */
-    HORSE_CHEST_BLOCK_BELOW("Horses.Block Usage Of Chest Below", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO, 55),
+    HORSE_CHEST_BLOCK_BELOW("Horses.Block Usage Of Chest Below", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO,
+            55),
 
     /**
      * ###########
      * # ZOMBIES #
      * ###########
      */
-    _COMMENT_ZOMBIES("Zombies", "Instead of speeding Zombies up, a Zombie will slow a player down for a few seconds when the player is hit by a zombie.",
+    _COMMENT_ZOMBIES("Zombies",
+            "Instead of speeding Zombies up, a Zombie will slow a player down for a few seconds when the player is hit by a zombie.",
             "Zombies may resurrect when slain. They will respawn after a few seconds and might ambush a player."),
     /**
      * whether zombies apply a debuff to players on hit
      */
     ZOMBIES_DEBILITATE_PLAYERS("Zombies.Slow Players.Enable", VarType.BOOLEAN, true),
 
-    ZOMBIES_DEBILITATE_PLAYERS_EFFECT("Zombies.Slow Players.Effect", VarType.POTION_EFFECT, new PotionEffectHolder(PotionEffectType.SLOWNESS, 5 * 20, 1),
+    ZOMBIES_DEBILITATE_PLAYERS_EFFECT("Zombies.Slow Players.Effect", VarType.POTION_EFFECT,
+            new PotionEffectHolder(PotionEffectType.SLOWNESS, 5 * 20, 1),
             "Effect to apply to the player when he is hit."),
 
     ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK("Zombies.Slow Players.Stack Effect.Enable", VarType.BOOLEAN, true,
             "If the effect strength should be increased when a player is hit in succession"),
 
-    ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK_MAX("Zombies.Slow Players.Stack Effect.Max Strength", VarType.INTEGER, SubType.NATURAL_NUMBER, 3,
+    ZOMBIES_DEBILITATE_PLAYERS_EFFECT_STACK_MAX("Zombies.Slow Players.Stack Effect.Max Strength", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 3,
             "Maximum strength of the effect that can be achieved."),
 
     /**
@@ -460,7 +509,8 @@ public enum RootNode implements ConfigNode
     ZOMBIES_REANIMATE_SKULLS("Zombies.Reanimate.Place Skulls", VarType.BOOLEAN, true,
             "If zombie heads should be placed at the location where a zombie will resurrect",
             "Breaking the head will result in the zombie not resurrecting."),
-    ZOMBIE_REANIMATE_SKULLS_DROP_PERCENTAGE("Zombies.Reanimate.Placed Skulls Drop Percentage", VarType.INTEGER, SubType.PERCENTAGE, 5,
+    ZOMBIE_REANIMATE_SKULLS_DROP_PERCENTAGE("Zombies.Reanimate.Placed Skulls Drop Percentage", VarType.INTEGER,
+            SubType.PERCENTAGE, 5,
             "What percentage of the placed skulls should drop as an item, when broken before the zombie respawns."),
     ZOMBIES_REANIMATE_PERCENT("Zombies.Reanimate.Percent", VarType.INTEGER, SubType.PERCENTAGE, 50,
             "Percentage for the 1st respawn to occur. To reduce the amount of consecutive respawns the percentage reduced by 1/n respawns.",
@@ -482,7 +532,8 @@ public enum RootNode implements ConfigNode
     /**
      * Slowness length
      */
-    SKELETONS_SNOWBALLS_SLOW_LEN("Skeletons.Shoot Snowballs.Blind Player (ticks)", VarType.INTEGER, SubType.NATURAL_NUMBER, 100),
+    SKELETONS_SNOWBALLS_SLOW_LEN("Skeletons.Shoot Snowballs.Blind Player (ticks)", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 100),
 
     /**
      * Shoot Fireworks
@@ -502,11 +553,10 @@ public enum RootNode implements ConfigNode
      */
     SKELETONS_FIREBALL_ENABLE("Skeletons.Shoot Fireballs.Enable", VarType.BOOLEAN, true),
 
-
     SKELETONS_FIREBALL_PERCENTAGE("Skeletons.Shoot Fireballs.Percentage", VarType.INTEGER, SubType.PERCENTAGE, 10),
 
-
-    SKELETONS_FIREBALL_PLAYER_FIRETICKS("Skeletons.Shoot Fireballs.Player Fireticks", VarType.INTEGER, SubType.NATURAL_NUMBER, 40),
+    SKELETONS_FIREBALL_PLAYER_FIRETICKS("Skeletons.Shoot Fireballs.Player Fireticks", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 40),
 
     /**
      * enable skeletons shooting silverfish instead of firing arrows
@@ -515,19 +565,23 @@ public enum RootNode implements ConfigNode
     /**
      * percent chance skeletons will release silverfish instead of firing arrows
      */
-    SKELETONS_RELEASE_SILVERFISH_PERCENT("Skeletons.Shoot Silverfish.Percent", VarType.INTEGER, SubType.PERCENTAGE, 20),
+    SKELETONS_RELEASE_SILVERFISH_PERCENT("Skeletons.Shoot Silverfish.Percent", VarType.INTEGER, SubType.PERCENTAGE,
+            20),
     /**
      * Kill the silverfish after the skeleton died
      */
-    SKELETONS_RELEASE_SILVERFISH_KILL("Skeletons.Shoot Silverfish.Kill Silverfish After Skeleton Died", VarType.BOOLEAN, true),
+    SKELETONS_RELEASE_SILVERFISH_KILL("Skeletons.Shoot Silverfish.Kill Silverfish After Skeleton Died",
+            VarType.BOOLEAN, true),
     /**
      * percent chance skeletons will release silverfish instead of firing arrows
      */
-    SKELETONS_RELEASE_SILVERFISH_LIMIT("Skeletons.Shoot Silverfish.Limit To X Spawned At A Time", VarType.INTEGER, SubType.NATURAL_NUMBER, 5),
+    SKELETONS_RELEASE_SILVERFISH_LIMIT("Skeletons.Shoot Silverfish.Limit To X Spawned At A Time", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 5),
     /**
      * total limit of silverfish
      */
-    SKELETONS_RELEASE_SILVERFISH_LIMIT_TOTAL("Skeletons.Shoot Silverfish.Limit To X Spawned In Total", VarType.INTEGER, SubType.NATURAL_NUMBER, 15),
+    SKELETONS_RELEASE_SILVERFISH_LIMIT_TOTAL("Skeletons.Shoot Silverfish.Limit To X Spawned In Total",
+            VarType.INTEGER, SubType.NATURAL_NUMBER, 15),
     /**
      * whether or not arrows will pass harmlessly through skeletons
      */
@@ -551,7 +605,8 @@ public enum RootNode implements ConfigNode
      */
     SILVERFISH_DROP_COBBLE("Silverfish.Drop Cobble", VarType.BOOLEAN, true),
     /**
-     * Spawn with a potion effect so you can still see them when they glitch into the floor
+     * Spawn with a potion effect so you can still see them when they glitch into
+     * the floor
      */
     SILVERFISH_TEMP_POTION_EFFECT_FIX("Silverfish.Show Particles To Make Better Visible", VarType.BOOLEAN, true),
 
@@ -563,7 +618,8 @@ public enum RootNode implements ConfigNode
     /**
      * percentage of zombies which will be replaced with spiders under sea level
      */
-    BONUS_UNDERGROUND_SPIDER_SPAWN_PERCENT("Spiders.Bonus Underground Spawn Percent", VarType.INTEGER, SubType.PERCENTAGE, 20),
+    BONUS_UNDERGROUND_SPIDER_SPAWN_PERCENT("Spiders.Bonus Underground Spawn Percent", VarType.INTEGER,
+            SubType.PERCENTAGE, 20),
     /**
      * whether spiders drop webbing when they die
      */
@@ -577,15 +633,18 @@ public enum RootNode implements ConfigNode
     /**
      * percentage of creepers which will spawn charged
      */
-    CHARGED_CREEPER_SPAWN_PERCENT("Creepers.Charged Creeper Spawn Percent", VarType.INTEGER, SubType.PERCENTAGE, 10),
+    CHARGED_CREEPER_SPAWN_PERCENT("Creepers.Charged Creeper Spawn Percent", VarType.INTEGER, SubType.PERCENTAGE,
+            10),
     /**
      * percentage of creepers which spawn activated TNT on death
      */
-    CREEPERS_DROP_TNT_ON_DEATH_PERCENT("Creepers.Drop Tnt On Death.Percent", VarType.INTEGER, SubType.PERCENTAGE, 20),
+    CREEPERS_DROP_TNT_ON_DEATH_PERCENT("Creepers.Drop Tnt On Death.Percent", VarType.INTEGER, SubType.PERCENTAGE,
+            20),
     /**
      * max y for creepers to drop tnt, to restrict them to caves
      */
-    CREEPERS_DROP_TNT_ON_DEATH_MAX_Y("Creepers.Drop Tnt On Death.Max Y", VarType.INTEGER, SubType.Y_VALUE, Disable.ZERO, 50),
+    CREEPERS_DROP_TNT_ON_DEATH_MAX_Y("Creepers.Drop Tnt On Death.Max Y", VarType.INTEGER, SubType.Y_VALUE,
+            Disable.ZERO, 50),
     /**
      * whether charged creepers explode when damaged
      */
@@ -597,7 +656,8 @@ public enum RootNode implements ConfigNode
     /**
      * Number of Fireworks to show when creeper launches
      */
-    FLAMING_CREEPERS_FIREWORK("Creepers.Fire Triggers Explosion.Firework Count", VarType.INTEGER, SubType.NATURAL_NUMBER, 3),
+    FLAMING_CREEPERS_FIREWORK("Creepers.Fire Triggers Explosion.Firework Count", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 3),
     /**
      * Speed at which a creeper ascends
      */
@@ -631,12 +691,14 @@ public enum RootNode implements ConfigNode
     /**
      * percentage chance that a blaze slain in the nether will split into two blazes
      */
-    NETHER_BLAZES_SPLIT_ON_DEATH_PERCENT("Blazes.Nether Split On Death Percent", VarType.INTEGER, SubType.PERCENTAGE, 25),
+    NETHER_BLAZES_SPLIT_ON_DEATH_PERCENT("Blazes.Nether Split On Death Percent", VarType.INTEGER,
+            SubType.PERCENTAGE, 25),
 
     /**
      * percentage chance that a blaze spawn will trigger a flame slime spawn as well
      */
-    FLAME_SLIMES_SPAWN_WITH_NETHER_BLAZE_PERCENT("MagmaCubes.Spawn With Nether Blaze Percent", VarType.INTEGER, SubType.PERCENTAGE, 100),
+    FLAME_SLIMES_SPAWN_WITH_NETHER_BLAZE_PERCENT("MagmaCubes.Spawn With Nether Blaze Percent", VarType.INTEGER,
+            SubType.PERCENTAGE, 100),
     /**
      * whether damaging a magma cube turns it into a blaze
      */
@@ -664,7 +726,8 @@ public enum RootNode implements ConfigNode
     /**
      * Whether pig zombies should drop netherwart occasionally elsewhere in Nether
      */
-    NETHER_PIGS_DROP_WART("PigZombies.Percent Chance to Drop Netherwart Elsewhere In Nether", VarType.INTEGER, SubType.PERCENTAGE, 25),
+    NETHER_PIGS_DROP_WART("PigZombies.Percent Chance to Drop Netherwart Elsewhere In Nether", VarType.INTEGER,
+            SubType.PERCENTAGE, 25),
     /**
      * PigMen get spawned when lighting strikes
      */
@@ -675,16 +738,19 @@ public enum RootNode implements ConfigNode
      * ##########
      */
     /**
-     * whether ghasts should deflect arrows and drop extra loot percentage like skeleton deflect
+     * whether ghasts should deflect arrows and drop extra loot percentage like
+     * skeleton deflect
      */
     GHASTS_DEFLECT_ARROWS("Ghasts.Arrows Do % Damage", VarType.INTEGER, SubType.PERCENTAGE, Disable.HUNDRED, 20,
             "Reduce the damage arrows do to Ghasts to make fights with Ghasts more challenging."),
     /**
-     * whether ghasts should deflect arrows and drop extra loot percentage like skeleton deflect
+     * whether ghasts should deflect arrows and drop extra loot percentage like
+     * skeleton deflect
      */
     GHASTS_EXP_MULTIPLIER("Ghasts.Exp Multiplier", VarType.INTEGER, SubType.NATURAL_NUMBER, Disable.ONE, 10),
     /**
-     * whether ghasts should deflect arrows and drop extra loot percentage like skeleton deflect
+     * whether ghasts should deflect arrows and drop extra loot percentage like
+     * skeleton deflect
      */
     GHASTS_DROPS_MULTIPLIER("Ghasts.Drops Multiplier", VarType.INTEGER, SubType.NATURAL_NUMBER, Disable.ONE, 5),
     /**
@@ -722,7 +788,7 @@ public enum RootNode implements ConfigNode
      * percentage of rabbits which spawn as killerbunnies
      */
     BONUS_KILLERBUNNY_SPAWN_PERCENT("KillerBunny.Bonus Spawn Percent", VarType.INTEGER, SubType.PERCENTAGE, 1),
-    
+
     /**
      * ###########
      * # Vindicator #
@@ -813,7 +879,8 @@ public enum RootNode implements ConfigNode
     /**
      * How much percent of plants you loose
      */
-    WEAK_FOOD_CROPS_LOSS_RATE("Farming.Weak Crops.Loss Rate", VarType.INTEGER, SubType.PERCENTAGE, Disable.ZERO, 25),
+    WEAK_FOOD_CROPS_LOSS_RATE("Farming.Weak Crops.Loss Rate", VarType.INTEGER, SubType.PERCENTAGE, Disable.ZERO,
+            25),
     /**
      * Should desserts be really empty and hostile towards plants
      */
@@ -861,7 +928,8 @@ public enum RootNode implements ConfigNode
     /**
      * Threshold/Number of animals before start damaging animals
      */
-    ANIMAL_OVERCROWD_THRESHOLD("Farming.Animal Overcrowding Control.Threshold", VarType.INTEGER, SubType.NATURAL_NUMBER, 10, 
+    ANIMAL_OVERCROWD_THRESHOLD("Farming.Animal Overcrowding Control.Threshold", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 10,
             "Maximum amount of animals allowed in a small area before they start dying"),
     /**
      * #############################
@@ -877,20 +945,23 @@ public enum RootNode implements ConfigNode
      */
     MORE_FALLING_BLOCKS_BREAK_TORCHES("Additional Falling Blocks.Break Torches", VarType.BOOLEAN, true),
     /**
-     * Whether a falling block that is broken by an obstructing block should drop as an item
+     * Whether a falling block that is broken by an obstructing block should drop as
+     * an item
      */
     MORE_FALLING_BLOCKS_DROP_ITEM("Additional Falling Blocks.Drop As Items", VarType.BOOLEAN, false,
             "Whether a falling block that is broken by an obstructing block should drop as an item"),
     /**
      * Cascading falling blocks
      */
-    MORE_FALLING_BLOCKS_CASCADE("Additional Falling Blocks.Landed Blocks Can Cause Blocks To Fall", VarType.BOOLEAN, true,
+    MORE_FALLING_BLOCKS_CASCADE("Additional Falling Blocks.Landed Blocks Can Cause Blocks To Fall", VarType.BOOLEAN,
+            true,
             "When a falling block lands it checks if the blocks around it should fall as well. Can cascade downwards infinitely."),
-//    /**
-//     * How much damage loose Falling Logs do to Players and Animals
-//     */
-//    MORE_FALLING_BLOCKS_DMG_AMOUNT("Additional Falling Blocks.Dmg Amount When Hitting Players", VarType.INTEGER, SubType.NATURAL_NUMBER, 2,
-//            "Should a falling block damage players when it lands on them."),
+    // /**
+    // * How much damage loose Falling Logs do to Players and Animals
+    // */
+    // MORE_FALLING_BLOCKS_DMG_AMOUNT("Additional Falling Blocks.Dmg Amount When
+    // Hitting Players", VarType.INTEGER, SubType.NATURAL_NUMBER, 2,
+    // "Should a falling block damage players when it lands on them."),
     /**
      * wheter falling grass/mycel turns into dirt
      */
@@ -921,13 +992,16 @@ public enum RootNode implements ConfigNode
     EXPLOSIONS_FYLING_BLOCKS_ENABLE("Explosions.Physics.Enable", VarType.BOOLEAN, true,
             "Makes explosions uber cool by throwing blocks up into the air"),
     /**
-     * If explosions from other plugins should also be affected (disabled by default)
+     * If explosions from other plugins should also be affected (disabled by
+     * default)
      */
-    EXPLOSIONS_FYLING_BLOCKS_ENABLE_OTHER("Explosions.Physics.Enable For Plugin Created Explosions", VarType.BOOLEAN, false),
+    EXPLOSIONS_FYLING_BLOCKS_ENABLE_OTHER("Explosions.Physics.Enable For Plugin Created Explosions",
+            VarType.BOOLEAN, false),
     /**
      * How many blocks will go flying
      */
-    EXPLOSIONS_FLYING_BLOCKS_PERCENTAGE("Explosions.Physics.Blocks Affected Percentage", VarType.INTEGER, SubType.PERCENTAGE, 20,
+    EXPLOSIONS_FLYING_BLOCKS_PERCENTAGE("Explosions.Physics.Blocks Affected Percentage", VarType.INTEGER,
+            SubType.PERCENTAGE, 20,
             "How many of the blocks that would have been destroyed should go flying instead"),
     /**
      * How fast the blocks accelerate upwards
@@ -941,7 +1015,8 @@ public enum RootNode implements ConfigNode
     /**
      * In what radius the flying blocks shouldnt be placed
      */
-    EXPLOSIONS_FLYING_BLOCKS_AUTOREMOVE_RADIUS("Explosions.Physics.Exceed Radius Autoremove", VarType.INTEGER, SubType.NATURAL_NUMBER, 10,
+    EXPLOSIONS_FLYING_BLOCKS_AUTOREMOVE_RADIUS("Explosions.Physics.Exceed Radius Autoremove", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 10,
             "Blocks exceeding this radius will no be placed in the world to avoid explosions uglying the landscape.",
             "Set to 0 if you want blocks to not be placed at all"),
     /**
@@ -950,7 +1025,8 @@ public enum RootNode implements ConfigNode
     EXPLOSIONS_Y("Explosions.Border Y", VarType.INTEGER, SubType.NATURAL_NUMBER, 55,
             "Determines where your surface is located. You can have seperate settings for the surface and caves."),
 
-    //WHEN ADDING NEW EXPLOSIONTYPES YOU HAVE TO ADD THE NODES TO EXPLOSIONTYPE AND ALSO UPDATE THE EXPLOSIONTASK
+    // WHEN ADDING NEW EXPLOSIONTYPES YOU HAVE TO ADD THE NODES TO EXPLOSIONTYPE AND
+    // ALSO UPDATE THE EXPLOSIONTASK
     /**
      * CREEPER Enable this custom explosion
      */
@@ -958,7 +1034,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below border
      */
-    EXPLOSIONS_CREEPERS_BELOW_POWER("Explosions.Creeper.Below Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 3,
+    EXPLOSIONS_CREEPERS_BELOW_POWER("Explosions.Creeper.Below Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 3,
             "3 = default creeper, 4 = default tnt, 6 = default charged creeper"),
     /**
      * Set Fire on Explosion below border
@@ -971,7 +1048,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below border
      */
-    EXPLOSIONS_CREEPERS_ABOVE_POWER("Explosions.Creeper.Above Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 3),
+    EXPLOSIONS_CREEPERS_ABOVE_POWER("Explosions.Creeper.Above Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 3),
     /**
      * Set Fire on Explosion below border
      */
@@ -989,27 +1067,33 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below the border
      */
-    EXPLOSIONS_CHARGED_CREEPERS_BELOW_POWER("Explosions.Charged Creeper.Below Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 4),
+    EXPLOSIONS_CHARGED_CREEPERS_BELOW_POWER("Explosions.Charged Creeper.Below Border.Explosion Power",
+            VarType.INTEGER, SubType.NATURAL_NUMBER, 4),
     /**
      * Set Fire on Explosion below border
      */
-    EXPLOSIONS_CHARGED_CREEPERS_BELOW_FIRE("Explosions.Charged Creeper.Below Border.Set Fire", VarType.BOOLEAN, false),
+    EXPLOSIONS_CHARGED_CREEPERS_BELOW_FIRE("Explosions.Charged Creeper.Below Border.Set Fire", VarType.BOOLEAN,
+            false),
     /**
      * Damage the world below border
      */
-    EXPLOSIONS_CHARGED_CREEPERS_BELOW_WORLD_GRIEF("Explosions.Charged Creeper.Below Border.World Damage", VarType.BOOLEAN, true),
+    EXPLOSIONS_CHARGED_CREEPERS_BELOW_WORLD_GRIEF("Explosions.Charged Creeper.Below Border.World Damage",
+            VarType.BOOLEAN, true),
     /**
      * Size of Explosion below border
      */
-    EXPLOSIONS_CHARGED_CREEPERS_ABOVE_POWER("Explosions.Charged Creeper.Above Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 4),
+    EXPLOSIONS_CHARGED_CREEPERS_ABOVE_POWER("Explosions.Charged Creeper.Above Border.Explosion Power",
+            VarType.INTEGER, SubType.NATURAL_NUMBER, 4),
     /**
      * Set Fire on Explosion below border
      */
-    EXPLOSIONS_CHARGED_CREEPERS_ABOVE_FIRE("Explosions.Charged Creeper.Above Border.Set Fire", VarType.BOOLEAN, false),
+    EXPLOSIONS_CHARGED_CREEPERS_ABOVE_FIRE("Explosions.Charged Creeper.Above Border.Set Fire", VarType.BOOLEAN,
+            false),
     /**
      * Damage the world below border
      */
-    EXPLOSIONS_CHARGED_CREEPERS_ABOVE_WORLD_GRIEF("Explosions.Charged Creeper.Above Border.World Damage", VarType.BOOLEAN, true),
+    EXPLOSIONS_CHARGED_CREEPERS_ABOVE_WORLD_GRIEF("Explosions.Charged Creeper.Above Border.World Damage",
+            VarType.BOOLEAN, true),
 
     /**
      * TNT Enable Custom Explosion?
@@ -1029,7 +1113,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below the border
      */
-    EXPLOSIONS_TNT_BELOW_POWER("Explosions.Tnt.Below Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 5),
+    EXPLOSIONS_TNT_BELOW_POWER("Explosions.Tnt.Below Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 5),
     /**
      * Set Fire on Explosion below border
      */
@@ -1041,7 +1126,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below border
      */
-    EXPLOSIONS_TNT_ABOVE_POWER("Explosions.Tnt.Above Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 3),
+    EXPLOSIONS_TNT_ABOVE_POWER("Explosions.Tnt.Above Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 3),
     /**
      * Set Fire on Explosion below border
      */
@@ -1058,7 +1144,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below the border
      */
-    EXPLOSIONS_BLAZE_BELOW_POWER("Explosions.Blazes Explode On Death.Below Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 4),
+    EXPLOSIONS_BLAZE_BELOW_POWER("Explosions.Blazes Explode On Death.Below Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 4),
     /**
      * Set Fire on Explosion below border
      */
@@ -1066,11 +1153,13 @@ public enum RootNode implements ConfigNode
     /**
      * Damage the world below border
      */
-    EXPLOSIONS_BLAZE_BELOW_WORLD_GRIEF("Explosions.Blazes Explode On Death.Below Border.World Damage", VarType.BOOLEAN, true),
+    EXPLOSIONS_BLAZE_BELOW_WORLD_GRIEF("Explosions.Blazes Explode On Death.Below Border.World Damage",
+            VarType.BOOLEAN, true),
     /**
      * Size of Explosion below border
      */
-    EXPLOSIONS_BLAZE_ABOVE_POWER("Explosions.Blazes Explode On Death.Above Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 4),
+    EXPLOSIONS_BLAZE_ABOVE_POWER("Explosions.Blazes Explode On Death.Above Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 4),
     /**
      * Set Fire on Explosion below border
      */
@@ -1078,7 +1167,8 @@ public enum RootNode implements ConfigNode
     /**
      * Damage the world below border
      */
-    EXPLOSIONS_BLAZE_ABOVE_WORLD_GRIEF("Explosions.Blazes Explode On Death.Above Border.World Damage", VarType.BOOLEAN, true),
+    EXPLOSIONS_BLAZE_ABOVE_WORLD_GRIEF("Explosions.Blazes Explode On Death.Above Border.World Damage",
+            VarType.BOOLEAN, true),
 
     /**
      * Ghast Enable custom Explosion?
@@ -1087,7 +1177,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below the border
      */
-    EXPLOSIONS_GHAST_BELOW_POWER("Explosions.Ghasts.Below Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 2),
+    EXPLOSIONS_GHAST_BELOW_POWER("Explosions.Ghasts.Below Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 2),
     /**
      * Set Fire on Explosion below border
      */
@@ -1099,7 +1190,8 @@ public enum RootNode implements ConfigNode
     /**
      * Size of Explosion below border
      */
-    EXPLOSIONS_GHAST_ABOVE_POWER("Explosions.Ghasts.Above Border.Explosion Power", VarType.INTEGER, SubType.NATURAL_NUMBER, 2),
+    EXPLOSIONS_GHAST_ABOVE_POWER("Explosions.Ghasts.Above Border.Explosion Power", VarType.INTEGER,
+            SubType.NATURAL_NUMBER, 2),
     /**
      * Set Fire on Explosion below border
      */
@@ -1139,7 +1231,6 @@ public enum RootNode implements ConfigNode
      */
     private Disable disableValue = null;
 
-
     /**
      * Constructor.
      *
@@ -1147,14 +1238,12 @@ public enum RootNode implements ConfigNode
      * @param type - Variable type.
      * @param def  - Default value.
      */
-    private RootNode(String path, VarType type, Object def)
-    {
+    private RootNode(String path, VarType type, Object def) {
         this.comments = null;
         this.path = path;
         this.type = type;
         this.defaultValue = def;
     }
-
 
     /**
      * Constructor.
@@ -1164,17 +1253,14 @@ public enum RootNode implements ConfigNode
      * @param def      - Default value.
      * @param comments - Explaining this node
      */
-    private RootNode(String path, VarType type, Object def, String... comments)
-    {
+    private RootNode(String path, VarType type, Object def, String... comments) {
         this.path = path;
         this.type = type;
         this.defaultValue = def;
         this.comments = comments;
     }
 
-
-    private RootNode(String path, VarType type, SubType subType, Object def)
-    {
+    private RootNode(String path, VarType type, SubType subType, Object def) {
         this.comments = null;
         this.path = path;
         this.type = type;
@@ -1182,9 +1268,7 @@ public enum RootNode implements ConfigNode
         this.subType = subType;
     }
 
-
-    private RootNode(String path, VarType type, SubType subType, Object def, String... comments)
-    {
+    private RootNode(String path, VarType type, SubType subType, Object def, String... comments) {
         this.path = path;
         this.type = type;
         this.defaultValue = def;
@@ -1192,9 +1276,7 @@ public enum RootNode implements ConfigNode
         this.comments = comments;
     }
 
-
-    private RootNode(String path, VarType type, SubType subType, Disable disable, Object def)
-    {
+    private RootNode(String path, VarType type, SubType subType, Disable disable, Object def) {
         this.comments = null;
         this.path = path;
         this.type = type;
@@ -1203,9 +1285,7 @@ public enum RootNode implements ConfigNode
         this.disableValue = disable;
     }
 
-
-    private RootNode(String path, VarType type, SubType subType, Disable disable, Object def, String... comments)
-    {
+    private RootNode(String path, VarType type, SubType subType, Disable disable, Object def, String... comments) {
         this.comments = comments;
         this.path = path;
         this.type = type;
@@ -1213,13 +1293,11 @@ public enum RootNode implements ConfigNode
         this.subType = subType;
         this.disableValue = disable;
     }
-
 
     /**
      * Comment Constructor
      */
-    private RootNode(String path, String... comments)
-    {
+    private RootNode(String path, String... comments) {
         this.path = path;
         this.comments = comments;
         this.type = VarType.COMMENT;
@@ -1228,55 +1306,44 @@ public enum RootNode implements ConfigNode
         this.disableValue = null;
     }
 
-
     @Override
-    public String getPath()
-    {
+    public String getPath() {
         return baseNode() + "." + path;
     }
 
-
     @Override
-    public VarType getVarType()
-    {
+    public VarType getVarType() {
         return type;
     }
 
-
     @Override
-    public Object getDefaultValue()
-    {
+    public Object getDefaultValue() {
         return defaultValue;
     }
 
-
     @Override
-    public SubType getSubType()
-    {
+    public SubType getSubType() {
         return subType;
     }
 
-
-    public static String baseNode()
-    {
+    public static String baseNode() {
         return "ExtraHardMode";
     }
-
 
     /**
      * Get comment describing this node
      *
      * @return comment or null if not set
      */
-    public String[] getComments()
-    {
+    public String[] getComments() {
         return comments;
     }
 
-
     /**
      * Get the Object that will disable this option
-     * <pre>Defaults:
+     * 
+     * <pre>
+     * Defaults:
      * boolean: false
      * int:
      *   no SubType set: 0
@@ -1294,122 +1361,103 @@ public enum RootNode implements ConfigNode
      * @return Object that will disable this option in the plugin
      */
     @Override
-    public Object getValueToDisable()
-    {
+    public Object getValueToDisable() {
         Object obj;
-        switch (type)
-        {
-            case BOOLEAN:
-            {
+        switch (type) {
+            case BOOLEAN: {
                 obj = false;
                 break;
             }
-            case INTEGER:
-            {
+            case INTEGER: {
                 obj = 0;
-                if (subType != null)
-                {
+                if (subType != null) {
                     if (disableValue != null && disableValue.get() != null)
                         obj = disableValue.get();
-                    else
-                    {
-                        switch (subType)
-                        {
+                    else {
+                        switch (subType) {
                             case NATURAL_NUMBER:
-                            case Y_VALUE:
-                            {
+                            case Y_VALUE: {
                                 obj = 0;
                                 break;
                             }
-                            case HEALTH:
-                            {
+                            case HEALTH: {
                                 obj = 20;
                                 break;
                             }
-                            case PERCENTAGE:
-                            {
+                            case PERCENTAGE: {
                                 obj = 0;
                                 break;
                             }
-                            default:
-                            {
+                            default: {
                                 obj = defaultValue;
-                                throw new UnsupportedOperationException("SubType hasn't been specified for " + path);
+                                throw new UnsupportedOperationException(
+                                        "SubType hasn't been specified for "
+                                                + path);
                             }
                         }
                     }
                 }
                 break;
             }
-            case DOUBLE:
-            {
+            case DOUBLE: {
                 obj = 0.0;
                 if (subType != null)
                     if (disableValue != null && disableValue.get() != null)
                         obj = disableValue.get();
-                    else
-                    {
-                        switch (subType)
-                        {
+                    else {
+                        switch (subType) {
                             case NATURAL_NUMBER:
-                            case Y_VALUE:
-                            {
+                            case Y_VALUE: {
                                 if (disableValue != null)
                                     obj = (Double) disableValue.get();
                                 break;
                             }
-                            case HEALTH:
-                            {
+                            case HEALTH: {
                                 obj = 20.0;
                                 break;
                             }
-                            case PERCENTAGE:
-                            {
+                            case PERCENTAGE: {
                                 obj = 0.0;
                                 break;
                             }
-                            default:
-                            {
+                            default: {
                                 obj = defaultValue;
-                                throw new UnsupportedOperationException("SubType hasn't been specified for " + path);
+                                throw new UnsupportedOperationException(
+                                        "SubType hasn't been specified for "
+                                                + path);
                             }
                         }
                     }
                 break;
             }
-            case STRING:
-            {
+            case STRING: {
                 obj = "";
                 break;
             }
-            case LIST:
-            {
+            case LIST: {
                 obj = Collections.emptyList();
                 break;
             }
-            case BLOCK_RELATION_LIST:
-            {
+            case BLOCK_RELATION_LIST: {
                 obj = BlockRelationsList.EMPTY_LIST;
                 break;
             }
-            case POTION_EFFECT:
-            {
+            case POTION_EFFECT: {
                 return null;
             }
-            default:
-            {
-                throw new UnsupportedOperationException("Type of " + type + " doesn't have a default value to be disabled");
+            default: {
+                throw new UnsupportedOperationException(
+                        "Type of " + type + " doesn't have a default value to be disabled");
             }
         }
         return obj;
     }
 
-
     /**
-     * Contains values for some Nodes which require a special value, which differs from other Nodes with the same type
+     * Contains values for some Nodes which require a special value, which differs
+     * from other Nodes with the same type
      */
-    private enum Disable
-    {
+    private enum Disable {
         /**
          * A value of 0 will disable this feature in the plugin
          */
@@ -1423,33 +1471,25 @@ public enum RootNode implements ConfigNode
          */
         HUNDRED(100);
 
-
-        private Disable(Object obj)
-        {
+        private Disable(Object obj) {
             disable = obj;
         }
 
-
         final Object disable;
 
-
-        public Object get()
-        {
+        public Object get() {
             return disable;
         }
     }
 
-
     /**
      * Default list of falling blocks.
      */
-    private static class DefaultFallingBlocks extends ArrayList<String>
-    {
+    private static class DefaultFallingBlocks extends ArrayList<String> {
         /**
          * Constructor.
          */
-        public DefaultFallingBlocks()
-        {
+        public DefaultFallingBlocks() {
             super();
             this.add(Material.DIRT.name());
             this.add(Material.GRASS_BLOCK.name());
@@ -1461,17 +1501,14 @@ public enum RootNode implements ConfigNode
         }
     }
 
-
     /**
      * Default list of falling blocks.
      */
-    private static class DefaultPhysicsBlocks extends ArrayList<String>
-    {
+    private static class DefaultPhysicsBlocks extends ArrayList<String> {
         /**
          * Constructor.
          */
-        public DefaultPhysicsBlocks()
-        {
+        public DefaultPhysicsBlocks() {
             super();
             this.add(Material.COAL_ORE.name());
             this.add(Material.IRON_ORE.name());
@@ -1483,47 +1520,38 @@ public enum RootNode implements ConfigNode
         }
     }
 
-
     /**
      * Default list of tool durabilities
      */
-    private static class DefaultToolDurabilities extends ArrayList<String>
-    {
+    private static class DefaultToolDurabilities extends ArrayList<String> {
         /**
          * Constructor.
          */
-        public DefaultToolDurabilities()
-        {
+        public DefaultToolDurabilities() {
             super();
-            //this.add(new BlockType(Material.IRON_PICKAXE, (short) 32));
-            //this.add(new BlockType(Material.DIAMOND_PICKAXE, (short) 64));
+            // this.add(new BlockType(Material.IRON_PICKAXE, (short) 32));
+            // this.add(new BlockType(Material.DIAMOND_PICKAXE, (short) 64));
             this.add(Material.IRON_PICKAXE.name() + "@128");
             this.add(Material.DIAMOND_PICKAXE.name() + "@512");
             this.add(Material.NETHERITE_PICKAXE.name() + "@1024");
         }
     }
 
-
     /**
      * Default stone cobble relations
      */
-    private static class DefaultStoneBlocks extends BlockRelationsList
-    {
+    private static class DefaultStoneBlocks extends BlockRelationsList {
         /**
          * Constructor.
          */
-        public DefaultStoneBlocks()
-        {
+        public DefaultStoneBlocks() {
             super();
             this.add(Material.STONE, Material.COBBLESTONE);
         }
     }
 
-
-    private static class DefaultValuableTools extends ArrayList<String>
-    {
-        public DefaultValuableTools()
-        {
+    private static class DefaultValuableTools extends ArrayList<String> {
+        public DefaultValuableTools() {
             super();
             this.add(Material.DIAMOND_AXE.name());
             this.add(Material.DIAMOND_SWORD.name());
@@ -1533,25 +1561,18 @@ public enum RootNode implements ConfigNode
         }
     }
 
-
-    private static class DefaultHardBlocks extends ArrayList<String>
-    {
-        public DefaultHardBlocks()
-        {
+    private static class DefaultHardBlocks extends ArrayList<String> {
+        public DefaultHardBlocks() {
             super();
             this.add(Material.STONE.name());
 
         }
     }
 
-
-    private static class DefaultWorlds extends ArrayList<String>
-    {
-        public DefaultWorlds()
-        {
+    private static class DefaultWorlds extends ArrayList<String> {
+        public DefaultWorlds() {
             super();
             this.add(MultiWorldConfig.ALL_WORLDS);
         }
     }
 }
-

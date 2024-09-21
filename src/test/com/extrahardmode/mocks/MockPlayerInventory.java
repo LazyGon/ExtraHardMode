@@ -21,7 +21,6 @@
 
 package com.extrahardmode.mocks;
 
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -34,8 +33,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Max
  */
-public class MockPlayerInventory
-{
+public class MockPlayerInventory {
     /**
      * Inventory instance
      */
@@ -56,14 +54,12 @@ public class MockPlayerInventory
      */
     private final ItemStack[] inventory;
 
-
     /**
      * Constructor
      *
      * @param player name of the Player to whom this inventory belongs to
      */
-    public MockPlayerInventory(Player player, ItemStack[] armorContents, ItemStack[] inventoryContents)
-    {
+    public MockPlayerInventory(Player player, ItemStack[] armorContents, ItemStack[] inventoryContents) {
         this.player = player;
         this.armorContents = armorContents;
         this.inventory = inventoryContents;
@@ -74,12 +70,10 @@ public class MockPlayerInventory
         when(inv.getContents()).thenReturn(this.inventory);
     }
 
-
     /**
      * Get the actual Inventory with it's mocked methods
      */
-    public PlayerInventory get()
-    {
+    public PlayerInventory get() {
         return inv;
     }
 }

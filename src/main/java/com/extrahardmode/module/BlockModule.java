@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.module;
-
 
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.compatibility.CompatHandler;
@@ -47,52 +45,49 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /** Module that manages blocks and physics logic. */
-public class BlockModule extends EHMModule
-{
-    /** Marks a block/location for whatever reason... currently used by waterbucket restrictions */
+public class BlockModule extends EHMModule {
+    /**
+     * Marks a block/location for whatever reason... currently used by waterbucket
+     * restrictions
+     */
     private final String MARK = "ExtraHardMode.Mark";
 
     private RootConfig CFG;
 
     private final Pattern slabPattern = Pattern.compile("(?!DOUBLE).*STEP");
 
-
     /**
      * Constructor.
      *
      * @param plugin - plugin instance.
      */
-    public BlockModule(ExtraHardMode plugin)
-    {
+    public BlockModule(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
-
 
     /**
      * Schedule the physics task
      *
      * @param block          - Target block.
      * @param recursionCount - Number of times to execute.
-     * @param forceCheck     - Whether to force adjacent blocks to be checked for the first iteration
-     * @param wait           - how many ticks to wait before the next task, mainly to prevent crashes when FallingBlocks collide
+     * @param forceCheck     - Whether to force adjacent blocks to be checked for
+     *                       the first iteration
+     * @param wait           - how many ticks to wait before the next task, mainly
+     *                       to prevent crashes when FallingBlocks collide
      */
-    public void physicsCheck(Block block, int recursionCount, boolean forceCheck, int wait)
-    {
-        int id = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new BlockPhysicsCheckTask(plugin, block, recursionCount, forceCheck), wait);
+    public void physicsCheck(Block block, int recursionCount, boolean forceCheck, int wait) {
+        int id = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+                new BlockPhysicsCheckTask(plugin, block, recursionCount, forceCheck), wait);
         // check if it was scheduled. If not, notify in console.
-        if (id == -1)
-        {
+        if (id == -1) {
             plugin.getLogger().severe("Failed schedule BlockPhysicsCheck task!");
         }
     }
-
 
     /**
      * Makes one single block subject to gravity
@@ -102,37 +97,37 @@ public class BlockModule extends EHMModule
      *
      * @return the UUID of this FallingBlock
      */
-    public UUID applyPhysics(Block block, boolean damageEntities)
-    {
+    public UUID applyPhysics(Block block, boolean damageEntities) {
         /* Spawning Falling Blocks with type = AIR crashes the Minecraft client */
         if (block.getType() == Material.AIR)
             return null;
 
         // grass and mycel become dirt when they fall
-        if ((block.getType() == Material.GRASS_BLOCK || block.getType() == Material.MYCELIUM) && CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_TURN_TO_DIRT, block.getWorld().getName()))
+        if ((block.getType() == Material.GRASS_BLOCK || block.getType() == Material.MYCELIUM)
+                && CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_TURN_TO_DIRT, block.getWorld().getName()))
             block.setType(Material.DIRT);
 
-        FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0.5D, 0.0D, 0.5D), block.getBlockData());
+        FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0.5D, 0.0D, 0.5D),
+                block.getBlockData());
         fallingBlock.setDropItem(CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_DROP_ITEM, block.getWorld().getName()));
         // remove original block
         CompatHandler.logFallingBlockFall(block);
         block.setType(Material.AIR);
 
-        final boolean breakTorches = CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_BREAK_TORCHES, block.getWorld().getName());
-        //TODO expand on this, it's only rudimentary, doesnt break torches if there are multiple fallingblocks (only breaks the first)
-        if (breakTorches)
-        {
+        final boolean breakTorches = CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_BREAK_TORCHES,
+                block.getWorld().getName());
+        // TODO expand on this, it's only rudimentary, doesnt break torches if there are
+        // multiple fallingblocks (only breaks the first)
+        if (breakTorches) {
             Block current = block;
             Block below = block.getRelative(BlockFace.DOWN);
-            //Check downwards and break any obstructing blocks
-            for (int y = current.getY(); y > 0; y--)
-            {
-                //Only breaks if the block below is solid and the block on top is transparent
-                if (below.getType().isSolid())
-                {
+            // Check downwards and break any obstructing blocks
+            for (int y = current.getY(); y > 0; y--) {
+                // Only breaks if the block below is solid and the block on top is transparent
+                if (below.getType().isSolid()) {
                     if (breaksFallingBlock(current.getType()))
                         current.breakNaturally();
-                    //Will land on the block below
+                    // Will land on the block below
                     break;
                 }
                 current = below;
@@ -140,17 +135,17 @@ public class BlockModule extends EHMModule
             }
         }
 
-        if (damageEntities) //mark so we know the block is from us
+        if (damageEntities) // mark so we know the block is from us
             EntityHelper.markForProcessing(plugin, fallingBlock);
 
         EntityHelper.markAsOurs(plugin, fallingBlock);
 
-        //TODO: Figure out how to make cancelable (ultra low priority)
-        plugin.getServer().getPluginManager().callEvent(new EntityChangeBlockEvent(fallingBlock, block, Material.AIR.createBlockData()));
+        // TODO: Figure out how to make cancelable (ultra low priority)
+        plugin.getServer().getPluginManager()
+                .callEvent(new EntityChangeBlockEvent(fallingBlock, block, Material.AIR.createBlockData()));
 
         return fallingBlock.getUniqueId();
     }
-
 
     /**
      * Mark this block for whatever reason
@@ -159,22 +154,18 @@ public class BlockModule extends EHMModule
      *
      * @param block to mark
      */
-    public void mark(Block block)
-    {
+    public void mark(Block block) {
         block.setMetadata(MARK, new FixedMetadataValue(plugin, true));
     }
-
 
     /**
      * Removes Metadata from the block
      *
      * @param block to remove the metadata from
      */
-    public void removeMark(Block block)
-    {
+    public void removeMark(Block block) {
         block.removeMetadata(MARK, plugin);
     }
-
 
     /**
      * Has this block been marked?
@@ -183,11 +174,9 @@ public class BlockModule extends EHMModule
      *
      * @return if it has been marked
      */
-    public boolean isMarked(Block block)
-    {
+    public boolean isMarked(Block block) {
         return block.getMetadata(MARK).size() > 0;
     }
-
 
     /**
      * Check if the given plant at the block should die.
@@ -197,23 +186,19 @@ public class BlockModule extends EHMModule
      *
      * @return True if plant should die, else false.
      */
-    public boolean plantDies(Block block, MaterialData newDataValue)
-    {
+    public boolean plantDies(Block block, MaterialData newDataValue) {
         World world = block.getWorld();
 
         final boolean weakFoodCropsEnabled = CFG.getBoolean(RootNode.WEAK_FOOD_CROPS, world.getName());
         final int lossRate = CFG.getInt(RootNode.WEAK_FOOD_CROPS_LOSS_RATE, world.getName());
         final boolean aridDesertsEnabled = CFG.getBoolean(RootNode.ARID_DESSERTS, world.getName());
 
-
-        if (weakFoodCropsEnabled)
-        {
+        if (weakFoodCropsEnabled) {
             // not evaluated until the plant is nearly full grown
-            //For some plants (netherwart, beetroot), this is at data value 3.
+            // For some plants (netherwart, beetroot), this is at data value 3.
 
             int fullGrowthValue = 7;
-            switch (block.getType())
-            {
+            switch (block.getType()) {
                 case BEETROOTS:
                     fullGrowthValue = 3;
                     break;
@@ -225,54 +210,45 @@ public class BlockModule extends EHMModule
                     return false;
             }
 
-            //TODO: 1.13
-            if (newDataValue.getData() >= fullGrowthValue)
-            {
-                    int deathProbability = lossRate;
+            // TODO: 1.13
+            if (newDataValue.getData() >= fullGrowthValue) {
+                int deathProbability = lossRate;
 
-                    // plants in the dark always die
-                    if (block.getLightFromSky() < 10)
-                    {
-                        deathProbability = 100;
-                    } else
-                    {
-                        Biome biome = block.getBiome();
+                // plants in the dark always die
+                if (block.getLightFromSky() < 10) {
+                    deathProbability = 100;
+                } else {
+                    Biome biome = block.getBiome();
 
-                        // the desert environment is very rough on crops
-                        if ((biome == Biome.DESERT) && aridDesertsEnabled)
-                        {
-                            deathProbability += 50;
-                        }
-
-                        // unwatered crops are more likely to die
-                        Block belowBlock = block.getRelative(BlockFace.DOWN);
-                        byte moistureLevel = 0;
-                        if (belowBlock.getType() == Material.FARMLAND)
-                        {
-                            moistureLevel = belowBlock.getData();
-                        }
-
-                        if (moistureLevel == 0)
-                        {
-                            deathProbability += 25;
-                        }
+                    // the desert environment is very rough on crops
+                    if ((biome == Biome.DESERT) && aridDesertsEnabled) {
+                        deathProbability += 50;
                     }
 
-                    if (plugin.random(deathProbability))
-                    {
-                        return true;
+                    // unwatered crops are more likely to die
+                    Block belowBlock = block.getRelative(BlockFace.DOWN);
+                    byte moistureLevel = 0;
+                    if (belowBlock.getType() == Material.FARMLAND) {
+                        moistureLevel = belowBlock.getData();
                     }
+
+                    if (moistureLevel == 0) {
+                        deathProbability += 25;
+                    }
+                }
+
+                if (plugin.random(deathProbability)) {
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
-
     /** Get all "touching" BlockFaces including top/bottom */
-    public BlockFace[] getTouchingFaces()
-    {
-        return new BlockFace[]{
+    public BlockFace[] getTouchingFaces() {
+        return new BlockFace[] {
                 BlockFace.WEST,
                 BlockFace.NORTH,
                 BlockFace.EAST,
@@ -282,15 +258,13 @@ public class BlockModule extends EHMModule
         };
     }
 
-
     /**
      * All horizontal Blockfaces including diagonal onea
      *
      * @return Blockfaces[]
      */
-    public static BlockFace[] getHorizontalAdjacentFaces()
-    {
-        return new BlockFace[]{
+    public static BlockFace[] getHorizontalAdjacentFaces() {
+        return new BlockFace[] {
                 BlockFace.WEST,
                 BlockFace.NORTH_WEST,
                 BlockFace.NORTH,
@@ -302,30 +276,24 @@ public class BlockModule extends EHMModule
         };
     }
 
-
     /**
      * Get all the blocks in a specific area centered around the Location passed in
      *
      * @param loc    Center of the search area
      * @param height how many blocks up to check
      * @param radius of the search (cubic search radius)
-     * @param tag   of Material to search for
+     * @param tag    of Material to search for
      *
      * @return all the Block with the given Type in the specified radius
      */
-    public Block[] getBlocksInArea(Location loc, int height, int radius, Tag tag)
-    {
+    public Block[] getBlocksInArea(Location loc, int height, int radius, Tag tag) {
         List<Block> blocks = new ArrayList<Block>();
-        //Height
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = -radius; x <= radius; x++)
-            {
-                for (int z = -radius; z <= radius; z++)
-                {
+        // Height
+        for (int y = 0; y < height; y++) {
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
                     Block checkBlock = loc.getBlock().getRelative(x, y, z);
-                    if (tag.isTagged(checkBlock.getType()))
-                    {
+                    if (tag.isTagged(checkBlock.getType())) {
                         blocks.add(checkBlock);
                     }
                 }
@@ -334,16 +302,15 @@ public class BlockModule extends EHMModule
         return blocks.toArray(new Block[blocks.size()]);
     }
 
-
     /**
-     * Will a FallingBlock which lands on this Material break and drop to the ground?
+     * Will a FallingBlock which lands on this Material break and drop to the
+     * ground?
      *
      * @param mat to check
      *
      * @return boolean
      */
-    public boolean breaksFallingBlock(Material mat)
-    {
+    public boolean breaksFallingBlock(Material mat) {
         return (mat.isTransparent() &&
                 mat != Material.NETHER_PORTAL &&
                 mat != Material.END_PORTAL) ||
@@ -352,14 +319,14 @@ public class BlockModule extends EHMModule
                 Tag.TRAPDOORS.isTagged(mat) ||
                 Tag.SIGNS.isTagged(mat) ||
                 Tag.WALL_SIGNS.isTagged(mat) ||
-                //Match all slabs besides double slab
+                // Match all slabs besides double slab
                 slabPattern.matcher(mat.name()).matches();
     }
 
-
-    /** Returns if Material is a plant that should be affected by the farming Rules */
-    public boolean isPlant(Material material)
-    {
+    /**
+     * Returns if Material is a plant that should be affected by the farming Rules
+     */
+    public boolean isPlant(Material material) {
         return material.equals(Material.WHEAT)
                 || material.equals(Material.POTATO)
                 || material.equals(Material.CARROT)
@@ -368,7 +335,6 @@ public class BlockModule extends EHMModule
                 || material.equals(Material.BEETROOTS);
     }
 
-
     /**
      * Is this Material food for horses?
      *
@@ -376,24 +342,21 @@ public class BlockModule extends EHMModule
      *
      * @return true if vegetable
      */
-    public static boolean isHorseFood(Material material)
-    {
+    public static boolean isHorseFood(Material material) {
         return material.equals(Material.CARROT)
                 || material.equals(Material.POTATO)
                 || material.equals(Material.APPLE)
-                //|| material.equals(Material.HAY_BLOCK)
+                // || material.equals(Material.HAY_BLOCK)
                 || material.equals(Material.WHEAT);
     }
 
-
     /** Is the given material a tool, e.g. doesn't stack */
-    public static boolean isTool(Material material)
-    {
-        return material.name().endsWith("AXE") //axe & pickaxe
+    public static boolean isTool(Material material) {
+        return material.name().endsWith("AXE") // axe & pickaxe
                 || material.name().endsWith("SHOVEL")
                 || material.name().endsWith("SWORD")
                 || material.name().endsWith("HOE")
-                || material.name().endsWith("BUCKET") //water, milk, lava,..
+                || material.name().endsWith("BUCKET") // water, milk, lava,..
                 || material.equals(Material.BOW)
                 || material.equals(Material.FISHING_ROD)
                 || material.equals(Material.CLOCK)
@@ -401,20 +364,16 @@ public class BlockModule extends EHMModule
                 || material.equals(Material.FLINT_AND_STEEL);
     }
 
-
     /** is the given material armor */
-    public boolean isArmor(Material material)
-    {
+    public boolean isArmor(Material material) {
         return material.name().endsWith("HELMET")
                 || material.name().endsWith("CHESTPLATE")
                 || material.name().endsWith("LEGGINGS")
                 || material.name().endsWith("BOOTS");
     }
 
-
     /** Consider this block a natural block for spawning? */
-    public boolean isNaturalSpawnMaterial(Material material)
-    {
+    public boolean isNaturalSpawnMaterial(Material material) {
         return material == Material.GRASS_BLOCK
                 || material == Material.DIRT
                 || material == Material.STONE
@@ -424,18 +383,16 @@ public class BlockModule extends EHMModule
                 || material == Material.OBSIDIAN
                 || material == Material.COBBLESTONE
                 || material == Material.BEDROCK
-                || material == Material.AIR      //Ghast, Bat
-                || material == Material.WATER;  //Squid
+                || material == Material.AIR // Ghast, Bat
+                || material == Material.WATER; // Squid
     }
 
-
     /** Is this a natural block for netherspawning? */
-    public boolean isNaturalNetherSpawn(Material material)
-    {
-        switch (material)
-        {
+    public boolean isNaturalNetherSpawn(Material material) {
+        switch (material) {
             case NETHERRACK:
-            case NETHER_BRICK: //I'm guessing this is the nether brick item, not the block. If so, this should be removed.
+            case NETHER_BRICK: // I'm guessing this is the nether brick item, not the block. If so, this should
+                               // be removed.
             case NETHER_BRICKS:
             case NETHER_BRICK_SLAB:
             case SOUL_SAND:
@@ -446,43 +403,43 @@ public class BlockModule extends EHMModule
         return false;
     }
 
-
     /**
-     * Determine if block is of the axis and placed in a weird angle. Dunno how to explain :D
+     * Determine if block is of the axis and placed in a weird angle. Dunno how to
+     * explain :D
      *
      * @return true if tje block is of the axis and placement should be blocked
      */
-    public static boolean isOffAxis(Block playerBlock, Block placed, Block against)
-    {
-        /* Disallow placing where the x's are if there is air beneath the block. This fixes the torch/fence exploit
-                 x|x
-        x         |      x
-       ===========P===========
-                  |       x
-                x |
+    public static boolean isOffAxis(Block playerBlock, Block placed, Block against) {
+        /*
+         * Disallow placing where the x's are if there is air beneath the block. This
+         * fixes the torch/fence exploit
+         * x|x
+         * x | x
+         * ===========P===========
+         * | x
+         * x |
          */
         if (placed.getRelative(BlockFace.DOWN).getType() == Material.AIR)
-            if (placed.getX() != against.getX() /*placed onto the side*/ && playerBlock.getX() == against.getX())
+            if (placed.getX() != against.getX() /* placed onto the side */ && playerBlock.getX() == against.getX())
                 return true;
             else if (placed.getZ() != against.getZ() && playerBlock.getZ() == against.getZ())
                 return true;
         return false;
     }
 
-
     /**
-     * Get the Material that will be dropped if this Block is broken by a player e.g. stone -> cobblestone ice -> nothing Note: This method doesn't have all blocks and is only
+     * Get the Material that will be dropped if this Block is broken by a player
+     * e.g. stone -> cobblestone ice -> nothing Note: This method doesn't have all
+     * blocks and is only
      * meant for blocks that you dont want to drop like grass/ice blocks
      *
      * @param mat to get the drop for
      */
-    public static Material getDroppedMaterial(Material mat)
-    {
+    public static Material getDroppedMaterial(Material mat) {
         if (Tag.LEAVES.isTagged(mat))
             return Material.AIR;
 
-        switch (mat)
-        {
+        switch (mat) {
             case GRASS_BLOCK:
             case FARMLAND:
                 return Material.DIRT;
@@ -507,17 +464,14 @@ public class BlockModule extends EHMModule
         return mat;
     }
 
-
-    public static boolean isOneOf(Block block, Material... materials)
-    {
+    public static boolean isOneOf(Block block, Material... materials) {
         for (Material material : materials)
             if (block.getType() == material)
                 return true;
         return false;
     }
 
-
     @Override
-    public void closing()
-    {/*ignored*/}
+    public void closing() {
+        /* ignored */}
 }

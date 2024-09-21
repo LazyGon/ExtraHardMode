@@ -19,17 +19,14 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode.task;
-
 
 import org.bukkit.entity.Player;
 
 /**
  * Set the target player's health and food levels.
  */
-public class SetPlayerHealthAndFoodTask implements Runnable
-{
+public class SetPlayerHealthAndFoodTask implements Runnable {
 
     /**
      * Target player.
@@ -46,7 +43,6 @@ public class SetPlayerHealthAndFoodTask implements Runnable
      */
     private final int food;
 
-
     /**
      * Constructor.
      *
@@ -54,29 +50,22 @@ public class SetPlayerHealthAndFoodTask implements Runnable
      * @param health - Health level
      * @param food   - Food level.
      */
-    public SetPlayerHealthAndFoodTask(Player player, int health, int food)
-    {
+    public SetPlayerHealthAndFoodTask(Player player, int health, int food) {
         this.player = player;
         this.health = health;
         this.food = food;
     }
 
-
     @Override
-    public void run()
-    {
-        try
-        {
-            try
-            {
+    public void run() {
+        try {
+            try {
                 this.player.setHealth(health);
-            } catch (IllegalArgumentException ignored)
-            {
+            } catch (IllegalArgumentException ignored) {
             } // if less than zero or higher than max, no changes
 
             this.player.setFoodLevel(this.food);
-        } catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             // Catch if player is null.
         }
     }

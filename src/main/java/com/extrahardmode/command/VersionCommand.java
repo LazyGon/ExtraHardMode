@@ -21,7 +21,6 @@
 
 package com.extrahardmode.command;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.ICommand;
 import org.bukkit.ChatColor;
@@ -33,45 +32,35 @@ import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class VersionCommand implements ICommand
-{
+public class VersionCommand implements ICommand {
 
     @Override
-    public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label, String[] args)
-    {
-        sender.sendMessage(ChatColor.GRAY + "========= " + ChatColor.GOLD + plugin.getName() + ChatColor.GRAY + " =========");
+    public boolean execute(ExtraHardMode plugin, CommandSender sender, Command command, String label, String[] args) {
+        sender.sendMessage(
+                ChatColor.GRAY + "========= " + ChatColor.GOLD + plugin.getName() + ChatColor.GRAY + " =========");
         sender.sendMessage(ChatColor.BLUE + "Version: " + ChatColor.WHITE + plugin.getDescription().getVersion());
-        //Read buildnumber from manifest if availible
+        // Read buildnumber from manifest if availible
         {
             JarFile pluginFile = null;
             java.net.URL file = plugin.getClass().getProtectionDomain().getCodeSource().getLocation();
-            try
-            {
+            try {
                 pluginFile = new JarFile(file.getFile());
-            } catch (IOException ignored)
-            {
+            } catch (IOException ignored) {
             }
 
-            if (pluginFile != null)
-            {
-                try
-                {
+            if (pluginFile != null) {
+                try {
                     Manifest manifest = pluginFile.getManifest();
-                    if (manifest != null)
-                    {
+                    if (manifest != null) {
                         String buildNumber = manifest.getMainAttributes().getValue("Build-Number");
                         if (buildNumber != null && buildNumber.length() > 0)
                             sender.sendMessage(ChatColor.BLUE + "Build: " + ChatColor.WHITE + buildNumber);
                     }
-                } catch (IOException ignored)
-                {
-                } finally
-                {
-                    try
-                    {
+                } catch (IOException ignored) {
+                } finally {
+                    try {
                         pluginFile.close();
-                    } catch (IOException e)
-                    {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -80,11 +69,11 @@ public class VersionCommand implements ICommand
 
         sender.sendMessage(ChatColor.BLUE + "Author:");
         List<String> authors = plugin.getDescription().getAuthors();
-        sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.get(0)); //author defined by "author: xyz" gets always loaded first
+        sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.get(0)); // author defined by "author:
+                                                                                       // xyz" gets always loaded first
 
         sender.sendMessage(ChatColor.BLUE + "Contributors:");
-        for (int i = 1; i < authors.size(); i++)
-        {
+        for (int i = 1; i < authors.size(); i++) {
             sender.sendMessage(ChatColor.GRAY + " - " + ChatColor.WHITE + authors.get(i));
         }
         return true;

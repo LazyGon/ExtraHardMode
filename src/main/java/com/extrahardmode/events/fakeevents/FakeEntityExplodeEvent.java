@@ -1,6 +1,5 @@
 package com.extrahardmode.events.fakeevents;
 
-
 import org.bukkit.ExplosionResult;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -12,10 +11,8 @@ import java.util.List;
 /**
  * @author Diemex
  */
-public class FakeEntityExplodeEvent extends EntityExplodeEvent
-{
-    public FakeEntityExplodeEvent(Entity what, Location location, List<Block> blocks, float yields)
-    {
+public class FakeEntityExplodeEvent extends EntityExplodeEvent {
+    public FakeEntityExplodeEvent(Entity what, Location location, List<Block> blocks, float yields) {
         super(what, location, blocks, yields, ExplosionResult.KEEP);
     }
 }

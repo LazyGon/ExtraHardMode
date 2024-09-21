@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -43,27 +42,21 @@ import java.util.List;
  * <p/>
  * Increase loot for Ghasts drastically Ghasts don't take damage from arrows
  */
-public class Ghasts extends ListenerModule
-{
+public class Ghasts extends ListenerModule {
     private RootConfig CFG;
 
     private PlayerModule playerModule;
 
-
-    public Ghasts(ExtraHardMode plugin)
-    {
+    public Ghasts(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
         playerModule = plugin.getModuleForClass(PlayerModule.class);
     }
-
 
     /**
      * When an Entity dies
@@ -71,8 +64,7 @@ public class Ghasts extends ListenerModule
      * Increase loot for Ghasts drastically
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
@@ -81,20 +73,16 @@ public class Ghasts extends ListenerModule
         final int ghastDropsMultiplier = CFG.getInt(RootNode.GHASTS_DROPS_MULTIPLIER, world.getName());
 
         // FEATURE: ghasts deflect arrows and drop extra loot and exp
-        if (ghastDeflectArrows)
-        {
-            if (entity instanceof Ghast)
-            {
+        if (ghastDeflectArrows) {
+            if (entity instanceof Ghast) {
                 event.setDroppedExp(event.getDroppedExp() * ghastExpMupliplier);
                 List<ItemStack> itemDrops = event.getDrops();
-                for (ItemStack itemDrop : itemDrops)
-                {
+                for (ItemStack itemDrop : itemDrops) {
                     itemDrop.setAmount(itemDrop.getAmount() * ghastDropsMultiplier);
                 }
             }
         }
     }
-
 
     /**
      * When an Entity takes damage
@@ -102,29 +90,24 @@ public class Ghasts extends ListenerModule
      * Ghasts don't take damage from arrows
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageByEntityEvent event)
-    {
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
 
         final int arrowDamagePercent = CFG.getInt(RootNode.GHASTS_DEFLECT_ARROWS, world.getName());
 
         // FEATURE: ghasts deflect arrows and drop extra loot
-        if (arrowDamagePercent < 100)
-        {
+        if (arrowDamagePercent < 100) {
             // only ghasts, and only if damaged by another entity (as opposed to
             // environmental damage)
-            if (entity instanceof Ghast)
-            {
+            if (entity instanceof Ghast) {
                 Entity damageSource = event.getDamager();
 
                 // only arrows
-                if (damageSource instanceof Arrow)
-                {
+                if (damageSource instanceof Arrow) {
                     // who shot it?
                     Arrow arrow = (Arrow) damageSource;
-                    if (arrow.getShooter() != null && arrow.getShooter() instanceof Player)
-                    {
+                    if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
                         // check permissions when it's shot by a player
                         Player player = (Player) arrow.getShooter();
                         if (!playerModule.playerBypasses(player, Feature.MONSTER_GHASTS))

@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -49,24 +48,18 @@ import java.util.List;
  * <p/>
  * More spiders in caves
  */
-public class Spiders extends ListenerModule
-{
+public class Spiders extends ListenerModule {
     private RootConfig CFG;
 
-
-    public Spiders(ExtraHardMode plugin)
-    {
+    public Spiders(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
-
 
     /**
      * When a creature spawns
@@ -74,8 +67,7 @@ public class Spiders extends ListenerModule
      * More spiders in caves
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (EntityHelper.isMarkedAsOurs(entity))
             return;
@@ -83,14 +75,16 @@ public class Spiders extends ListenerModule
         World world = location.getWorld();
         EntityType entityType = entity.getType();
 
-        final int spiderBonusSpawnPercent = CFG.getInt(RootNode.BONUS_UNDERGROUND_SPIDER_SPAWN_PERCENT, world.getName());
+        final int spiderBonusSpawnPercent = CFG.getInt(RootNode.BONUS_UNDERGROUND_SPIDER_SPAWN_PERCENT,
+                world.getName());
 
         // FEATURE: more spiders underground
-        if (entityType == EntityType.ZOMBIE && world.getEnvironment() == World.Environment.NORMAL && location.getBlockY() < world.getSeaLevel() - 5
-                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) //Don't change type from respawned zombies etc.
+        if (entityType == EntityType.ZOMBIE && world.getEnvironment() == World.Environment.NORMAL
+                && location.getBlockY() < world.getSeaLevel() - 5
+                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) // Don't change type from respawned
+                                                                                     // zombies etc.
         {
-            if (plugin.random(spiderBonusSpawnPercent))
-            {
+            if (plugin.random(spiderBonusSpawnPercent)) {
                 event.setCancelled(true);
                 entityType = EntityType.SPIDER;
                 EntityHelper.spawn(location, entityType);
@@ -98,27 +92,24 @@ public class Spiders extends ListenerModule
         }
     }
 
-
     /**
      * When an Entity dies
      * <p/>
      * spiders drop web on death
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
         final boolean spidersDropWebOnDeath = CFG.getBoolean(RootNode.SPIDERS_DROP_WEB_ON_DEATH, world.getName());
 
-        //TODO EhmSpiderDropWebEvent
+        // TODO EhmSpiderDropWebEvent
         // FEATURE: spiders drop web on death
-        if (spidersDropWebOnDeath)
-        {
-            //Reduce amount of web dropped by spiders which die in caves from environmental damage
-            if (entity instanceof Spider && (!EntityHelper.isLootLess(entity) || plugin.getRandom().nextInt(3) == 1))
-            {
+        if (spidersDropWebOnDeath) {
+            // Reduce amount of web dropped by spiders which die in caves from environmental
+            // damage
+            if (entity instanceof Spider && (!EntityHelper.isLootLess(entity) || plugin.getRandom().nextInt(3) == 1)) {
                 // random web placement
                 long serverTime = world.getFullTime();
                 int random1 = (int) (serverTime + entity.getLocation().getBlockZ()) % 9;
@@ -132,8 +123,7 @@ public class Spiders extends ListenerModule
                 locations[3] = entity.getLocation().add(random1 / 2, 0, -random2 / 2);
 
                 List<Block> changedBlocks = new ArrayList<Block>();
-                for (Location location : locations)
-                {
+                for (Location location : locations) {
                     Block block = location.getBlock();
 
                     // don't replace anything solid with web
@@ -141,32 +131,28 @@ public class Spiders extends ListenerModule
                         continue;
 
                     // only place web on the ground, not hanging up in the air
-                    for (int i = 0; i < 5 || block.getY() < -64; i++)
-                    {
+                    for (int i = 0; i < 5 || block.getY() < -64; i++) {
                         if (block.getRelative(BlockFace.DOWN).getType() == Material.AIR)
                             block = block.getRelative(BlockFace.DOWN);
                     }
 
                     // only place web if Block is empty
-                    if (block.getRelative(BlockFace.DOWN).getType() != Material.AIR)
-                    {
+                    if (block.getRelative(BlockFace.DOWN).getType() != Material.AIR) {
                         // don't place next to cactus, because it will break the
                         // cactus
-                        Block[] adjacentBlocks = new Block[]{block.getRelative(BlockFace.EAST), block.getRelative(BlockFace.WEST),
-                                block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH)};
+                        Block[] adjacentBlocks = new Block[] { block.getRelative(BlockFace.EAST),
+                                block.getRelative(BlockFace.WEST),
+                                block.getRelative(BlockFace.NORTH), block.getRelative(BlockFace.SOUTH) };
 
                         boolean nextToCactus = false;
-                        for (Block adjacentBlock : adjacentBlocks)
-                        {
-                            if (adjacentBlock.getType() == Material.CACTUS)
-                            {
+                        for (Block adjacentBlock : adjacentBlocks) {
+                            if (adjacentBlock.getType() == Material.CACTUS) {
                                 nextToCactus = true;
                                 break;
                             }
                         }
 
-                        if (!nextToCactus)
-                        {
+                        if (!nextToCactus) {
                             block.setType(Material.COBWEB);
                             changedBlocks.add(block);
                         }
@@ -175,8 +161,7 @@ public class Spiders extends ListenerModule
 
                 // any webs placed above sea level will be automatically cleaned up
                 // after a short time
-                if (entity.getLocation().getBlockY() >= entity.getLocation().getWorld().getSeaLevel() - 5)
-                {
+                if (entity.getLocation().getBlockY() >= entity.getLocation().getWorld().getSeaLevel() - 5) {
                     WebCleanupTask task = new WebCleanupTask(changedBlocks);
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 20L * 30);
                 }

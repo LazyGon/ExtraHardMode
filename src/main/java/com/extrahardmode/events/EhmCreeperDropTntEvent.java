@@ -21,7 +21,6 @@
 
 package com.extrahardmode.events;
 
-
 import org.bukkit.Location;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Player;
@@ -34,8 +33,7 @@ import org.bukkit.event.HandlerList;
  *
  * @author Diemex
  */
-public class EhmCreeperDropTntEvent extends Event implements Cancellable
-{
+public class EhmCreeperDropTntEvent extends Event implements Cancellable {
     private boolean cancelled;
 
     private final Player player;
@@ -44,97 +42,80 @@ public class EhmCreeperDropTntEvent extends Event implements Cancellable
 
     private Location location;
 
-
     /**
      * This looks like a constructor
      *
-     * @param player   Player who killed the Creeper, can be null if not a Player kill
+     * @param player   Player who killed the Creeper, can be null if not a Player
+     *                 kill
      * @param creeper  who has been killed and dropped the tnt
      * @param location of the tnt-drop
      */
-    public EhmCreeperDropTntEvent(final Player player, final Creeper creeper, Location location)
-    {
+    public EhmCreeperDropTntEvent(final Player player, final Creeper creeper, Location location) {
         this.player = player;
         this.creeper = creeper;
         this.location = location;
     }
-
 
     /**
      * Get the Location where the tnt will be dropped
      *
      * @return the location
      */
-    public Location getLocation()
-    {
+    public Location getLocation() {
         return location;
     }
-
 
     /**
      * Set the location where the tnt will drop
      *
      * @param location the location to set
      */
-    public void setLocation(Location location)
-    {
+    public void setLocation(Location location) {
         this.location = location;
     }
-
 
     /**
      * Get the Creeper resposible for dropping the tnt
      *
      * @return the creeper
      */
-    public Creeper getCreeper()
-    {
+    public Creeper getCreeper() {
         return creeper;
     }
-
 
     /**
      * Get the Player which killed the Creeper
      *
      * @return the player, can be null if not killed by a Player
      */
-    public Player getPlayer()
-    {
+    public Player getPlayer() {
         return player;
     }
-
 
     /**
      * @return if Event got cancelled
      */
     @Override
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return cancelled;
     }
 
-
     /**
-     * @param cancelled set if the Event is cancelled which mean that the Skeleton will take normal damage
+     * @param cancelled set if the Event is cancelled which mean that the Skeleton
+     *                  will take normal damage
      */
     @Override
-    public void setCancelled(boolean cancelled)
-    {
+    public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
 
-
     private static final HandlerList HANDLERS = new HandlerList();
 
-
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 
-
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

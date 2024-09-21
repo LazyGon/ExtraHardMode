@@ -21,7 +21,6 @@
 
 package com.extrahardmode.config;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.service.config.ConfigNode;
 import com.extrahardmode.service.config.Header;
@@ -39,66 +38,51 @@ import java.util.Map;
 /**
  *
  */
-public class RootConfig extends MultiWorldConfig
-{
+public class RootConfig extends MultiWorldConfig {
     /**
      * Constructor
      */
-    public RootConfig(ExtraHardMode plugin)
-    {
+    public RootConfig(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         load();
     }
 
-
     @Override
-    public void closing()
-    {
+    public void closing() {
     }
 
-
     @Override
-    public void load()
-    {
+    public void load() {
         init();
-        //find all ymls
+        // find all ymls
         File[] configFiles = findAllYmlFiles(plugin.getDataFolder());
-        //load the ymls
+        // load the ymls
         EHMConfig[] ehmConfigs = new EHMConfig[configFiles.length];
-        for (int i = 0; i < configFiles.length; i++)
-        {
+        for (int i = 0; i < configFiles.length; i++) {
             ehmConfigs[i] = new EHMConfig(configFiles[i]);
             ehmConfigs[i].registerNodes(RootNode.values());
             ehmConfigs[i].load();
         }
-        //what is the main config.yml file?
+        // what is the main config.yml file?
         EHMConfig mainEhmConfig = null;
-        for (EHMConfig ehmConfig : ehmConfigs)
-        {
-            if (ehmConfig.isMainConfig())
-            {
+        for (EHMConfig ehmConfig : ehmConfigs) {
+            if (ehmConfig.isMainConfig()) {
                 mainEhmConfig = ehmConfig;
                 break;
             }
         }
-        //has config.yml been found? not -> create it
-        if (mainEhmConfig == null)
-        {
+        // has config.yml been found? not -> create it
+        if (mainEhmConfig == null) {
             File mainFile = new File(plugin.getDataFolder().getPath() + File.separator + "config.yml");
-            if (!mainFile.exists())
-            {
-                try
-                {
+            if (!mainFile.exists()) {
+                try {
                     mainFile.getParentFile().mkdirs();
                     mainFile.createNewFile();
-                } catch (IOException e)
-                {
+                } catch (IOException e) {
                     plugin.getLogger().severe("Couldn't create config.yml");
                     e.printStackTrace();
                 }
@@ -107,21 +91,19 @@ public class RootConfig extends MultiWorldConfig
             mainEhmConfig.registerNodes(RootNode.values());
             mainEhmConfig.load();
         }
-        //Load config.yml
+        // Load config.yml
         if (mainEhmConfig.isEnabledForAll())
             enabledForAll = true;
-        for (Map.Entry<ConfigNode, Object> node : mainEhmConfig.getLoadedNodes().entrySet())
-        {
-            for (String world : mainEhmConfig.getWorlds())
-            {
+        for (Map.Entry<ConfigNode, Object> node : mainEhmConfig.getLoadedNodes().entrySet()) {
+            for (String world : mainEhmConfig.getWorlds()) {
                 set(world, node.getKey(), node.getValue());
             }
         }
-        //Save files
+        // Save files
         mainEhmConfig.setHeader(createHeader());
         mainEhmConfig.save();
 
-        //Prepare comments
+        // Prepare comments
         Map<String, String[]> comments = new HashMap<String, String[]>();
         for (RootNode node : RootNode.values())
             if (node.getComments() != null)
@@ -131,12 +113,10 @@ public class RootConfig extends MultiWorldConfig
             YamlCommentWriter.write(mainEhmConfig.getConfigFile(), comments);
     }
 
-
-    private Header createHeader()
-    {
+    private Header createHeader() {
         Header header = new Header();
         header.setHeading("ExtraHardMode Config");
-        String[] lines = new String[]{
+        String[] lines = new String[] {
                 "",
                 "1. The config cleans itself, so if something resets you probably did something wrong",
                 "2. Generally if you can specify a block you can add meta after an @",
@@ -149,11 +129,10 @@ public class RootConfig extends MultiWorldConfig
                 "5. Lots of the configuration is user requested so if you need something just ask",
                 "6. Remember to use /ehm reload after you changed the config instead of /reload",
                 "",
-                "Happy Configuring!"};
+                "Happy Configuring!" };
         header.addLines(lines);
         return header;
     }
-
 
     /**
      * find all yml files
@@ -167,24 +146,21 @@ public class RootConfig extends MultiWorldConfig
      * save files with correct inheritance
      */
 
-
     /**
      * Search the base directory for yml-files
      *
      * @return File[] containing all the *.yml Files in a lexical order
      */
-    protected File[] findAllYmlFiles(File baseDir)
-    {
-        String[] filePaths = baseDir.list(new FilenameFilter()
-        {
+    protected File[] findAllYmlFiles(File baseDir) {
+        String[] filePaths = baseDir.list(new FilenameFilter() {
             @Override
-            public boolean accept(File dir, String name)
-            {
-                return name.endsWith(".yml"); //TODO - disables
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".yml"); // TODO - disables
             }
         });
-        if (filePaths == null) filePaths = new String[]{};
-        Arrays.sort(filePaths); //lexically
+        if (filePaths == null)
+            filePaths = new String[] {};
+        Arrays.sort(filePaths); // lexically
         ArrayList<File> files = new ArrayList<File>();
         for (String fileName : filePaths)
             files.add(new File(plugin.getDataFolder() + File.separator + fileName));

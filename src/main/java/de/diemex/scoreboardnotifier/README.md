@@ -1,4 +1,5 @@
 # ScoreBoard Notifier
+
 by Diemex
 
 Ever wanted to show messages without spamming the chat? This adds per player scoreboards
@@ -14,11 +15,12 @@ This package will be a separate project once it is stable and everything works p
 
 Create a new ScoreboardManager
 
-``` java
+```java
 NotificationManager man = NotificationManager(plugin);
 ```
 
 Send your messages via
-``` java
+
+```java
 man.showTimedPopup("Notch", 400, "Messages", "You rock!");
 ```

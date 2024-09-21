@@ -21,7 +21,6 @@
 
 package com.extrahardmode.features.monsters;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.ExplosionType;
 import com.extrahardmode.config.RootConfig;
@@ -47,28 +46,24 @@ import org.bukkit.util.Vector;
 /**
  * Changes to Blazes including:
  * <p/>
- * spawn in the Nether everywhere , multiply on death , more loot , magmacubes explode on death and turn into Blazes
+ * spawn in the Nether everywhere , multiply on death , more loot , magmacubes
+ * explode on death and turn into Blazes
  * <p/>
- * spawn at lavalevel in the OverWorld , explode on death in the Overworld , no blazerods in the OverWorld
+ * spawn at lavalevel in the OverWorld , explode on death in the Overworld , no
+ * blazerods in the OverWorld
  */
-public class Blazes extends ListenerModule
-{
+public class Blazes extends ListenerModule {
     private RootConfig CFG;
 
-
-    public Blazes(ExtraHardMode plugin)
-    {
+    public Blazes(ExtraHardMode plugin) {
         super(plugin);
     }
 
-
     @Override
-    public void starting()
-    {
+    public void starting() {
         super.starting();
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
-
 
     /**
      * When an Entity spawns,
@@ -76,8 +71,7 @@ public class Blazes extends ListenerModule
      * handles all the extra spawns for Blazes in the OverWorld and Nether
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
-    public void onEntitySpawn(CreatureSpawnEvent event)
-    {
+    public void onEntitySpawn(CreatureSpawnEvent event) {
         Location location = event.getLocation();
         World world = location.getWorld();
 
@@ -88,37 +82,32 @@ public class Blazes extends ListenerModule
         EntityType entityType = entity.getType();
 
         // FEATURE: more blazes in nether
-        if (entityType == EntityType.ZOMBIFIED_PIGLIN && world.getEnvironment() == World.Environment.NETHER)
-        {
-            if (plugin.random(bonusNetherBlazeSpawnPercent))
-            {
+        if (entityType == EntityType.ZOMBIFIED_PIGLIN && world.getEnvironment() == World.Environment.NETHER) {
+            if (plugin.random(bonusNetherBlazeSpawnPercent)) {
                 event.setCancelled(true);
                 entityType = EntityType.BLAZE;
 
                 // FEATURE: magma cubes spawn with blazes
-                if (plugin.random(bonusNetherBlazeSpawnPercent))
-                {
+                if (plugin.random(bonusNetherBlazeSpawnPercent)) {
                     MagmaCube cube = (MagmaCube) (EntityHelper.spawn(location, EntityType.MAGMA_CUBE));
                     cube.setSize(1);
                 }
                 EntityHelper.spawn(location, entityType);
-                //TODO EhmBlazeSpawnEvent (Nether)
+                // TODO EhmBlazeSpawnEvent (Nether)
             }
         }
 
         // FEATURE: blazes near bedrock
-        if (entityType == EntityType.SKELETON && world.getEnvironment() == World.Environment.NORMAL && location.getBlockY() < 20 && !EntityHelper.isMarkedAsOurs(entity))
-        {
-            if (plugin.random(nearBedrockSpawnPercent))
-            {
+        if (entityType == EntityType.SKELETON && world.getEnvironment() == World.Environment.NORMAL
+                && location.getBlockY() < 20 && !EntityHelper.isMarkedAsOurs(entity)) {
+            if (plugin.random(nearBedrockSpawnPercent)) {
                 event.setCancelled(true);
                 entityType = EntityType.BLAZE;
                 EntityHelper.spawn(location, entityType);
-                //TODO EhmBlazeSpawnEvent (OverWorld)
+                // TODO EhmBlazeSpawnEvent (OverWorld)
             }
         }
     }
-
 
     /**
      * When a Blaze dies,
@@ -126,8 +115,7 @@ public class Blazes extends ListenerModule
      * exlode in OverWorld , multiply in the Nether
      */
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event)
-    {
+    public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         World world = entity.getWorld();
 
@@ -137,18 +125,13 @@ public class Blazes extends ListenerModule
         int blazeSplitPercent = CFG.getInt(RootNode.NETHER_BLAZES_SPLIT_ON_DEATH_PERCENT, world.getName());
 
         // FEATURE: nether blazes drop extra loot (glowstone and gunpowder)
-        if (entity instanceof Blaze && !EntityHelper.isLootLess(entity))
-        {
-            if (world.getEnvironment() == World.Environment.NETHER)
-            {
-                if (bonusLoot)
-                {
+        if (entity instanceof Blaze && !EntityHelper.isLootLess(entity)) {
+            if (world.getEnvironment() == World.Environment.NETHER) {
+                if (bonusLoot) {
                     // 50% chance of each
-                    if (plugin.getRandom().nextInt(2) == 0)
-                    {
+                    if (plugin.getRandom().nextInt(2) == 0) {
                         event.getDrops().add(new ItemStack(Material.GUNPOWDER, 2));
-                    } else
-                    {
+                    } else {
                         event.getDrops().add(new ItemStack(Material.GLOWSTONE_DUST, 2));
                     }
                 }
@@ -159,41 +142,46 @@ public class Blazes extends ListenerModule
         }
 
         // FEATURE: blazes explode on death in normal world
-        if (blazesExplodeOnDeath && entity instanceof Blaze && world.getEnvironment() == World.Environment.NORMAL)
-        {
-            //Label explosion as creeper
+        if (blazesExplodeOnDeath && entity instanceof Blaze && world.getEnvironment() == World.Environment.NORMAL) {
+            // Label explosion as creeper
             Creeper creeper = world.spawn(entity.getLocation(), Creeper.class);
             creeper.remove();
-            new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.OVERWORLD_BLAZE, creeper).run(); // equal to a TNT blast, sets fires
+            new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.OVERWORLD_BLAZE, creeper).run(); // equal
+                                                                                                                 // to a
+                                                                                                                 // TNT
+                                                                                                                 // blast,
+                                                                                                                 // sets
+                                                                                                                 // fires
             // fire a fireball straight up in normal worlds
             Fireball fireball = (Fireball) world.spawnEntity(entity.getLocation(), EntityType.FIREBALL);
             fireball.setDirection(new Vector(0, 10, 0));
             fireball.setYield(1.0F);
-            //TODO EhmBlazeExplodeEvent
+            // TODO EhmBlazeExplodeEvent
         }
 
         // FEATURE: nether blazes may multiply on death
-        if (blazeSplitPercent > 0 && world.getEnvironment() == World.Environment.NETHER && entity instanceof Blaze)
-        {
-            //Blazes which have split already are less likely to split
-            int respawnCount = entity.getMetadata("extrahardmode.blaze.splitcount").size() > 0 ? entity.getMetadata("extrahardmode.blaze.splitcount").get(0).asInt() : 0;
+        if (blazeSplitPercent > 0 && world.getEnvironment() == World.Environment.NETHER && entity instanceof Blaze) {
+            // Blazes which have split already are less likely to split
+            int respawnCount = entity.getMetadata("extrahardmode.blaze.splitcount").size() > 0
+                    ? entity.getMetadata("extrahardmode.blaze.splitcount").get(0).asInt()
+                    : 0;
             respawnCount++;
             blazeSplitPercent = (int) (1.0D / respawnCount * blazeSplitPercent);
-            if (plugin.random(blazeSplitPercent))
-            {
-                //TODO EhmBlazeSplitEvent
+            if (plugin.random(blazeSplitPercent)) {
+                // TODO EhmBlazeSplitEvent
                 Entity firstNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
                 firstNewBlaze.setVelocity(new Vector(1, 0, 1));
-                //Save the new splitcounter
-                firstNewBlaze.setMetadata("extrahardmode.blaze.splitcount", new FixedMetadataValue(plugin, respawnCount));
+                // Save the new splitcounter
+                firstNewBlaze.setMetadata("extrahardmode.blaze.splitcount",
+                        new FixedMetadataValue(plugin, respawnCount));
 
                 Entity secondNewBlaze = EntityHelper.spawn(entity.getLocation(), EntityType.BLAZE);
                 secondNewBlaze.setVelocity(new Vector(-1, 0, -1));
-                secondNewBlaze.setMetadata("extrahardmode.blaze.splitcount", new FixedMetadataValue(plugin, respawnCount));
+                secondNewBlaze.setMetadata("extrahardmode.blaze.splitcount",
+                        new FixedMetadataValue(plugin, respawnCount));
 
                 // if this blaze was marked lootless, mark the new blazes the same
-                if (EntityHelper.isLootLess(entity))
-                {
+                if (EntityHelper.isLootLess(entity)) {
                     EntityHelper.markLootLess(plugin, (LivingEntity) firstNewBlaze);
                     EntityHelper.markLootLess(plugin, (LivingEntity) secondNewBlaze);
                 }
@@ -201,59 +189,57 @@ public class Blazes extends ListenerModule
         }
     }
 
-
     /**
      * When an Entity takes damage
      * <p/>
      * Magmacubes turn into blazes , Blazes drop fire when hit ,
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageEvent event)
-    {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
         World world = entity.getWorld();
 
-        final boolean magmacubesBlazeOnDmg = CFG.getBoolean(RootNode.MAGMA_CUBES_BECOME_BLAZES_ON_DAMAGE, world.getName());
+        final boolean magmacubesBlazeOnDmg = CFG.getBoolean(RootNode.MAGMA_CUBES_BECOME_BLAZES_ON_DAMAGE,
+                world.getName());
         final boolean blazeFireOnDmg = CFG.getBoolean(RootNode.BLAZES_DROP_FIRE_ON_DAMAGE, world.getName());
 
         // FEATURE: magma cubes become blazes when they take damage
-        if (magmacubesBlazeOnDmg && entityType == EntityType.MAGMA_CUBE && !entity.isDead() && !EntityHelper.hasFlagIgnore(entity))
-        {
-            //Magmacube gets replaced by blaze
+        if (magmacubesBlazeOnDmg && entityType == EntityType.MAGMA_CUBE && !entity.isDead()
+                && !EntityHelper.hasFlagIgnore(entity)) {
+            // Magmacube gets replaced by blaze
             entity.remove();
             EntityHelper.spawn(entity.getLocation().add(0.0, 2.0, 0.0), EntityType.BLAZE); // replace with blaze
 
-            //Explosion labeled as fireball
+            // Explosion labeled as fireball
             Fireball ball = world.spawn(entity.getLocation(), Fireball.class);
             ball.remove();
-            new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.MAGMACUBE_FIRE, ball).run(); // fiery explosion for effect
-            //TODO EhmMagmaCubeExplodeEvent
+            new CreateExplosionTask(plugin, entity.getLocation(), ExplosionType.MAGMACUBE_FIRE, ball).run(); // fiery
+                                                                                                             // explosion
+                                                                                                             // for
+                                                                                                             // effect
+            // TODO EhmMagmaCubeExplodeEvent
         }
 
         // FEATURE: blazes drop fire on hit, also in nether
-        if (blazeFireOnDmg)
-        {
-            if (entityType == EntityType.BLAZE)
-            {
+        if (blazeFireOnDmg) {
+            if (entityType == EntityType.BLAZE) {
                 Blaze blaze = (Blaze) entity;
 
-                if (blaze.getHealth() > blaze.getMaxHealth() / 2)
-                {
+                if (blaze.getHealth() > blaze.getMaxHealth() / 2) {
 
                     Block block = entity.getLocation().getBlock();
 
                     Block underBlock = block.getRelative(BlockFace.DOWN);
-                    for (int i = 0; i < 50; i++)
-                    {
-                        if (underBlock.getType() == Material.AIR)
-                        {
+                    for (int i = 0; i < 50; i++) {
+                        if (underBlock.getType() == Material.AIR) {
                             underBlock = underBlock.getRelative(BlockFace.DOWN);
-                        } else break;
+                        } else
+                            break;
                     }
                     block = underBlock.getRelative(BlockFace.UP);
-                    if (block.getType() == Material.AIR && underBlock.getType() != Material.AIR && !underBlock.isLiquid() && underBlock.getY() > 0)
-                    {
+                    if (block.getType() == Material.AIR && underBlock.getType() != Material.AIR
+                            && !underBlock.isLiquid() && underBlock.getY() > 0) {
                         block.setType(Material.FIRE);
                     }
                 }

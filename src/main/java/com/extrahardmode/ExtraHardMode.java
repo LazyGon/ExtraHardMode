@@ -19,9 +19,7 @@
  * along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.extrahardmode;
-
 
 import com.extrahardmode.command.Commander;
 import com.extrahardmode.compatibility.CompatHandler;
@@ -83,12 +81,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
-
 /**
  * Main plugin class.
  */
-public class ExtraHardMode extends JavaPlugin
-{
+public class ExtraHardMode extends JavaPlugin {
 
     /**
      * Plugin tag.
@@ -105,13 +101,11 @@ public class ExtraHardMode extends JavaPlugin
      */
     private final Random randomNumberGenerator = new Random();
 
-
     /**
      * initializes well... everything
      */
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         // Register modules
         registerModule(RootConfig.class, new RootConfig(this));
         MessageConfig config = new MessageConfig(this);
@@ -122,7 +116,8 @@ public class ExtraHardMode extends JavaPlugin
 
         File rootFolder = new File(getDataFolder().getPath() + File.separator + "persistence" + File.separator);
         rootFolder.mkdirs();
-        registerModule(MsgPersistModule.class, new MsgPersistModule(this, rootFolder + File.separator + "messages_count.db"));
+        registerModule(MsgPersistModule.class,
+                new MsgPersistModule(this, rootFolder + File.separator + "messages_count.db"));
 
         registerModule(MsgModule.class, new MsgModule(this));
 
@@ -131,10 +126,10 @@ public class ExtraHardMode extends JavaPlugin
         registerModule(UtilityModule.class, new UtilityModule(this));
         registerModule(PlayerModule.class, new PlayerModule(this));
 
-        //Register command
+        // Register command
         getCommand("ehm").setExecutor(new Commander(this));
 
-        //Basic Modules
+        // Basic Modules
         registerModule(AntiFarming.class, new AntiFarming(this));
         registerModule(AnimalCrowdControl.class, new AnimalCrowdControl(this));
         registerModule(AntiGrinder.class, new AntiGrinder(this));
@@ -148,25 +143,24 @@ public class ExtraHardMode extends JavaPlugin
         registerModule(Torches.class, new Torches(this));
         registerModule(Water.class, new Water(this));
 
-        //Utils
+        // Utils
         registerModule(TemporaryBlockHandler.class, new TemporaryBlockHandler(this));
 
-        //Monster Modules
+        // Monster Modules
         registerModule(Blazes.class, new Blazes(this));
         registerModule(BumBumBens.class, new BumBumBens(this));
         registerModule(Endermen.class, new Endermen(this));
         registerModule(Glydia.class, new Glydia(this));
         registerModule(Ghasts.class, new Ghasts(this));
-        try //Enabled from 1.6 onwards only
-        {
+        try {
+            // Enabled from 1.6 onwards only
             Class.forName("org.bukkit.entity.Horse", false, null);
             registerModule(Horses.class, new Horses(this));
-        } catch (ClassNotFoundException ignored)
-        {
+        } catch (ClassNotFoundException ignored) {
         }
         registerModule(MonsterRules.class, new MonsterRules(this));
         registerModule(PigMen.class, new PigMen(this));
-        //registerModule(RealisticChopping.class, new RealisticChopping(this));
+        // registerModule(RealisticChopping.class, new RealisticChopping(this));
         registerModule(Silverfish.class, new Silverfish(this));
         registerModule(Skeletors.class, new Skeletors(this));
         registerModule(Spiders.class, new Spiders(this));
@@ -178,11 +172,11 @@ public class ExtraHardMode extends JavaPlugin
         registerModule(Guardians.class, new Guardians(this));
         registerModule(Vex.class, new Vex(this));
         
-        //Compatibility
+        // Compatibility
         registerModule(CompatHandler.class, new CompatHandler(this));
         registerModule(ExplosionCompatStorage.class, new ExplosionCompatStorage(this));
 
-        //TODO make modules
+        // TODO make modules
         registerModule(Tutorial.class, new Tutorial(this));
 
         OurRandom.reload();
@@ -191,15 +185,17 @@ public class ExtraHardMode extends JavaPlugin
         MoreMonstersTask task = new MoreMonstersTask(this);
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, task, 600L, 600L);
 
-        //Feature: check weight task if no swimming in armor active and feature active in at least one world
+        // Feature: check weight task if no swimming in armor active and feature active
+        // in at least one world
         boolean active = false;
         for (World world : getServer().getWorlds())
             if (getModuleForClass(RootConfig.class).getBoolean(RootNode.NO_SWIMMING_IN_ARMOR, world.getName()))
                 active = true;
         if (active)
-            this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new WeightCheckTask(this), 20L * 5, 20L * 5);
+            this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new WeightCheckTask(this), 20L * 5,
+                    20L * 5);
 
-        //Armor task
+        // Armor task
         /*
         active = false;
         for (World world : getServer().getWorlds())
@@ -208,28 +204,24 @@ public class ExtraHardMode extends JavaPlugin
         if (active)
             this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ArmorWeightTask(this), 20L * 5, 20L * 3);
         */
-        //Metrics Plotter, this gets included by maven
+        // Metrics Plotter, this gets included by maven
         new ConfigPlotter(this, getModuleForClass(RootConfig.class));
 
-        //Register Placeholder
-        if(this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
-        {
+        // Register Placeholder
+        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new Placeholder(this).register();
         }
     }
 
-    public void debug(World world, String message)
-    {
+    public void debug(World world, String message) {
         if ((getModuleForClass(RootConfig.class)).getBoolean(RootNode.DEBUG, world.getName()))
             this.getLogger().info(message);
     }
 
-
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         super.onDisable();
-        //Gracefully stop all modules
+        // Gracefully stop all modules
         for (IModule module : modules.values())
             module.closing();
         for (Player player : getServer().getOnlinePlayers())
@@ -238,7 +230,6 @@ public class ExtraHardMode extends JavaPlugin
         modules.clear();
     }
 
-
     /**
      * Computes random chance
      *
@@ -246,28 +237,22 @@ public class ExtraHardMode extends JavaPlugin
      *
      * @return True if it was successful, else false.
      */
-    public boolean random(int percentChance)
-    {
+    public boolean random(int percentChance) {
         return randomNumberGenerator.nextInt(101) < percentChance;
     }
-
 
     /**
      * Get random generator.
      *
      * @return a Random object
      */
-    public Random getRandom()
-    {
+    public Random getRandom() {
         return randomNumberGenerator;
     }
 
-
-    public String getTag()
-    {
+    public String getTag() {
         return TAG;
     }
-
 
     /**
      * Register a module.
@@ -277,14 +262,11 @@ public class ExtraHardMode extends JavaPlugin
      *
      * @throws IllegalArgumentException - Thrown if an argument is null.
      */
-    <T extends IModule> void registerModule(Class<T> clazz, T module)
-    {
+    <T extends IModule> void registerModule(Class<T> clazz, T module) {
         // Check arguments.
-        if (clazz == null)
-        {
+        if (clazz == null) {
             throw new IllegalArgumentException("Class cannot be null");
-        } else if (module == null)
-        {
+        } else if (module == null) {
             throw new IllegalArgumentException("Module cannot be null");
         }
         // Add module.
@@ -293,61 +275,55 @@ public class ExtraHardMode extends JavaPlugin
         module.starting();
     }
 
-
     /**
      * Deregister a module.
      *
      * @param clazz - Class of the instance.
      *
-     * @return Module that was removed. Returns null if no instance of the module is registered.
+     * @return Module that was removed. Returns null if no instance of the module is
+     *         registered.
      */
-    public <T extends IModule> T deregisterModuleForClass(Class<T> clazz)
-    {
+    public <T extends IModule> T deregisterModuleForClass(Class<T> clazz) {
         // Check arguments.
-        if (clazz == null)
-        {
+        if (clazz == null) {
             throw new IllegalArgumentException("Class cannot be null");
         }
         // Grab module and tell it its closing.
         T module = clazz.cast(modules.get(clazz));
-        if (module != null)
-        {
+        if (module != null) {
             module.closing();
         }
         return module;
     }
-
 
     /**
      * Retrieve a registered module.
      *
      * @param clazz - Class identifier.
      *
-     * @return Module instance. Returns null is an instance of the given class has not been registered with the API.
+     * @return Module instance. Returns null is an instance of the given class has
+     *         not been registered with the API.
      */
-    public <T extends IModule> T getModuleForClass(Class<T> clazz)
-    {
+    public <T extends IModule> T getModuleForClass(Class<T> clazz) {
         return clazz.cast(modules.get(clazz));
     }
-
 
     /**
      * Get all the registered modules
      *
      * @return Map of modules
      */
-    public Map<Class<? extends IModule>, IModule> getModules()
-    {
+    public Map<Class<? extends IModule>, IModule> getModules() {
         return modules;
     }
 
     /**
      * Determines if a config node is enabled in any world
+     * 
      * @param node
      * @return True if enabled in a world, false if disabled everywhere
      */
-    public boolean isNodeEnabled(RootNode node)
-    {
+    public boolean isNodeEnabled(RootNode node) {
         for (World world : getServer().getWorlds())
             if (getModuleForClass(RootConfig.class).getBoolean(node, world.getName()))
                 return true;

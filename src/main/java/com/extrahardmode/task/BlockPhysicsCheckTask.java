@@ -21,7 +21,6 @@
 
 package com.extrahardmode.task;
 
-
 import com.extrahardmode.ExtraHardMode;
 import com.extrahardmode.config.RootConfig;
 import com.extrahardmode.config.RootNode;
@@ -35,8 +34,7 @@ import java.util.List;
 /**
  * Called to apply physics to a block and its neighbors if necessary.
  */
-public class BlockPhysicsCheckTask implements Runnable
-{
+public class BlockPhysicsCheckTask implements Runnable {
     /**
      * Plugin instance.
      */
@@ -62,18 +60,17 @@ public class BlockPhysicsCheckTask implements Runnable
      */
     private final RootConfig CFG;
 
-
     /**
      * Constructor.
      *
      * @param plugin         - Plugin instance.
      * @param block          - Target block for task.
      * @param recursionCount - Recursion count for task.
-     * @param force          - do we want to check adjacent blocks no matter if the center block falls or not? Also checks a lot
+     * @param force          - do we want to check adjacent blocks no matter if the
+     *                       center block falls or not? Also checks a lot
      *                       further down
      */
-    public BlockPhysicsCheckTask(ExtraHardMode plugin, Block block, int recursionCount, boolean force)
-    {
+    public BlockPhysicsCheckTask(ExtraHardMode plugin, Block block, int recursionCount, boolean force) {
         this.plugin = plugin;
         this.block = block;
         this.recursionCount = recursionCount;
@@ -81,35 +78,32 @@ public class BlockPhysicsCheckTask implements Runnable
         CFG = plugin.getModuleForClass(RootConfig.class);
     }
 
-
     @Override
-    public void run()
-    {
+    public void run() {
 
         BlockModule module = plugin.getModuleForClass(BlockModule.class);
         boolean fall = false;
 
-        final boolean fallingBlocksEnabled = CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_ENABLE, block.getWorld().getName());
-        final List<Material> fallingBlocks = CFG.getStringListAsMaterialList(RootNode.MORE_FALLING_BLOCKS, block.getWorld().getName());
+        final boolean fallingBlocksEnabled = CFG.getBoolean(RootNode.MORE_FALLING_BLOCKS_ENABLE,
+                block.getWorld().getName());
+        final List<Material> fallingBlocks = CFG.getStringListAsMaterialList(RootNode.MORE_FALLING_BLOCKS,
+                block.getWorld().getName());
 
         Material material = block.getType();
         Block underBlock = block.getRelative(BlockFace.DOWN);
         Material underType = underBlock.getType();
 
-        if ((underType == Material.AIR || underType == Material.CAVE_AIR || underBlock.isLiquid() || underType == Material.TORCH)
+        if ((underType == Material.AIR || underType == Material.CAVE_AIR || underBlock.isLiquid()
+                || underType == Material.TORCH)
                 && (material == Material.SAND || material == Material.GRAVEL || fallingBlocks.contains(block.getType())
-                && fallingBlocksEnabled && material != Material.AIR))
-        {
+                        && fallingBlocksEnabled && material != Material.AIR)) {
             module.applyPhysics(block, true);
             fall = true;
         }
 
-        if (fall || force)
-        {
-            if (recursionCount >= 0)
-            {
-                if (force)
-                {
+        if (fall || force) {
+            if (recursionCount >= 0) {
+                if (force) {
                     Block neighbor = block.getRelative(BlockFace.DOWN, 1);
                     module.physicsCheck(neighbor, recursionCount - 1, false, 1);
 

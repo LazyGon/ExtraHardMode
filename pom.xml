@@ -19,8 +19,9 @@
   ~ along with ExtraHardMode.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Project properties. -->
@@ -35,7 +36,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.mainclass>com.extrahardmode.ExtraHardMode</project.mainclass>
-        <!--Use a profile to overwrite this-->
+        <!-- Use a profile to overwrite this-->
         <outputdir>${project.build.outputDirectory}</outputdir>
         <mc-version>1.21.1</mc-version>
         <bukkit-ver>R0.1-SNAPSHOT</bukkit-ver>
@@ -59,12 +60,12 @@
 
             <!-- Use a profile to override the outputdir, e.g. to a local testserver-->
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-jar-plugin</artifactId>-->
-                <!--<version>2.4</version>-->
-                <!--<configuration>-->
-                    <!--<outputDirectory>${outputdir}</outputDirectory>-->
-                <!--</configuration>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-jar-plugin</artifactId>-->
+            <!--<version>2.4</version>-->
+            <!--<configuration>-->
+            <!--<outputDirectory>${outputdir}</outputDirectory>-->
+            <!--</configuration>-->
             <!--</plugin>-->
 
             <!-- Shade Metrics -->
@@ -119,7 +120,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
                 <configuration>
-                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens
+                        java.base/java.util=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
         </plugins>
@@ -135,17 +137,17 @@
             <id>playpro-repo</id>
             <url>https://maven.playpro.com</url>
         </repository>
-<!--        <repository>-->
-<!--            <id>github-releases</id>-->
-<!--            <url>https://di3mex.github.io/repo_bukkit/releases/</url>-->
-<!--        </repository>-->
-<!--        <repository>-->
-<!--            <id>github-snapshots</id>-->
-<!--            <url>https://di3mex.github.io/repo_bukkit/snapshots/</url>-->
-<!--        </repository>-->
+        <!--        <repository>-->
+        <!--            <id>github-releases</id>-->
+        <!--            <url>https://di3mex.github.io/repo_bukkit/releases/</url>-->
+        <!--        </repository>-->
+        <!--        <repository>-->
+        <!--            <id>github-snapshots</id>-->
+        <!--            <url>https://di3mex.github.io/repo_bukkit/snapshots/</url>-->
+        <!--        </repository>-->
         <!--<repository>-->
-            <!--<id>prism-repo</id>-->
-            <!--<url>http://dhmc.us:8081/nexus/content/repositories/releases/</url>-->
+        <!--<id>prism-repo</id>-->
+        <!--<url>http://dhmc.us:8081/nexus/content/repositories/releases/</url>-->
         <!--</repository>-->
         <repository>
             <id>md_5-releases</id>
@@ -160,7 +162,7 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-        <!--WorldGuard Repo -->
+        <!-- WorldGuard Repo -->
         <repository>
             <id>enginehub-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
@@ -243,10 +245,10 @@
         <!-- Block Loggers -->
         <!-- Prism -->
         <!--<dependency>-->
-            <!--<groupId>me.botsko</groupId>-->
-            <!--<artifactId>prism</artifactId>-->
-            <!--<version>2.0</version>-->
-            <!--&lt;!&ndash;<version>2.0.6</version>&ndash;&gt;-->
+        <!--<groupId>me.botsko</groupId>-->
+        <!--<artifactId>prism</artifactId>-->
+        <!--<version>2.0</version>-->
+        <!--&lt;!&ndash;<version>2.0.6</version>&ndash;&gt;-->
         <!--</dependency>-->
         <!-- CoreProtect -->
         <dependency>
